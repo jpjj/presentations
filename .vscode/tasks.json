@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Export Slides to PDF",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-c",
+        "set -e && bun --bun slidev export --format png --output temp_folder && for file in temp_folder/*.png; do num=$(basename \"$file\" .png); padded=$(printf '%03d' \"$num\"); mv \"$file\" \"temp_folder/$padded.png\"; done && img2pdf temp_folder/*.png -o \"${input:outputFileName}.pdf\" && rm -rf temp_folder && echo 'PDF created: ${input:outputFileName}.pdf'"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "outputFileName",
+      "type": "promptString",
+      "description": "Enter the output PDF filename (without .pdf extension)",
+      "default": "output"
+    }
+  ]
+}
