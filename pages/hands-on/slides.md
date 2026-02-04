@@ -27,27 +27,21 @@ duration: 35min
 
 hide: false
 ---
+## 1 Expectation Management:
 
-## Mathematical Modelling Tips & Tricks
-O4A Hands-On Session
+This session is about hands-on practices on how to convert a business problem (scheduling/assignment problem) into a mathematical optimization model.
+We will start with a base model which we will improve by considering some often times applied tips and tricks to make the model run faster and solve bigger instances.
+
+In the end, I show you that often times, problems can be modeled in more than one way. Going a step back and viewing the problem from a completely different point of view can be very beneficial. **We are talking about solving the same problem in 8 hours solving time (model 1) vs 10 seconds (model 2)**
+
+Tech stack: We will use **pyomo** for modelling and **highs** for solving. Both tools I can strongly recommend. 
+
 
 ---
 
-# What to expect
+## 2 Let us take a look at the problem:
 
-1. Introduction to a simple assignment/scheduling problem.
-2. Creating first formulation.
-3. Improving formulation with established modeling best-practices
-4. Reformulating formulating, overcoming last bottlenecks and creating a far superior model.
-
-
-**Techstack**:
-
-`pyomo` for modeling, `highs` for solving
-
----
-
-## Let us take a look at the problem:
+Maybe two or three slides, always focusing what is important.
 
 There are $N$ **workers** and $M$ **tasks**.
 
@@ -111,37 +105,34 @@ Total cost: 7 + 10 + 0 = 17
 
 ---
 
-## Let us visualize the solution
+# Let us visualize the solution
 
 ![Visualization](/assets/baby_example_solution.png)
 
 
 ---
 
-# Breakout Session #1
-Your turn!
+6 Questions? Is everybody ready to model this problem? Breakout!
 
-Formulate a model to the problem introduced. How to model:
-
-- Assignment of tasks to workers?
-- Overlap of tasks not allowed?
-- shift length of a worker:
-	- No task: 0
-	- At least one task:
-		- Your shift will be at least at least $D_{min}$.
-		- Your shift cannot be more than $D_{max}$.
+- How to model:
+	- Assignment of tasks to workers?
+	- Overlap of tasks not allowed?
+	- shift length of a worker:
+		- No task: 0
+		- At least one task:
+			- You have to work at least $D_{min}$ hours.
+			- You cannot work more than $D_{max}$.
 - Your tools: **Create variables, constraints, objective function**!
 
 ---
 
-## One way of modelling the problem: 
-# Assignment Problem
-Remember: We have our input:
-- number of workers $N$, 
-- $K$ tasks with start and end time each, 
-- $D_{min}$, 
-- $D_{max}$
+7 One way of modelling the problem: Assignment Problem
 
+Remember: We have our input:
+- number of workers N, 
+- M tasks with start and end time each, 
+- D_min, 
+- D_max
 We need:
 - Variables
 - Constraints
@@ -149,240 +140,87 @@ We need:
 
 ---
 
-# Define Sets
-Pyomo:
+8 Variables
 
-```python
-
-def create_model_instance(problem: Problem) -> pyo.ConcreteModel
-    # Create Model
-    m = pyo.ConcreteModel("Worker Task Assignment")
-    
-    # Define Sets
-    m.workers = pyo.RangeSet(problem.N)
-    m.tasks = pyo.Set(initialize=problem.tasks)
-
-```
-
+They decide what to do:
+- $y_i\in \{0,1\}$, $y_i = 1$ iff worker i will have a shift.
+- $x_{i,j}\in \{0,1\}$, $x_{i,j} = 1$ iff worker $i$ will do task $j$.
+- $s_i \in \mathbb{N}$ shift start of worker i.
+- $t_i \in \mathbb{N}$ shift end of worker i.
 
 ---
 
-## Define Variables
+9 Going back to the example
 
-| Variable | Domain | Description |
-|----------|--------|-------------|
-| $y_i$ | $\mathbb{B}$ | $y_i = 1$ $\iff$ worker $i$ will have a shift |
-| $x_{i,j}$ | $\mathbb{B}$ | $x_{i,j} = 1$ $\iff$ worker $i$ will do task $j$ |
-| $s_i$ | $\mathbb{N}$ | shift start time of worker $i$ |
-| $t_i$ | $\mathbb{N}$ | shift end time of worker $i$ |
+- $x_{1,0} = 1$, because worker 1 does task 0.
+- $y_0 = 0$, because worker 0 does not work.
+- $s_2 = 11$, $t_2=21$. Worker 2 starts at 11:00 and ends their shift at 21:00.
 
 ---
 
-## Going back to the example
-![Visualization](/assets/baby_example_solution.png)
+10 Constraints
 
-- $x_{1,1} = 1$, because worker 1 does task 1.
-- $y_2 = 0$, because worker 2 does not work.
-- $s_0 = 10$, $t_0 = 17$. Worker 0 starts at 10:00 and ends their shift at 17:00.
-
-
----
-
-# Define Variables
-Pyomo:
-```python {10-15}
-
-def create_model_instance(problem: Problem) -> pyo.ConcreteModel
-    # Create Model
-    m = pyo.ConcreteModel("Worker Task Assignment")
-    
-    # Define Sets
-    m.workers = pyo.RangeSet(problem.N)
-    m.tasks = pyo.Set(initialize=problem.tasks)
-
-    # Define Variables
-    m.y = pyo.Var(m.workers, domain=pyo.Binary)  # Worker has shift?
-    m.x = pyo.Var(m.workers * m.tasks, domain=pyo.Binary)  # Worker i does task j?
-    m.s = pyo.Var(m.workers, domain=pyo.NonNegativeIntegers)  # Shift start
-    m.t = pyo.Var(m.workers, domain=pyo.NonNegativeIntegers)  # Shift end
-
-```
-
---- 
-
-# Define Parameters
-Pyomo:
-```python {10-}
-
-def create_model_instance(problem: Problem) -> pyo.ConcreteModel
-    
-	  ...
-
-    m.s = pyo.Var(m.workers, domain=pyo.NonNegativeIntegers)  # Shift start
-    m.t = pyo.Var(m.workers, domain=pyo.NonNegativeIntegers)  # Shift end
-		
-
-    @m.Param()
-    def DMIN(m):
-        return problem.D_min
-
-    @m.Param()
-    def DMAX(m):
-        return problem.D_max
-```
-
+Best would be to showcase every constraint side by side with the pyomo code!!
+Maybe here really every single reveal one at a time.
+- Every task needs to be served:
+	- $\sum_{i=0}^{N-1}x_{i,j} = 1$ for all tasks $j$.
+	- We call this constraint: `fulfill_all_tasks`
+- No Overlapping tasks:
+	- $x_{i,j_1} + x_{i, j_2} \leq 1$ for all workers $i$ and all **task pairs** $j_1, j_2$ that **overlap**.
+	- We call this constraint `no_overlapping_tasks`.
+- Shift of a single worker:
+	- $s_i + y_i D_{min} \leq t_i$ for all workers $i$.
+	- `minimum_shift_length`
+	- $t_i \leq s_i + y_iD_{max}$ for all workers $i$
+	- `maximum_shift_length`
+- Let us check the last two constraints:
+	- If $y_i = 0$, we get:
+		- $s_i \leq t_i$ and $t_i \leq s_i$. So: $s_i = t_i$.
+	- If $y_i = 1$, we get:
+		- $s_i + D_{min} \leq t_i \leq s_i + D_{max}$. The shift end is between $D_{min}$ and $D_{max}$ hours after shift start $s_i$.
+- Assigned task must be within worker's shift:
+	- $x_{i,j}\omega_j \leq t_i$ for all workers $i$ and tasks $j$.
+	- `task_end_before_shift_end`
+	- $s_i \leq x_{i,j}\alpha_j + (1 - x_{i,j})M$ all workers $i$ and tasks $j$.  
+	- PROBLEM: This constraint should have no effect if  $x_{i,j} = 0$. This is why we use **big-M** here.
+	- `task_start_after_shift_start`
 
 ---
 
-# 10 Constraints
-Here we go
+11 Objective function
 
-
----
-
-## Every task needs to be served
-$$\sum_{i=0}^{N-1} x_{i,j} = 1 \quad \forall \text{ tasks } j$$
-
-Pyomo:
-```python
-    @m.Constraint(m.tasks)
-    def fulfill_all_tasks(m, j):
-        return pyo.quicksum(m.x[i, j] for i in m.workers) == 1
-```
----
-
-### 2. No overlapping tasks for same worker
-$$x_{i,j_1} + x_{i,j_2} \leq 1 \quad \forall \text{ workers } i, \forall \text{ overlapping task pairs } (j_1, j_2)$$
-
-Pyomo:
-```python
-		def get_overlapping_tasks(tasks: list[Task]) -> list[tuple(Task, Task)]:
-			...
-
-		m.overlapping_tasks = pyo.Set(initialize=get_overlapping_tasks(problem.tasks))
-
-    @m.Constraint(m.workers, m.overlapping_tasks)
-    def no_overlapping_tasks(m, i, j1, j2):
-        return m.x[i, j1] + m.x[i, j2] <= 1
-```
----
-
-### 3. Minimum shift length
-$$s_i + y_i \cdot D_{min} \leq t_i \quad \forall \text{ workers } i$$
-
-Pyomo:
-```python
-    @m.Constraint(m.workers)
-    def minimum_shift_length(m, i):
-        return m.s[i] + m.y[i] * m.DMIN <= m.t[i]
-```
----
-
-### 4. Maximum shift length
-$$t_i \leq s_i + y_i \cdot D_{max} \quad \forall \text{ workers } i$$
-
-Pyomo:
-```python
-    @m.Constraint(m.workers)
-    def maximum_shift_length(m, i):
-        return m.t[i] <= m.s[i] + m.y[i] * m.DMAX
-```
+Minimize the sum of all shift lengths:
+- $minimize \sum_{i=1}^N t_i - s_i$
 
 ---
 
-## Rewind:
-$$s_i + y_i \cdot D_{min} \leq t_i \quad \forall \text{ workers } i$$
-$$t_i \leq s_i + y_i \cdot D_{max} \quad \forall \text{ workers } i$$
-
-- If $y_i = 0$, we get:
-	- $s_i \leq t_i$ and $t_i \leq s_i$, so: 
-	- $s_i = t_i$. 
-- If $y_i = 1$, we get:
-	- $s_i + D_{min} \leq t_i \leq s_i + D_{max}$, so:
-	-  $D_{min} \leq t_i - s_i \leq D_{max}$.
-
+12 Problem defined, let us solve it!
 
 ---
 
-### 5. Task end before shift end
-$$x_{i,j} \cdot \omega_j \leq t_i \quad \forall \text{ workers } i, \forall \text{ tasks } j$$
-
-Pyomo:
-```python
-    @m.Constraint(m.workers, m.tasks)
-    def task_start_after_shift_start(m, i, j):
-        return m.s[i] <= m.x[i, j] * j.start + (1 - m.x[i, j]) * M
-```
----
-
-### 6. Task start after shift start (using Big-M)
-$$s_i \leq x_{i,j} \cdot \alpha_j + (1 - x_{i,j}) \cdot M \quad \forall \text{ workers } i, \forall \text{ tasks } j$$
-
-
-Pyomo:
-```python
-    @m.Constraint(m.workers, m.tasks)
-    def task_end_before_shift_end(m, i, j):
-        return m.x[i, j] * j.end <= m.t[i]
-```
+13 Go to the google collab, show the complete code
 
 ---
 
-## Wait, why?
-$$s_i \leq x_{i,j} \cdot \alpha_j + (1 - x_{i,j}) \cdot M \quad \forall \text{ workers } i, \forall \text{ tasks } j$$
-
-**Note:** 
-- This constraint should have no effect if $x_{i,j} = 0$. This is why we use **big-M** here.
-- Without the term $(1 - x_{i,j}) \cdot M$ , $s_i$ would be forced to be $0$ if $x_{i,j}=0$ for some $j$.
-
+14 Show a first, easy problem instance, that is not trivial: (25,10)
 
 ---
 
-## Objective Function
-Minimize all shift lengths:
-$$\min \sum_{i=1}^{N} (t_i - s_i)$$
-
-```python
-    @m.Objective(sense=pyo.minimize)
-    def total_costs(m):
-        return pyo.quicksum(m.t[i] - m.s[i] for i in m.workers)
-
-```
+15 Let the model run, show the final result
 
 
+<!-- ![[Pasted image 20260127164944.png]] -->
 
 ---
 
-# Let's take this baby for a test drive!
+16 Show next, bigger instance, let it run again
 
-```python
-
-def create_model_instance(problem: Problem) -> pyo.ConcreteModel:
-    # Create Model
-    m = pyo.ConcreteModel("Worker Task Assignment")
-    
-    # Define Sets
-    ...
-    # Define Parameters
-    ...
-    # Define Variables
-    ...
-    # Define Constraints
-    ...
-    # Define Objective
-		...
-
-    return m
-
-```
+It takes time! Problem. Look at the solver logs. Do not go too deep, would be for another hands on session. But what we see: It detects symmetries that we try to solve.
+Maybe we can also see that it reduced number of columns/constraints? Hint for cutting plain!
 
 ---
 
-## Well, this did not go as planned...
-
----
-
-# Breakout sessions! How can we improve?
+16.5 Breakout sessions! How can we improve?
 
 Discuss on what can be made better regarding the model!
 
