@@ -648,6 +648,8 @@ Tight formulation:
 
 ## Goal:
 Revisit our constraints, make them tighter!
+
+
 ---
 layout: center
 ---
@@ -675,13 +677,46 @@ $$M = 24 - D_{min}$$
 </v-click>
 
 
+
+---
+
+## Improvement 2: Cutting Planes (Clique Inequality)
+
+
+**Original overlap constraint:** One constraint per overlapping task *pair*:
+$$x_{i,j_1} + x_{i,j_2} \leq 1 \quad \forall i, \forall \text{ overlapping } (j_1, j_2)$$
+
+**Better:** For each hour, at most one task active at that hour can be assigned to a worker.
+
+$$\sum_{j \text{ active at hour } h} x_{i,j} \leq 1 \quad \forall i, \forall h \in [0, 23]$$
+
+
+---
+
+## Improvement 2: Cutting Planes (Clique Inequality)
+Two big wins:
+1. Formulation just got tighter!
+2. Huge reduction in number of constraints:
+    - Number of old overlapping constraints scaled at $O(K²)$.
+    - New variant: constant $24$.
+
+```python
+@m.Constraint(m.workers, m.hours)
+def no_overlapping_tasks(m, i, h):
+    active_tasks = overlapping_task_per_hour[h]
+    if len(active_tasks) <= 1:
+        return pyo.Constraint.Skip
+    return pyo.quicksum(m.x[i, j] for j in active_tasks) <= 1
+
+```
+
 ---
 layout: image-right
 
 image: /assets/meme_symmetry.png
 ---
 
-## Improvement 2: Symmetry Breaking
+## Improvement 3: Symmetry Breaking
 
 
 **Problem:**
@@ -704,19 +739,6 @@ $$s_{i-1}  \leq s_i \quad \forall i > 1$$
 ```
 
 
----
-
-## Improvement 3: Cutting Planes (Clique Constraints)
-
-**Idea:** Reduce the solution space of the LP relaxation without reducing the MILP solution space.
-
-**Original overlap constraint:** One constraint per overlapping task *pair*.
-
-**Better:** For each hour, at most one task active at that hour can be assigned to a worker.
-
-$$\sum_{j : \text{task } j \text{ active at hour } h} x_{i,j} \leq 1 \quad \forall i, \forall h \in [0, 23]$$
-
-This gives us only 24 constraint groups instead of $O(K^2)$!
 
 ---
 
@@ -726,73 +748,76 @@ Add explicit bounds on shift start and end times. These bounds are outside of th
 - $s_i \in [0, 24 - D_{min}]$
 - $t_i \in [D_{min}, 24]$
 
----
+```python {2,4}
+    m.s = pyo.Var(m.workers, domain=pyo.NonNegativeIntegers, 
+                  bounds=(0, 24 - problem.D_min))
+    m.t = pyo.Var(m.workers, domain=pyo.NonNegativeIntegers, 
+                  bounds=(problem.D_min, 24))
 
-21 small bonus: set bounds for variables
-
-Here we need some more theoretical proof. Maybe in the books or googling again?
-
-and run it.
-As said before, construct (next to be baby set) 3 kinds of sets:
-1. Can be solved by first model
-2. Can be solver by improved model, but not by first model
-3. Can be solved by flow model, but not by improved model.
+```
 
 ---
 
-22 Let us solve, again!
+## Let us solve, again!
 
-Dann lass den ganzen Bums nochmal laufen! Lass die Leute sehen, wie es auch einmal schneller geht (mit 25, 10). Dann mach (50, 20). Geht immer noch! Dann mach (100, 40).
-Es läuft und läuft... Was tun wir jetzt? Wir haben schon so viel aus dem Model rausgeholt, es so tight gemacht. Aber es ist immer noch nicht gut...
-
----
-
-23 What is the problem?
-
-Das Problem: Immer noch recht großes Problem: 
-Sehe hier: 4000 + 40 +40 + 40 Entscheidungsvariablen.
-Constraints: Auch viele. Wie also kleiner?
-D.h. Anzahl Constraints und Variablen skaliert mit $O(NM)$!
+Back to the bat mobile...
 
 ---
 
-24  Breakout! Lass die Leute diskutieren, wie man das Ding vielleicht ganz anders formulieren kann.
+## The Scaling Problem
 
+Even with improvements, the model still struggles with larger instances. Why?
 
+**Variable count:** Scales with $O(N \cdot K)$
 
-# Ernsthafte Frage: Wie viel Zeit haben wir hier?
-vielleicht sind wir hier nach 45 Minuten und können dann nochmal tief in den Flow gehen?
+**Constraint count:** Also scales with $O(N \cdot K)$
 
----
-
-25 Have you ever heard about a flow?
-
-Grant reveal! Flow.
-Make the next things pop up one by one:
-- What is a minimum cost flow?
-- We have a directed graph with nodes and arcs.
-- One node is a source with a certain supply.
-- One node is a sink with a same amout of demand.
-- We want to get all these units of demand via the graph network from sink to source. However:
-	- Arcs can have capacities, meaning only a certain amount can pass them.
-	- Arcs also have costs that are incurred for each unit of flow using that arc.
-- The goal: Get demand to the sink while only using minimal costs.
-This problem can be formulated as a LP.
+Can we do better?
 
 ---
 
-26 Show LP formulation. 
+# Part 6: A Different Perspective
 
-- Flow conservation constraint.
-- Capacity Constraint
-- objective.
+## Breakout Session 3: Can we formulate this differently?
 
 ---
 
-27 The cool thing about this flow:
+## Introduction to Minimum Cost Flow
 
-The matrix is totally unimodular. This means it is very nice! The optimal solution to the LP found by the simplex method is an integer solution!
-That means these problems are very easy to solve.
+A **minimum cost flow** problem consists of:
+- A directed graph with nodes and arcs
+- One **source** node with a certain supply
+- One **sink** node with a demand equal to the supply
+- Each arc has a **capacity** (max flow that can pass)
+- Each arc has a **cost** (incurred per unit of flow)
+
+**Goal:** Move all flow from source to sink with minimum total cost.
+
+---
+layout: two-cols
+layoutClass: gap-16
+---
+
+### LP Formulation
+
+**Variables:** $f_e \geq 0$ for each arc $e$
+
+**Flow Conservation:**
+$$\sum_{e \text{ outgoing from } v} f_e - \sum_{e \text{ incoming to } v} f_e = \text{supply}(v)$$
+
+**Capacity:**
+$$f_e \leq \text{capacity}(e)$$
+
+**Objective:**
+$$\min \sum_e c_e \cdot f_e$$
+
+::right::
+
+### The big benefit
+The constraint matrix is **totally unimodular**. This means the LP solution found by simplex is guaranteed to be integer!
+
+These problems are **very easy to solve**.
+
 
 ---
 
@@ -802,94 +827,161 @@ You guessed it. We can formulate our problem as a flow model
 
 ---
 
-29 Zeige Zeichnung von Excalidraw.
-
-
 **Motivation**
 
-Think about the flow being hour workers. We have as much flow units as we have workers.
-Depending on how the flow travels the network shows us which worker should be assigned to which task.
-Vielleicht hier schonmal ein Bild wo man sieht: Von links nach rechts durch den Flow heißt durch den Tag gehen.
+- Think about the flow being our workers. 
+- We have as much flow units as we have workers.
+- Depending on how the flow travels the network shows us which worker should be assigned to which task.
+
+
+---
+layout: image
+image: /assets/graph1.png
+backgroundSize: 40em
+---
+
+---
+layout: image
+image: /assets/graph2.png
+backgroundSize: 40em
+---
+
+
+---
+layout: image
+image: /assets/graph3.png
+backgroundSize: 40em
+---
+
+
+---
+layout: image
+image: /assets/graph4.png
+backgroundSize: 40em
+---
+
+
+---
+layout: image
+image: /assets/graph5.png
+backgroundSize: 40em
+---
+
+
+---
+layout: image
+image: /assets/graph6.png
+backgroundSize: 52em
+---
+
+
+---
+layout: image
+image: /assets/graph7.png
+backgroundSize: 40em
+---
+
+
+---
+layout: image
+image: /assets/graph8.png
+backgroundSize: 40em
+---
+
+
+---
+layout: image
+image: /assets/graph9.png
+backgroundSize: 40em
+---
+
+
+---
+layout: image
+image: /assets/graph10.png
+backgroundSize: 40em
+---
+
+
+---
+layout: quote
+---
+
+We have waited long enough, let us go to google collab and start this rocket!
+
+---
+layout: two-cols
+layoutClass: gap-16
+---
+
+## Why is the Flow Model Better?
+
+**Scaling Analysis:**
+
+| Model | Variables | Constraints |
+|---------|-------------|---------------|
+| Basic | $O(N \cdot K)$ | $O(N \cdot K^2)$ |
+| Improved | $O(N \cdot K)$ | $O(N \cdot K)$ |
+| Flow | $O(D_{max} \cdot K)$ | $O(D_{max} \cdot K)$ |
+
+::right::
+
+**Key insight:** The flow model doesn't scale with the number of workers!
+
+- Increasing workers: No effect on graph size
+- Increasing tasks: Each task appears in at most $D_{max}$ workflow layers
+
+**Additional benefits:**
+1. Near total unimodularity means quick branching
+2. Easy to add complex cost functions
+3. Instead of returning "INFEASIBLE", it still gives a useful plan with the maximum number of fulfilled tasks.
+
+
+
 
 ---
 
-30 First decision: When does a worker start its day?
+## Part 7: Key Takeaways
 
-<!-- 1. ![[Screenshot from 2026-01-27 17-51-59.png]] -->
-2. It is like on a game board. And we see now how the workers go about their day. Every hour, they decide: Do I work on a task or do I wait?
-
----
-
-31 Let us zoom in on the case a worker starts their day at 10:00
-
-<!-- 1. ![[Pasted image 20260127175501.png]] -->
-Every hour, they can decide: Do I wait or do I do a task? **Use updated pictuge above with task 1 also so people understand on the missing out cost**
-If I do a task, I might be gone for some time.
-
----
-
-32 Worker also have to end their day at some point. This where their costs are paid: 
-
-<!-- ![[Pasted image 20260127180455.png]] -->
+1. **Start simple**: Begin with a straightforward formulation to understand the problem
+2. **Analyze and improve**:
+   - Tighten Big-M constants
+   - Add symmetry breaking constraints
+   - Use cutting planes / clique constraints
+   - Set variable bounds
+3. **Think differently**: Sometimes a completely different formulation is the answer
+   - The flow model turned an 8-hour solve into 10 seconds!
+   - Understanding problem structure enables better models
+4. **Know your tools**: 
+   - Pyomo for modeling
+   - HiGHS for solving
+   - Pydantic for creating classes
+   - All these tools are free, powerful, and production-ready
 
 ---
 
-33 We have such a row path for any kind of start time
+## Further Topics
 
-Maybe show a picture here, too.
+For even larger instances:
+- Decomposition strategies (Benders, Dantzig-Wolfe)
+- Metaheuristics (this is scheduling, after all!)
+- Hybrid approaches
 
----
-
-34 We also have an extra task for workers not working. 
-
- <!-- ![[Pasted image 20260127180608.png]] -->
-
----
-
-34 We need to put an incentive to do the tasks, though
-
-Didn't we forgot something?
-- Give them huge negative costs
-- Add the constraints that these are linked together.
-
-Nun wieder Pyomo Code und die Ideen (mit Flow State) Side by side.
-
-- Variables:
-	- Only f, for any arc we have, none-negative integer
-- Constraints:
-	- Flow Conservation constraint:
-		- sum(f_a for a outgoing from v) - sum(f_a for a incoming to v) = supply(v)
-	- Capa constraints: Gibt es keine!
-	- Task constraint:
-		- sum(f_a for a representing task i) <= 1
-- Objective:
-	- minimize sum(c_a * f_a for a arc in G)
+Extensions to the problem:
+- Finer time granularity (minutes instead of hours)
+- More complex cost functions (overtime charges)
+- Weekly scheduling with fairness constraints
+- Handling infeasibility (maximize served tasks)
 
 ---
-
-Dann final die alte Instanz, die nicht lösbar war, nun mit Flow lösen. Boom Super schnell!
-
-
-
-Man erkennt:
-Man hat nicht so super viele Knoten und Kanten:
-Man hat 24 - 7 possible paths. Eine Task kann höchstens 10 mal auftauchen, eher weniger wegen am Anfang,Ende sein oder Länge. Sagen wir also.
-
-Hier sehen wir: 
-Wenn wir drivers erhöhen, passiert gar nichts. Wenn wir tasks erhöhen, taucht eine Task höchstens bei 10 Neuen Dingen auf, eher weniger. Somit ist Scaling hier $O(M)$. Much better! Außerdem! Ein Flow ist totally unimodular, unser ist aber kein einfacher Min Cost Flow mehr. Warum?
-Das gute: Spätestens nach M Branches (wahrscheinlich früher) sind wir schon am Ziel!
-
-Darum besser!
-
+layout: end
 ---
 
-Was könnte man noch zum Abschluss sagen:
-Was ist wenn noch größer wird? Decomposition strategies, Metaheursitiscs, this is scheduling after all! In this case, it was important for the client to hae it optimal.
+Thank you!
 
-Other thoughts: This formulation allows us to have arbitrary costs!
-What was not so nice: If not feasible, nothing is returned. For the client, bad! At least give us some solution! Idea: The solution with the maximum number of served tasks while still minimizing the total shift time.
+**Let's connect on linkedin:** [Jens-Peter Joost](https://www.linkedin.com/in/jens-peter-joost/)
 
-The real problem had some extras we did not touch: 
-1. It was not just hours, but more granular.
-2. More complicated cost function (overtime charge)
-3. Creating a schedule not for a day but for a total week. Additional objectives: Fairness Constraints.
+**Resources:**
+- [Pyomo Documentation](https://pyomo.readthedocs.io/)
+- [HiGHS Solver](https://highs.dev/)
+- [Network Flow Problems](https://en.wikipedia.org/wiki/Network_flow_problem)
