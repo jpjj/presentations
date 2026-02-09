@@ -29,8 +29,12 @@ hide: false
 
 ---
 
-## Mathematical Modeling Tips & Tricks
+## Hands-On MIP Modeling
 O4A Hands-On Session
+
+<div class="abs-bl m-6 text-sm opacity-40">
+  jpjsolutions.com/presentations/hands-on-modeling
+</div>
 
 <div class="abs-br m-6 flex gap-2">
   <a href="https://github.com/jpjj/O4A-Hands-On-Modeling" target="_blank" alt="GitHub"
@@ -40,11 +44,12 @@ O4A Hands-On Session
 </div>
 
 
+
 ---
 layout: image-right
 
 # the image source
-image: /assets/peter.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/peter.png?raw=true
 ---
 # Hello there!
 
@@ -80,12 +85,12 @@ zoom: 1.0
 <br>
 <div class="grid grid-cols-3 gap-8 mt-8">
   <div class="flex flex-col items-center">
-    <img src="/assets/pyomo.png" class="h-20 mb-4" alt="Pyomo" />
+    <img src="https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/pyomo.png?raw=true" class="h-20 mb-4" alt="Pyomo" />
     <code>pyomo</code>
     <span class="text-sm opacity-70">for modeling</span>
   </div>
   <div class="flex flex-col items-center">
-    <img src="/assets/highs.png" class="h-20 mb-4" alt="HiGHS" />
+    <img src="https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/highs.png?raw=true" class="h-20 mb-4" alt="HiGHS" />
     <code>highs</code>
     <span class="text-sm opacity-70">for solving</span>
   </div>
@@ -188,7 +193,7 @@ Total cost: 7 + 10 + 0 = 17
 
 ## Let us visualize the solution
 
-![Visualization](/assets/baby_example_solution.png)
+![Visualization](https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/baby_example_solution.png?raw=true)
 
 
 ---
@@ -240,7 +245,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel
     m = pyo.ConcreteModel("Worker Task Assignment")
     
     # Define Sets
-    m.workers = pyo.RangeSet(problem.N)
+    m.workers = pyo.RangeSet(0, problem.N-1)
     m.tasks = pyo.Set(initialize=problem.tasks)
 ```
 
@@ -259,7 +264,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel
 ---
 
 ## Going back to the example
-![Visualization](/assets/baby_example_solution.png)
+![Visualization](https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/baby_example_solution.png?raw=true)
 
 - $x_{1,1} = 1$ because worker 1 does task 1.
 - $y_2 = 0$ because worker 2 does not work.
@@ -277,7 +282,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel
     m = pyo.ConcreteModel("Worker Task Assignment")
     
     # Define Sets
-    m.workers = pyo.RangeSet(problem.N)
+    m.workers = pyo.RangeSet(0, problem.N-1)
     m.tasks = pyo.Set(initialize=problem.tasks)
 
     # Define Variables
@@ -551,7 +556,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel:
     m = pyo.ConcreteModel("Worker Task Assignment")
     
     # Define Sets
-    m.workers = pyo.RangeSet(problem.N)
+    m.workers = pyo.RangeSet(0, problem.N-1)
     m.tasks = pyo.Set(initialize=problem.tasks)
     m.overlapping_tasks = pyo.Set(initialize=overlapping_task_pairs)
 
@@ -612,7 +617,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel:
 
 ---
 
-## Let's solve some problems
+## [Let's solve some problems](https://colab.research.google.com/github/jpjj/O4A-Hands-On-Modeling/blob/main/mathematical_modeling_complete.ipynb)
 
 
 ```python
@@ -693,7 +698,7 @@ Chapter 3
 ---
 layout: image-right
 
-image: /assets/loose_formulation.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/loose_formulation.png?raw=true
 ---
 ## Some theory
 
@@ -706,7 +711,7 @@ Weak/loose formulation:
 ---
 layout: image-right
 
-image: /assets/tight_formulation.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/tight_formulation.png?raw=true
 ---
 ## Some theory
 
@@ -792,7 +797,7 @@ def no_overlapping_tasks(m, i, h):
 ---
 layout: image-right
 
-image: /assets/meme_symmetry.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/meme_symmetry.png?raw=true
 ---
 
 ## Improvement 3: Symmetry Breaking
@@ -918,7 +923,7 @@ $$
 
 ---
 layout: image-right
-image: assets/tight_formulation.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/tight_formulation.png?raw=true
 ---
 
 ### The big benefit
@@ -942,69 +947,69 @@ The LP solution found by simplex is guaranteed to be integer!
 
 ---
 layout: image
-image: /assets/graph1.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/graph1.png?raw=true
 backgroundSize: 40em
 ---
 
 ---
 layout: image
-image: /assets/graph2.png
-backgroundSize: 40em
----
-
-
----
-layout: image
-image: /assets/graph3.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/graph2.png?raw=true
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph4.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/graph3.png?raw=true
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph5.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/graph4.png?raw=true
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph6.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/graph5.png?raw=true
+backgroundSize: 40em
+---
+
+
+---
+layout: image
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/graph6.png?raw=true
 backgroundSize: 52em
 ---
 
 
 ---
 layout: image
-image: /assets/graph7.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/graph7.png?raw=true
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph8.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/graph8.png?raw=true
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph9.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/graph9.png?raw=true
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph10.png
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/graph10.png?raw=true
 backgroundSize: 40em
 ---
 
@@ -1127,4 +1132,15 @@ layout: end
 
 Thank you!
 
-**Let's connect on linkedin:** [Jens-Peter Joost](https://www.linkedin.com/in/jens-peter-joost/)
+<div class="flex flex-col gap-4 mt-8">
+
+  <a href="https://colab.research.google.com/github/jpjj/O4A-Hands-On-Modeling/blob/main/mathematical_modeling_complete.ipynb" target="_blank" class="flex items-center gap-2 text-xl opacity-70 hover:opacity-100">
+    <carbon-logo-python class="text-2xl" /> All the code to run in google colab
+  </a>
+  <a href="https://www.youtube.com/@Optimization4All/playlists" target="_blank" class="flex items-center gap-2 text-xl opacity-70 hover:opacity-100">
+    <carbon-logo-youtube class="text-2xl" /> More O4A Hands-On Sessions
+  </a>
+  <a href="https://www.linkedin.com/in/jens-peter-joost/" target="_blank" class="flex items-center gap-2 text-xl opacity-70 hover:opacity-100">
+    <carbon-logo-linkedin class="text-2xl" /> Let's connect
+  </a>
+</div>
