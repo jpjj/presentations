@@ -35,7 +35,12 @@ jobs:
         run: bun install
 
       - name: Build slides
-        run: bun run build --base /presentations/
+        run: bun run build --base /presentations/hands-on-modeling/
+
+      - name: Move to subdirectory
+        run: |
+          mkdir -p output/hands-on-modeling
+          mv dist/* output/hands-on-modeling/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -43,7 +48,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: output
 
   deploy:
     environment:
