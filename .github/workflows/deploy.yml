@@ -35,7 +35,7 @@ jobs:
         run: bun install
 
       - name: Build slides
-        run: bun run build --base /hands-on-modeling/
+        run: bun run build --base /presentations/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
