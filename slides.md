@@ -9,10 +9,9 @@ background: https://images.unsplash.com/photo-1520022911530-fea50671df2e?q=80&w=
 # some information about your slides (markdown enabled)
 title: Hands-On Modeling
 info: |
-  ## Peter Pan
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
+  ## Jens-Peter Joost
+  Presentation slides for Optimization for all Hands-On Session.
+  Find notebook [here](https://github.com/jpjj/O4A-Hands-On-Modeling)
 # apply UnoCSS classes to the current slide
 class: text-center
 # https://sli.dev/features/drawing
@@ -49,30 +48,28 @@ image: /assets/peter.png
 ---
 # Hello there!
 
-My Name is Peter!
-
-<v-click>
-I like: 
-</v-click>
+I'm Peter!
 
 <v-clicks>
 
-- Math
-- ...
-
+```
+2018             M.Sc. Maths
+2019 - 2025      OR Scientist at DHL
+Since 2025       OR Freelancer
+```
 </v-clicks>
 
 ---
 zoom: 1.0
 ---
-# Agenda
+# Chapters
 
 <v-clicks>
 
 1. Introduction to a simple assignment/scheduling problem.
-2. Creating first formulation.
-3. Improving formulation with established modeling best-practices.
-4. New reformulation, overcoming last bottlenecks and creating a far superior model.
+2. Creating a simple formulation.
+3. Creating an improved formulation with established modeling best-practices.
+4. New reformulation, overcoming last bottlenecks.
 
 </v-clicks>
 
@@ -80,7 +77,7 @@ zoom: 1.0
 ---
 
 ## Tech Stack:
-
+<br>
 <div class="grid grid-cols-3 gap-8 mt-8">
   <div class="flex flex-col items-center">
     <img src="/assets/pyomo.png" class="h-20 mb-4" alt="Pyomo" />
@@ -99,29 +96,45 @@ zoom: 1.0
   </div>
 </div>
 
-
+---
+layout: image-right
+image: https://images.unsplash.com/photo-1530819568329-97653eafbbfa?q=80&w=2065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
 
 # The Problem
+Chapter 1
+
+---
+
 There are $N$ **workers** and $K$ **tasks**.
 
-- Every task $j$ has a fixed start time $\alpha_j$ and end time $\omega_{j}$.
+<v-clicks>
+
 - Tasks are assigned to workers.
 - Any worker $i$ could do any task $j$.
 - Multiple tasks can be assigned to a single worker. But:
-- If a worker has at least one task assigned to them, they start a shift:
+- If a worker has at least one task assigned to them, they start a shift.
 - Workers have a minimum and a maximum shift length $D_{min}$ and $D_{max}$.
+- Every task $j$ has a fixed start time $\alpha_j$ and end time $\omega_{j}$.
 - All tasks assigned to a worker must be within this shift and they may not overlap.
+
+
+</v-clicks>
+
+<v-click>
 
 **Objective:**
 Minimize the sum of all shift lengths while fulfilling all tasks!
+
+
+</v-click>
 
 ---
 layout: two-cols
 layoutClass: gap-16
 ---
 
-## Show some small example
+## Some small example
 
 Let us say we have 3 **workers** and 3 **tasks**.
 ```python
@@ -159,6 +172,8 @@ D_max = 10
 |   1    |  \[ 1, 2 \]    | 11 - 21 |
 |   2    |  \[ \]    | - |
 
+
+
 </v-click>
 
 <v-click>
@@ -181,7 +196,7 @@ Total cost: 7 + 10 + 0 = 17
 # Breakout Session #1
 Your turn!
 
-Formulate a model to the problem introduced. How to model:
+Formulate a the problem as a MIP. How to model:
 
 - Assignment of tasks to workers?
 - Overlap of tasks not allowed?
@@ -193,9 +208,17 @@ Formulate a model to the problem introduced. How to model:
 - Your tools: **Define variables, constraints, objective function**!
 
 ---
+layout: image-right
+image: https://images.unsplash.com/photo-1619796753108-cba77bacf03d?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+---
+# The Simple Model
+Chapter 2
+
+
+---
 
 # Assignment Problem Formulation
-Remember: We have our input:
+We have our input:
 - number of workers $N$, 
 - $K$ tasks with start and end time each, 
 - $D_{min}$, 
@@ -212,7 +235,6 @@ We need:
 Pyomo:
 
 ```python
-
 def create_model_instance(problem: Problem) -> pyo.ConcreteModel
     # Create Model
     m = pyo.ConcreteModel("Worker Task Assignment")
@@ -220,7 +242,6 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel
     # Define Sets
     m.workers = pyo.RangeSet(problem.N)
     m.tasks = pyo.Set(initialize=problem.tasks)
-
 ```
 
 
@@ -294,7 +315,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel
 ---
 
 # Constraints
-Buckle up!
+
 
 
 ---
@@ -359,23 +380,49 @@ $$t_i \leq s_i + y_i \cdot D_{max} \quad \forall \text{ workers } i$$
 ```
 </v-click>
 ---
-layout: center
+layout: two-cols-header
+layout-Class: gap-8
 ---
 
 ## Rewind:
 $$s_i + y_i \cdot D_{min} \leq t_i \quad \forall \text{ workers } i$$
 $$t_i \leq s_i + y_i \cdot D_{max} \quad \forall \text{ workers } i$$
 
-<v-clicks>
 
-- If $y_i = 0$, we get:
-	- $s_i \leq t_i$ and $t_i \leq s_i$, so: 
-	- $s_i = t_i$. 
-- If $y_i = 1$, we get:
-	- $s_i + D_{min} \leq t_i \leq s_i + D_{max}$, so:
-	-  $D_{min} \leq t_i - s_i \leq D_{max}$.
+::left::
+<v-click>
 
-</v-clicks>
+**Case $y_i = 0$:**
+
+</v-click>
+<v-click>
+
+$\Rightarrow s_i \leq t_i \text{ and } t_i \leq s_i$ 
+
+</v-click>
+<v-click>
+
+$\Rightarrow s_i = t_i$
+
+</v-click>
+
+::right::
+<v-click>
+
+
+**Case $y_i = 1$:**
+</v-click>
+<v-click>
+
+$\Rightarrow s_i + D_{min} \leq t_i \leq s_i + D_{max}$
+
+</v-click>
+<v-click>
+
+$\Rightarrow D_{min} \leq t_i - s_i \leq D_{max}$
+
+</v-click>
+
 
 ---
 layout: center
@@ -401,7 +448,6 @@ $$s_i \leq x_{i,j} \cdot \alpha_j + (1 - x_{i,j}) \cdot M \quad \forall \text{ w
 
 <v-click>
 ```python
-
     @m.Constraint(m.workers, m.tasks)
     def task_start_after_shift_start(m, i, j):
         return m.s[i] <= m.x[i, j] * j.start + (1 - m.x[i, j]) * M
@@ -409,18 +455,38 @@ $$s_i \leq x_{i,j} \cdot \alpha_j + (1 - x_{i,j}) \cdot M \quad \forall \text{ w
 </v-click>
 
 ---
-layout: center
+layout: two-cols-header
+layout-Class: gap-8
 ---
 
-## Wait, why?
+## Why big-M?
 $$s_i \leq x_{i,j} \cdot \alpha_j + (1 - x_{i,j}) \cdot M \quad \forall \text{ workers } i, \forall \text{ tasks } j$$
+
+::left::
 
 <v-click>
 
-- This constraint should have no effect if $x_{i,j} = 0$. This is why we use **big-M** here.
-- Without the term $(1 - x_{i,j}) \cdot M$ , $s_i$ would be forced to be $0$ if $x_{i,j}=0$ for some $j$.
+**Case $x_{i,j} = 0$:**
 
 </v-click>
+<v-click>
+
+$\Rightarrow s_i \leq M$ 
+
+</v-click>
+
+::right::
+<v-click>
+
+
+**Case $x_{i,j} = 1$:**
+</v-click>
+<v-click>
+
+$\Rightarrow s_i \leq \alpha_j$
+
+</v-click>
+
 
 ---
 layout: center
@@ -546,7 +612,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel:
 
 ---
 
-## Let's take this baby for a test drive
+## Let's solve some problems
 
 
 ```python
@@ -554,10 +620,6 @@ m = create_model_instance(problem)
 solver = Highs()
 solver.solve(m)
 ```
-
----
-
-## Well, this did not go as planned...
 
 ---
 
@@ -569,6 +631,10 @@ How can we improve the model formulation?
 - Where are its weak points?
 - Try to reduce number of variables & constraints while sticking to the problem logic.
 - Which constraints might cause trouble regarding the integrality gap?
+
+
+
+
 
 ---
 layout: two-cols-header
@@ -617,9 +683,12 @@ Model Analysis:
 </v-clicks>
 
 ---
-layout: section
+layout: image-right
+image: https://images.unsplash.com/photo-1621537108694-3a8259512251?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
-# Part 3: Model Improvements
+
+# The Improved Formulation
+Chapter 3
 
 ---
 layout: image-right
@@ -681,24 +750,31 @@ $$M = 24 - D_{min}$$
 ---
 
 ## Improvement 2: Cutting Planes (Clique Inequality)
-
+<br>
 
 **Original overlap constraint:** One constraint per overlapping task *pair*:
 $$x_{i,j_1} + x_{i,j_2} \leq 1 \quad \forall i, \forall \text{ overlapping } (j_1, j_2)$$
+
+<br>
+
+<v-click>
 
 **Better:** For each hour, at most one task active at that hour can be assigned to a worker.
 
 $$\sum_{j \text{ active at hour } h} x_{i,j} \leq 1 \quad \forall i, \forall h \in [0, 23]$$
 
+</v-click>
 
 ---
 
-## Improvement 2: Cutting Planes (Clique Inequality)
-Two big wins:
+### Two big wins:
 1. Formulation just got tighter!
 2. Huge reduction in number of constraints:
     - Number of old overlapping constraints scaled at $O(K²)$.
     - New variant: constant $24$.
+
+<v-click>
+
 
 ```python
 @m.Constraint(m.workers, m.hours)
@@ -710,6 +786,9 @@ def no_overlapping_tasks(m, i, h):
 
 ```
 
+</v-click>
+
+
 ---
 layout: image-right
 
@@ -718,10 +797,13 @@ image: /assets/meme_symmetry.png
 
 ## Improvement 3: Symmetry Breaking
 
-
 **Problem:**
 
 For instance (25,10), a single solution can have up to $10!$ duplicate solutions by permuting workers!
+
+
+<v-click>
+
 
 **One Solution:** 
 
@@ -729,6 +811,12 @@ Order workers by shift start time (or some other criterion).
 New constraint:
 
 $$s_{i-1}  \leq s_i \quad \forall i > 1$$
+
+
+</v-click>
+
+<v-click>
+
 
 ```python
     @m.Constraint(m.workers)
@@ -738,6 +826,7 @@ $$s_{i-1}  \leq s_i \quad \forall i > 1$$
         return m.s[i - 1] <= m.s[i]
 ```
 
+</v-click>
 
 
 ---
@@ -760,7 +849,6 @@ Add explicit bounds on shift start and end times. These bounds are outside of th
 
 ## Let us solve, again!
 
-Back to the bat mobile...
 
 ---
 
@@ -768,24 +856,45 @@ Back to the bat mobile...
 
 Even with improvements, the model still struggles with larger instances. Why?
 
-**Variable count:** Scales with $O(N \cdot K)$
+<v-clicks>
 
-**Constraint count:** Also scales with $O(N \cdot K)$
+- **Variable count:** Scales with $O(N \cdot K)$
+- **Constraint count:** Also scales with $O(N \cdot K)$
+- **Integrality Gap:** Despite the tighter bounds & cutting planes, the solver is still searching many nodes
 
-Can we do better?
+
+</v-clicks>
 
 ---
 
-# Part 6: A Different Perspective
+# Breakout Session #3: 
+Your turn!
 
-## Breakout Session 3: Can we formulate this differently?
+Can we formulate the model differently?
+Think about:
 
+- What is the information we really need from a solution?
+- Can you think of any well known problem whose formulation we might use here?
+
+---
+layout: image-right
+image: https://plus.unsplash.com/premium_photo-1708078449934-4de2318cdc84?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+---
+
+# The Flow Formulation
+Chapter 4
+
+
+---
+layout: image-right
+image: https://optimization.cbe.cornell.edu/images/7/77/Picture2.png?20201125024008
+backgroundSize: contain
 ---
 
 ## Introduction to Minimum Cost Flow
 
 A **minimum cost flow** problem consists of:
-- A directed graph with nodes and arcs
+- A directed graph $G=(V, A)$ with nodes $V$ and arcs $A$
 - One **source** node with a certain supply
 - One **sink** node with a demand equal to the supply
 - Each arc has a **capacity** (max flow that can pass)
@@ -794,44 +903,41 @@ A **minimum cost flow** problem consists of:
 **Goal:** Move all flow from source to sink with minimum total cost.
 
 ---
-layout: two-cols
-layoutClass: gap-16
+layout: image-right
 ---
+## LP Formulation
 
-### LP Formulation
+$$
+\begin{array}{rll}
+\min & \displaystyle\sum_{a \in A} c_a \cdot f_a & \\[1em]
+\text{s.t.} & \displaystyle\sum_{a: \text{tail}(a)=v} f_a - \sum_{a: \text{head}(a)=v} f_a = \text{supply}(v) & \forall v \in V \\[1em]
+& f_a \leq \text{capacity}(a) & \forall a \in A \\[0.5em]
+& f_a \geq 0 & \forall a \in A
+\end{array}
+$$
 
-**Variables:** $f_e \geq 0$ for each arc $e$
-
-**Flow Conservation:**
-$$\sum_{e \text{ outgoing from } v} f_e - \sum_{e \text{ incoming to } v} f_e = \text{supply}(v)$$
-
-**Capacity:**
-$$f_e \leq \text{capacity}(e)$$
-
-**Objective:**
-$$\min \sum_e c_e \cdot f_e$$
-
-::right::
+---
+layout: image-right
+image: assets/tight_formulation.png
+---
 
 ### The big benefit
-The constraint matrix is **totally unimodular**. This means the LP solution found by simplex is guaranteed to be integer!
+The constraint matrix is **totally unimodular**. 
 
-These problems are **very easy to solve**.
+The LP solution found by simplex is guaranteed to be integer!
 
 
 ---
 
-28 Why should I care?
-
-You guessed it. We can formulate our problem as a flow model
+## Let's try to formulate our problem as a flow
 
 ---
 
 **Motivation**
 
-- Think about the flow being our workers. 
-- We have as much flow units as we have workers.
-- Depending on how the flow travels the network shows us which worker should be assigned to which task.
+- Think about the flow network being a time table.
+- The flow units (our workers) work through their day and have to decide which task to do. 
+- Looking at the solution flow, we should be able to see how workers should be assigned to tasks.
 
 
 ---
@@ -904,74 +1010,116 @@ backgroundSize: 40em
 
 
 ---
-layout: quote
+zoom: 0.7
 ---
 
-We have waited long enough, let us go to google collab and start this rocket!
+## That is the new model formulation
+
+```python
+
+def create_flow_model(graph: Graph) -> pyo.ConcreteModel:
+    """Create the flow model from the graph."""
+    m = pyo.ConcreteModel("Worker Assignment - Flow Model")
+    
+    m.nodes = pyo.Set(initialize=graph.nodes)
+    m.arcs = pyo.Set(initialize=graph.arcs)
+    m.tasks = pyo.Set(initialize=graph.problem.tasks)
+
+    m.f = pyo.Var(m.arcs, domain=pyo.NonNegativeIntegers)
+
+    # Parameters
+    m.cost = pyo.Param(m.arcs, initialize={e: flow_cost(e, graph.problem) for e in graph.arcs})
+    m.supply = pyo.Param(m.nodes, initialize={v: flow_supply(v, graph.problem) for v in graph.nodes})
+
+    # Flow conservation constraint
+    @m.Constraint(m.nodes)
+    def flow_conservation(m, v):
+        outgoing = pyo.quicksum(m.f[e] for e in graph.outgoing_arcs[v])
+        incoming = pyo.quicksum(m.f[e] for e in graph.incoming_arcs[v])
+        return outgoing - incoming == m.supply[v]
+
+    # Task assignment constraint: each task at most once
+    @m.Constraint(m.tasks)
+    def task_assignment(m, task):
+        return pyo.quicksum(m.f[e] for e in graph.task_to_arcs[task]) <= 1
+
+    # Objective: Minimize total cost
+        @m.Objective(sense=pyo.minimize)
+        def total_costs(m):
+            return pyo.quicksum(m.cost[e] * m.f[e] for e in m.arcs)
+
+    return m
+
+```
 
 ---
-layout: two-cols
 layoutClass: gap-16
 ---
 
-## Why is the Flow Model Better?
+## Why is the Flow Formulation Better?
 
-**Scaling Analysis:**
+<v-click>
+
+**1. Better Scaling**
 
 | Model | Variables | Constraints |
 |---------|-------------|---------------|
-| Basic | $O(N \cdot K)$ | $O(N \cdot K^2)$ |
+| Simple | $O(N \cdot K)$ | $O(N \cdot K +  K^2)$ |
 | Improved | $O(N \cdot K)$ | $O(N \cdot K)$ |
 | Flow | $O(D_{max} \cdot K)$ | $O(D_{max} \cdot K)$ |
 
-::right::
+</v-click>
 
-**Key insight:** The flow model doesn't scale with the number of workers!
+<v-click>
 
-- Increasing workers: No effect on graph size
-- Increasing tasks: Each task appears in at most $D_{max}$ workflow layers
+**2. Tighter Bounds** 
 
-**Additional benefits:**
-1. Near total unimodularity means quick branching
-2. Easy to add complex cost functions
-3. Instead of returning "INFEASIBLE", it still gives a useful plan with the maximum number of fulfilled tasks.
+MIP formulation is extremely tight, thanks to 
+- MCNF formulation being TU 
+- additional clique inequalities yielding good branching properties
 
-
+</v-click>
 
 
 ---
 
-## Part 7: Key Takeaways
+## Takeaways
 
-1. **Start simple**: Begin with a straightforward formulation to understand the problem
-2. **Analyze and improve**:
-   - Tighten Big-M constants
-   - Add symmetry breaking constraints
-   - Use cutting planes / clique constraints
-   - Set variable bounds
-3. **Think differently**: Sometimes a completely different formulation is the answer
-   - The flow model turned an 8-hour solve into 10 seconds!
-   - Understanding problem structure enables better models
+<v-clicks>
+
+1. **Start simple** to understand the problem
+2. **Analyze and improve** and make use of best-practices
+3. **Know the catalog of well-studied MO problems**. Maybe it fits in one of these categories.
 4. **Know your tools**: 
-   - Pyomo for modeling
-   - HiGHS for solving
-   - Pydantic for creating classes
-   - All these tools are free, powerful, and production-ready
+   - [Pyomo for Modeling](https://pyomo.readthedocs.io/)
+   - [HiGHS as powerful Open Source Solver](https://highs.dev/)
+   - [Pydantic for data validation](https://docs.pydantic.dev/latest/) (read: less headache)
+
+
+</v-clicks>
 
 ---
 
 ## Further Topics
 
+
+<v-clicks>
+
 For even larger instances:
-- Decomposition strategies (Benders, Dantzig-Wolfe)
+- Decomposition strategies (Column Generation)
 - Metaheuristics (this is scheduling, after all!)
-- Hybrid approaches
+- Constraint Programming
+- ...
 
 Extensions to the problem:
 - Finer time granularity (minutes instead of hours)
 - More complex cost functions (overtime charges)
 - Weekly scheduling with fairness constraints
 - Handling infeasibility (maximize served tasks)
+
+
+</v-clicks>
+
 
 ---
 layout: end
@@ -980,8 +1128,3 @@ layout: end
 Thank you!
 
 **Let's connect on linkedin:** [Jens-Peter Joost](https://www.linkedin.com/in/jens-peter-joost/)
-
-**Resources:**
-- [Pyomo Documentation](https://pyomo.readthedocs.io/)
-- [HiGHS Solver](https://highs.dev/)
-- [Network Flow Problems](https://en.wikipedia.org/wiki/Network_flow_problem)
