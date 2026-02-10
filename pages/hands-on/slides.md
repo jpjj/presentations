@@ -63,7 +63,7 @@ layoutClass: gap-16
 
 ## 3 Show some baby Example
 
-Let us say we have 3 **workers** and 3 **tasks**.
+Let us say we have 3 **workers** and 3 **tasks**
 ```python
 N = 3 # number of workers
 tasks = [
