@@ -201,7 +201,7 @@ Total cost: 7 + 10 + 0 = 17
 # Breakout Session #1
 Your turn!
 
-Formulate a the problem as a MIP. How to model:
+Formulate the problem as a MIP. How to model:
 
 - Assignment of tasks to workers?
 - Overlap of tasks not allowed?
@@ -221,18 +221,55 @@ Chapter 2
 
 
 ---
+layout: two-cols-header
+---
 
 # Assignment Problem Formulation
 We have our input:
+::left::
+
+<v-click>
+
 - number of workers $N$, 
 - $K$ tasks with start and end time each, 
 - $D_{min}$, 
 - $D_{max}$
 
+</v-click>
+
+<v-click at="+2">
+
 We need:
 - Variables
 - Constraints
 - Objective Function
+
+</v-click>
+
+::right::
+
+
+<v-click at="-1" >
+
+```python
+class Task(BaseModel, frozen=True):
+    """Represents a task with an id, start time and end time."""
+    id: int
+    start: int
+    end: int
+
+
+class Problem(BaseModel):
+    """Represents the problem instance."""
+    tasks: list[Task] = Field(description="tasks to be assigned to workers")
+    N: int = Field(description="Number of workers N", ge=1)
+    D_min: int = Field(description="Minimum shift length", ge=0)
+    D_max: int = Field(description="Maximum shift length", ge=0)
+```
+
+
+</v-click>
+
 
 ---
 
@@ -766,7 +803,7 @@ $$x_{i,j_1} + x_{i,j_2} \leq 1 \quad \forall i, \forall \text{ overlapping } (j_
 
 **Better:** For each hour, at most one task active at that hour can be assigned to a worker.
 
-$$\sum_{j \text{ active at hour } h} x_{i,j} \leq 1 \quad \forall i, \forall h \in [0, 23]$$
+$$\sum_{j \text{ active at hour } h} x_{i,j} \leq 1 \quad \forall i, \forall h \in \mathbb{N}_{<24}$$
 
 </v-click>
 
@@ -775,8 +812,8 @@ $$\sum_{j \text{ active at hour } h} x_{i,j} \leq 1 \quad \forall i, \forall h \
 ### Two big wins:
 1. Formulation just got tighter!
 2. Huge reduction in number of constraints:
-    - Number of old overlapping constraints scaled at $O(K²)$.
-    - New variant: constant $24$.
+    - Number of old overlapping constraints scaled at $O(N\cdot K²)$.
+    - New variant: $24$ per worker: $O(N)$.
 
 <v-click>
 
@@ -815,7 +852,7 @@ For instance (25,10), a single solution can have up to $10!$ duplicate solutions
 Order workers by shift start time (or some other criterion).
 New constraint:
 
-$$s_{i-1}  \leq s_i \quad \forall i > 1$$
+$$s_{i-1}  \leq s_i \quad \forall i > 0$$
 
 
 </v-click>
@@ -826,7 +863,7 @@ $$s_{i-1}  \leq s_i \quad \forall i > 1$$
 ```python
     @m.Constraint(m.workers)
     def symmetry_breaker(m, i):
-        if i == 1:
+        if i == 0:
             return pyo.Constraint.Skip
         return m.s[i - 1] <= m.s[i]
 ```
@@ -1069,7 +1106,7 @@ layoutClass: gap-16
 
 | Model | Variables | Constraints |
 |---------|-------------|---------------|
-| Simple | $O(N \cdot K)$ | $O(N \cdot K +  K^2)$ |
+| Simple | $O(N \cdot K)$ | $O(N \cdot K^2)$ |
 | Improved | $O(N \cdot K)$ | $O(N \cdot K)$ |
 | Flow | $O(D_{max} \cdot K)$ | $O(D_{max} \cdot K)$ |
 
