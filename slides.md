@@ -737,6 +737,7 @@ Chapter 3
 layout: image-right
 
 image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/loose_formulation.png?raw=true
+backgroundSize: 80%
 ---
 ## Some theory
 
@@ -750,6 +751,7 @@ Weak/loose formulation:
 layout: image-right
 
 image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/tight_formulation.png?raw=true
+backgroundSize: 80%
 ---
 ## Some theory
 
@@ -962,6 +964,7 @@ $$
 ---
 layout: image-right
 image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/tight_formulation.png?raw=true
+backgroundSize: 80%
 ---
 
 ### The big benefit
@@ -1087,9 +1090,9 @@ def create_flow_model(graph: Graph) -> pyo.ConcreteModel:
         return pyo.quicksum(m.f[e] for e in graph.task_to_arcs[task]) <= 1
 
     # Objective: Minimize total cost
-        @m.Objective(sense=pyo.minimize)
-        def total_costs(m):
-            return pyo.quicksum(m.cost[e] * m.f[e] for e in m.arcs)
+    @m.Objective(sense=pyo.minimize)
+    def total_costs(m):
+        return pyo.quicksum(m.cost[e] * m.f[e] for e in m.arcs)
 
     return m
 
