@@ -1,6 +1,7 @@
 ---
 # try also 'default' to start simple
 theme: seriph
+colorSchema: dark
 aspectRatio: 7/10
 canvasWidth: 500
 # random image from a curated Unsplash collection by Anthony

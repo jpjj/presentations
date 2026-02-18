@@ -29,7 +29,7 @@ duration: 35min
 hide: false
 ---
 
-# The VRP solver comparison
+# Why VRP solver comparisons miss the point
 
 <div @click="$slidev.nav.next" class="mt-12 py-1" hover:bg="white op-10">
   next page <carbon:arrow-right />
@@ -118,7 +118,6 @@ zoom: 1.3
 ## CVRP $\neq$ real world routing
 
 <br>
-<br>
 
 What CVRP does not consider:
 
@@ -137,28 +136,27 @@ What CVRP does not consider:
 
 
 ---
-zoom: 1.2
+zoom: 1.4
+layout: center
 ---
 
 <br>
 
 
-### We need to ask:
+#### We need to ask:
 
 <br>
 
 
 <button class="i-carbon-task align-middle" />  Which constraints can these libraries model?
-
 <br>
 
 <button class="i-carbon-document align-middle" />  How well-documentated are they? 
-
 <br>
 
 <button class="i-carbon-tools align-middle" />  Are they actively maintained?
-
 <br>
+
 <button class="i-carbon-logo-python time align-middle" />  And: Why are we restricting ourselves to python?
 
 ---
