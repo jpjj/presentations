@@ -27,6 +27,6 @@ mdc: true
 # duration of the presentation
 duration: 35min
 
-src: ./pages/cvrp-challenge/cvrp-challenge.md
+src: ./pages/max-cover/max-cover.md
 hide: false
 ---
