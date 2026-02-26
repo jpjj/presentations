@@ -9,3 +9,9 @@ To start the slide show:
 Edit the [slides.md](./slides.md) to see the changes.
 
 Learn more about Slidev at the [documentation](https://sli.dev/).
+
+
+If you want to do a local session:
+```
+bun --bun run dev
+```
