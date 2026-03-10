@@ -6,7 +6,7 @@ favicon: 'https://raw.githubusercontent.com/jpjj/jpjj.github.io/main/assets/favi
 # aspectRatio: 2/1
 # random image from a curated Unsplash collection by Anthony
 # like them? see https://unsplash.com/collections/94734566/slidev
-background: https://images.unsplash.com/photo-1520022911530-fea50671df2e?q=80&w=2499&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+background: https://images.unsplash.com/photo-1466094899371-97b327dff551?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 # https://cover.sli.dev
 # some information about your slides (markdown enabled)
 title: Hands-On Modeling
@@ -34,7 +34,7 @@ hide: false
 ## Hands-On MIP Modeling
 O4A Hands-On Session
 
-<div class="abs-bl m-6 text-sm opacity-40">
+<div class="abs-bl m-6 text-sm opacity-50">
   jpjsolutions.com/presentations/hands-on-modeling
 </div>
 
@@ -107,7 +107,7 @@ zoom: 1.0
 
 ---
 layout: image-right
-image: https://images.unsplash.com/photo-1530819568329-97653eafbbfa?q=80&w=2065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+image: https://images.unsplash.com/photo-1593967758432-181c2d9a6495?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
 
 # The Problem
@@ -218,8 +218,9 @@ Formulate the problem as a MIP. How to model:
 
 ---
 layout: image-right
-image: https://images.unsplash.com/photo-1619796753108-cba77bacf03d?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+image: https://images.unsplash.com/photo-1499796683658-b659bc751db1?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
+
 # The Simple Model
 Chapter 2
 
@@ -730,7 +731,7 @@ Model Analysis:
 
 ---
 layout: image-right
-image: https://images.unsplash.com/photo-1621537108694-3a8259512251?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+image: https://images.unsplash.com/photo-1517217004452-4ff260cb5598?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
 
 # The Improved Formulation
@@ -744,7 +745,7 @@ backgroundSize: 80%
 zoom: 0.9
 
 ---
-## Some theory 1
+## Some Theory 1
 
 Modern solvers use "Branch & Bound" to solve MIPs:
 
@@ -766,7 +767,7 @@ layout: image-right
 image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/loose_formulation.png
 backgroundSize: 80%
 ---
-## Some theory 2
+## Some Theory 2
 
 Weak/loose formulation: 
 
@@ -784,7 +785,7 @@ layout: image-right
 image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/tight_formulation.png
 backgroundSize: 80%
 ---
-## Some theory 3
+## Some Theory 3
 
 
 Tight formulation:
@@ -1007,7 +1008,7 @@ Think about:
 
 ---
 layout: image-right
-image: https://plus.unsplash.com/premium_photo-1708078449934-4de2318cdc84?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+image: https://images.unsplash.com/photo-1502933691298-84fc14542831?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
 
 # The Flow Formulation
@@ -1275,20 +1276,39 @@ Extensions to the problem:
 
 
 ---
-layout: end
+layout: cover
+background: https://images.unsplash.com/photo-1466094899371-97b327dff551?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
 
-Thank you!
+
+<br>
+<br>
+
+##  Thank you!
+
+
+<br>
+<br>
+<br>
+<br>
 
 <div class="flex flex-col gap-4 mt-8">
 
-  <a href="https://colab.research.google.com/github/jpjj/O4A-Hands-On-Modeling/blob/main/mathematical_modeling_complete.ipynb" target="_blank" class="flex items-center gap-2 text-xl opacity-70 hover:opacity-100">
+  <a href="https://colab.research.google.com/github/jpjj/O4A-Hands-On-Modeling/blob/main/mathematical_modeling_complete.ipynb" target="_blank" class="flex items-center gap-2 text-xl opacity-85 hover:opacity-100">
     <carbon-logo-python class="text-2xl" /> All the code to run in google colab
   </a>
-  <a href="https://www.youtube.com/@Optimization4All/playlists" target="_blank" class="flex items-center gap-2 text-xl opacity-70 hover:opacity-100">
+  <a href="https://www.youtube.com/@Optimization4All/playlists" target="_blank" class="flex items-center gap-2 text-xl opacity-85 hover:opacity-100">
     <carbon-logo-youtube class="text-2xl" /> More O4A Hands-On Sessions
   </a>
-  <a href="https://www.linkedin.com/in/jens-peter-joost/" target="_blank" class="flex items-center gap-2 text-xl opacity-70 hover:opacity-100">
+  <a href="https://www.linkedin.com/in/jens-peter-joost/" target="_blank" class="flex items-center gap-2 text-xl opacity-85 hover:opacity-100">
     <carbon-logo-linkedin class="text-2xl" /> Let's connect
   </a>
 </div>
+
+
+<br>
+<br>
+<br>
+<br>
+
+jpjsolutions.com/presentations/hands-on-modeling
