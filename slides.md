@@ -1236,9 +1236,9 @@ MIP formulation is extremely tight, thanks to
 1. **Start simple** to understand the problem.
 2. If your formulation is hard to solve:
    - Can the number of variables/constraints be reduced? What information do we really need?
-   - How tight is your formulation? Can the LR exploit some variables? 
+   - How tight is your formulation? Can the LR exploit some constraints? 
    - Symmetries?
-3. **Know the catalog of well-studied MO problems**. Some are much easier to solve than others.
+3. **Know the catalog of well-studied MO problems**. Some are much easier to solve than others:
     - Graph problems: Paths, Trees, Flows, Matchings
     - Set Cover/Partitioning Problems
     - ...
@@ -1259,7 +1259,7 @@ MIP formulation is extremely tight, thanks to
 
 <v-clicks depth="2">
 
-For even larger instances:
+For larger instances:
 - Decomposition strategies (Column Generation)
 - Metaheuristics (this is scheduling, after all!)
 - Constraint Programming
