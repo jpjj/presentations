@@ -102,6 +102,8 @@ zoom: 1.0
   </div>
 </div>
 
+<!-- Fastapi, langchain, langraph -->
+
 ---
 layout: image-right
 image: https://images.unsplash.com/photo-1530819568329-97653eafbbfa?q=80&w=2065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
@@ -209,7 +211,7 @@ Formulate the problem as a MIP. How to model:
 - shift length of a worker:
 	- No task: 0
 	- At least one task:
-		- Your shift will be at least at least $D_{min}$.
+		- Your shift will be at least $D_{min}$.
 		- Your shift cannot be more than $D_{max}$.
 - Your tools: **Define variables, constraints, objective function**!
 
@@ -719,7 +721,7 @@ Model Analysis:
 <v-clicks>
 
 1. **Many variables and constraints**
-2. **Many overlap constraints** - Scales with $O(K^2)$
+2. **Many overlap constraints** - Scales with $O(N\cdot K^2)$
 3. **Symmetry is a problem** - Permuting workers gives equivalent solutions
 4. **Big-M is bad** - Creates weak LP relaxations
 
@@ -736,16 +738,44 @@ Chapter 3
 ---
 layout: image-right
 
+image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/branch_and_bound.png?raw=true
+backgroundSize: 80%
+zoom: 0.9
+
+---
+## Some theory 1
+
+Modern solvers use "Branch & Bound" to solve MIPs:
+
+<v-clicks depth="2">
+
+- Solve the linear relaxation (LR) of the problem.
+- If not all variables of the optimal solution have integer values, pick one with float value $(y_i= 0.5)$ and create 2 new scenarios (branches):
+    1. LR with constraint $y_i \leq 0$
+    2. LR with constraint $y_i \geq 1$
+- Rinse and repeat until LR has integral solution. Use the solution's value as a bound to cut off branches.
+- If no branch is left to be discovered, return best integral solution found.
+
+</v-clicks>
+
+
+---
+layout: image-right
+
 image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/loose_formulation.png?raw=true
 backgroundSize: 80%
 ---
-## Some theory
+## Some theory 2
 
 Weak/loose formulation: 
-- The linear relaxation's feasible region is much larger than necessary
-- Solving the relaxed LP gets us fractional solutions that are far from any integer solution. 
-- Large integrality gap, 
+
+<v-clicks>
+
+- The LR's feasible region is much larger than necessary
+- Solving the relaxed MIP gets us fractional solutions that are far from any integer solution. 
 - More branch-and-bound nodes & longer solve times.
+
+</v-clicks>
 
 ---
 layout: image-right
@@ -753,15 +783,25 @@ layout: image-right
 image: https://github.com/jpjj/presentations/blob/hands-on-session-presentation/assets/tight_formulation.png?raw=true
 backgroundSize: 80%
 ---
-## Some theory
+## Some theory 3
 
-Tight formulation: 
+
+Tight formulation:
+
+<v-clicks depth="2">
+
 - The linear relaxation's feasible region closely approximates the convex hull of integer feasible solutions. 
 - The LP relaxation bound is close to the optimal integer solution value!
 - Branch & Bound finds integer solution much faster.
 
+</v-clicks>
+
+<v-click>
+
 ## Goal:
 Revisit our constraints, make them tighter!
+
+</v-click>
 
 
 ---
@@ -770,17 +810,17 @@ layout: center
 
 ## Improvement 1: Tighter Big-M
 
-Problem constraint:
 $$s_i \leq x_{i,j} \cdot \alpha_j + (1 - x_{i,j}) \cdot M$$
-
-<v-click>
 
 **Why is a large M bad?** 
 
+<v-clicks>
+
 - In the linear relaxation, the optimal solution can exploit slack.
 - Example: for $M=1000$ and $x_{i,j}= 0.99$, we get: $s_i \leq 0.99 \cdot \alpha_j + 10$
+- This means the shift start of a worker $i$ doing a 99% share of task $j$ can be almost 10 hours after the task's start time! 
 
-</v-click>
+</v-clicks>
 
 <v-click>
 
@@ -809,6 +849,49 @@ $$x_{i,j_1} + x_{i,j_2} \leq 1 \quad \forall i, \forall \text{ overlapping } (j_
 $$\sum_{j \text{ active at hour } h} x_{i,j} \leq 1 \quad \forall i, \forall h \in \mathbb{N}_{<24}$$
 
 </v-click>
+
+
+---
+layout: two-cols-header
+---
+
+## Why is the new formulation tighter?
+<br>
+
+<v-clicks>
+
+### Example:
+
+Let us say we have 3 overlapping tasks $j_1, j_2, j_3$.
+
+</v-clicks>
+
+::left::
+
+<v-clicks>
+
+**Original overlap constraint:**:
+$$x_{i,j_1} + x_{i,j_2} \leq 1$$
+$$x_{i,j_2} + x_{i,j_3} \leq 1$$
+$$x_{i,j_1} + x_{i,j_3} \leq 1$$
+Feasible values for $x$:
+$$x_{i,j_1} = x_{i,j_2} = x_{i,j_3} = 0.5$$
+
+</v-clicks>
+
+::right::
+
+<v-clicks>
+
+**New overlap constraint:** Since all three tasks overlap, there must be an hour $h'$ where they are all active.
+
+$$x_{i,j_1} + x_{i,j_2} + x_{i,j_3} \leq \sum_{j \text{ active at hour } h'} x_{i,j}\leq 1$$
+Setting the three variables to $0.5$ is no longer feasible!
+
+</v-clicks>
+
+
+
 
 ---
 
@@ -938,14 +1021,29 @@ backgroundSize: contain
 
 ## Introduction to Minimum Cost Flow
 
+
+<v-click>
+
 A **minimum cost flow** problem consists of:
+
+</v-click>
+
+<v-clicks>
+
 - A directed graph $G=(V, A)$ with nodes $V$ and arcs $A$
 - One **source** node with a certain supply
 - One **sink** node with a demand equal to the supply
 - Each arc has a **capacity** (max flow that can pass)
 - Each arc has a **cost** (incurred per unit of flow)
 
+</v-clicks>
+
+<v-click>
+
+
 **Goal:** Move all flow from source to sink with minimum total cost.
+
+</v-click>
 
 ---
 layout: image-right
@@ -1112,7 +1210,7 @@ layoutClass: gap-16
 |---------|-------------|---------------|
 | Simple | $O(N \cdot K)$ | $O(N \cdot K^2)$ |
 | Improved | $O(N \cdot K)$ | $O(N \cdot K)$ |
-| Flow | $O(D_{max} \cdot K)$ | $O(D_{max} \cdot K)$ |
+| Flow | $O(K)$ | $O(K)$ |
 
 </v-click>
 
@@ -1131,12 +1229,18 @@ MIP formulation is extremely tight, thanks to
 
 ## Takeaways
 
-<v-clicks>
+<v-clicks depth="2">
 
-1. **Start simple** to understand the problem
-2. **Analyze and improve** and make use of best-practices
-3. **Know the catalog of well-studied MO problems**. Maybe it fits in one of these categories.
-4. **Know your tools**: 
+1. **Start simple** to understand the problem.
+2. If your formulation is hard to solve:
+   - Can the number of variables/constraints be reduced? What information do we really need?
+   - How tight is your formulation? Can the LR exploit some variables? 
+   - Symmetries?
+3. **Know the catalog of well-studied MO problems**. Some are much easier to solve than others.
+    - Graph problems: Paths, Trees, Flows, Matchings
+    - Set Cover/Partitioning Problems
+    - ...
+4. There are great open source tools out there:
    - [Pyomo for Modeling](https://pyomo.readthedocs.io/)
    - [HiGHS as powerful Open Source Solver](https://highs.dev/)
    - [Pydantic for data validation](https://docs.pydantic.dev/latest/) (read: less headache)
@@ -1144,12 +1248,14 @@ MIP formulation is extremely tight, thanks to
 
 </v-clicks>
 
+<!-- Like partition problem. Max Cover Problem. Set Cover, Shortest path + Minimum Spanning tree have exact algorithms. Assignment problems are flow problems etc. There is a lot to know. I recommend following Optimization4All, they have a lot more to cover. -->
+
 ---
 
 ## Further Topics
 
 
-<v-clicks>
+<v-clicks depth="2">
 
 For even larger instances:
 - Decomposition strategies (Column Generation)
