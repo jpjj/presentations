@@ -1,6 +1,7 @@
 ---
 # try also 'default' to start simple
 theme: default
+colorSchema: light
 routerMode: hash
 favicon: 'https://raw.githubusercontent.com/jpjj/jpjj.github.io/main/assets/favicon_jpjsolutions.png'
 # aspectRatio: 2/1
@@ -97,7 +98,7 @@ zoom: 1.0
     <span class="text-sm opacity-70">for solving</span>
   </div>
   <div class="flex flex-col items-center">
-    <img src="https://docs.pydantic.dev/latest/logo-white.svg" class="h-20 mb-4" alt="Pydantic" />
+    <img src="https://docs.pydantic.dev/latest/logo-white.svg" class="h-20 mb-4" alt="Pydantic" style="filter: brightness(0) saturate(100%) invert(12%) sepia(95%) saturate(7471%) hue-rotate(304deg) brightness(101%) contrast(109%);" />
     <code>pydantic</code>
     <span class="text-sm opacity-70">for data validation</span>
   </div>
