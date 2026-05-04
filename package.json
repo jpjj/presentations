@@ -3,9 +3,11 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "slidev build",
-    "dev": "slidev --open",
-    "export": "slidev export"
+    "dev": "slidev presentations/hands-on-modeling/slides.md --open",
+    "dev:hands-on": "slidev presentations/hands-on-modeling/slides.md --open",
+    "build": "slidev build presentations/hands-on-modeling/slides.md",
+    "build:hands-on": "slidev build presentations/hands-on-modeling/slides.md",
+    "export": "slidev export presentations/hands-on-modeling/slides.md"
   },
   "dependencies": {
     "@slidev/cli": "^52.11.3",
@@ -22,8 +24,8 @@
     "overrides": [
       {
         "files": [
-          "slides.md",
-          "pages/*.md"
+          "presentations/**/slides.md",
+          "presentations/**/*.md"
         ],
         "options": {
           "parser": "slidev",

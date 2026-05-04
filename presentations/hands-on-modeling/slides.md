@@ -52,7 +52,7 @@ O4A Hands-On Session
 layout: image-right
 
 # the image source
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/peter.png
+image: /assets/peter.png
 ---
 # Hello there!
 
@@ -88,12 +88,12 @@ zoom: 1.0
 <br>
 <div class="grid grid-cols-3 gap-8 mt-8">
   <div class="flex flex-col items-center">
-    <img src="https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/pyomo.png" class="h-20 mb-4" alt="Pyomo" />
+    <img src="/assets/pyomo.png" class="h-20 mb-4" alt="Pyomo" />
     <code>pyomo</code>
     <span class="text-sm opacity-70">for modeling</span>
   </div>
   <div class="flex flex-col items-center">
-    <img src="https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/highs.png" class="h-20 mb-4" alt="HiGHS" />
+    <img src="/assets/highs.png" class="h-20 mb-4" alt="HiGHS" />
     <code>highs</code>
     <span class="text-sm opacity-70">for solving</span>
   </div>
@@ -198,7 +198,7 @@ Total cost: 7 + 10 + 0 = 17
 
 ## Let us visualize the solution
 
-![Visualization](https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/baby_example_solution.png)
+![Visualization](/assets/baby_example_solution.png)
 
 
 ---
@@ -307,7 +307,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel
 ---
 
 ## Going back to the example
-![Visualization](https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/baby_example_solution.png)
+![Visualization](/assets/baby_example_solution.png)
 
 - $x_{1,1} = 1$ because worker 1 does task 1.
 - $y_2 = 0$ because worker 2 does not work.
@@ -741,7 +741,7 @@ Chapter 3
 ---
 layout: image-right
 
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/branch_and_bound.png
+image: /assets/branch_and_bound.png
 backgroundSize: 80%
 zoom: 0.9
 
@@ -765,7 +765,7 @@ Modern solvers use "Branch & Bound" to solve MIPs:
 ---
 layout: image-right
 
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/loose_formulation.png
+image: /assets/loose_formulation.png
 backgroundSize: 80%
 ---
 ## Some Theory 2
@@ -783,7 +783,7 @@ Weak/loose formulation:
 ---
 layout: image-right
 
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/tight_formulation.png
+image: /assets/tight_formulation.png
 backgroundSize: 80%
 ---
 ## Some Theory 3
@@ -923,7 +923,7 @@ def no_overlapping_tasks(m, i, h):
 ---
 layout: image-right
 
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/meme_symmetry.png
+image: /assets/meme_symmetry.png
 ---
 
 ## Improvement 3: Symmetry Breaking
@@ -1064,7 +1064,7 @@ $$
 
 ---
 layout: image-right
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/tight_formulation.png
+image: /assets/tight_formulation.png
 backgroundSize: 80%
 ---
 
@@ -1089,69 +1089,69 @@ The LP solution found by simplex is guaranteed to be integer!
 
 ---
 layout: image
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph1.png
+image: /assets/graph1.png
 backgroundSize: 40em
 ---
 
 ---
 layout: image
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph2.png
-backgroundSize: 40em
----
-
-
----
-layout: image
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph3.png
+image: /assets/graph2.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph4.png
+image: /assets/graph3.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph5.png
+image: /assets/graph4.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph6.png
+image: /assets/graph5.png
+backgroundSize: 40em
+---
+
+
+---
+layout: image
+image: /assets/graph6.png
 backgroundSize: 52em
 ---
 
 
 ---
 layout: image
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph7.png
+image: /assets/graph7.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph8.png
+image: /assets/graph8.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph9.png
+image: /assets/graph9.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph10.png
+image: /assets/graph10.png
 backgroundSize: 40em
 ---
 
