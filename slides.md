@@ -1,10 +1,13 @@
 ---
 # try also 'default' to start simple
 theme: default
+colorSchema: light
+routerMode: hash
+favicon: 'https://raw.githubusercontent.com/jpjj/jpjj.github.io/main/assets/favicon_jpjsolutions.png'
 # aspectRatio: 2/1
 # random image from a curated Unsplash collection by Anthony
 # like them? see https://unsplash.com/collections/94734566/slidev
-background: https://images.unsplash.com/photo-1520022911530-fea50671df2e?q=80&w=2499&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+background: https://images.unsplash.com/photo-1466094899371-97b327dff551?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 # https://cover.sli.dev
 # some information about your slides (markdown enabled)
 title: Hands-On Modeling
@@ -29,8 +32,12 @@ hide: false
 
 ---
 
-## Mathematical Modeling Tips & Tricks
+## Hands-On MIP Modeling
 O4A Hands-On Session
+
+<div class="abs-bl m-6 text-sm opacity-50">
+  jpjsolutions.com/presentations/hands-on-modeling
+</div>
 
 <div class="abs-br m-6 flex gap-2">
   <a href="https://github.com/jpjj/O4A-Hands-On-Modeling" target="_blank" alt="GitHub"
@@ -40,11 +47,12 @@ O4A Hands-On Session
 </div>
 
 
+
 ---
 layout: image-right
 
 # the image source
-image: /assets/peter.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/peter.png
 ---
 # Hello there!
 
@@ -80,25 +88,27 @@ zoom: 1.0
 <br>
 <div class="grid grid-cols-3 gap-8 mt-8">
   <div class="flex flex-col items-center">
-    <img src="/assets/pyomo.png" class="h-20 mb-4" alt="Pyomo" />
+    <img src="https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/pyomo.png" class="h-20 mb-4" alt="Pyomo" />
     <code>pyomo</code>
     <span class="text-sm opacity-70">for modeling</span>
   </div>
   <div class="flex flex-col items-center">
-    <img src="/assets/highs.png" class="h-20 mb-4" alt="HiGHS" />
+    <img src="https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/highs.png" class="h-20 mb-4" alt="HiGHS" />
     <code>highs</code>
     <span class="text-sm opacity-70">for solving</span>
   </div>
   <div class="flex flex-col items-center">
-    <img src="https://docs.pydantic.dev/latest/logo-white.svg" class="h-20 mb-4" alt="Pydantic" />
+    <img src="https://docs.pydantic.dev/latest/logo-white.svg" class="h-20 mb-4" alt="Pydantic" style="filter: brightness(0) saturate(100%) invert(12%) sepia(95%) saturate(7471%) hue-rotate(304deg) brightness(101%) contrast(109%);" />
     <code>pydantic</code>
     <span class="text-sm opacity-70">for data validation</span>
   </div>
 </div>
 
+<!-- Fastapi, langchain, langraph -->
+
 ---
 layout: image-right
-image: https://images.unsplash.com/photo-1530819568329-97653eafbbfa?q=80&w=2065&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+image: https://images.unsplash.com/photo-1593967758432-181c2d9a6495?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
 
 # The Problem
@@ -188,7 +198,7 @@ Total cost: 7 + 10 + 0 = 17
 
 ## Let us visualize the solution
 
-![Visualization](/assets/baby_example_solution.png)
+![Visualization](https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/baby_example_solution.png)
 
 
 ---
@@ -196,38 +206,76 @@ Total cost: 7 + 10 + 0 = 17
 # Breakout Session #1
 Your turn!
 
-Formulate a the problem as a MIP. How to model:
+Formulate the problem as a MIP. How to model:
 
 - Assignment of tasks to workers?
 - Overlap of tasks not allowed?
 - shift length of a worker:
 	- No task: 0
 	- At least one task:
-		- Your shift will be at least at least $D_{min}$.
+		- Your shift will be at least $D_{min}$.
 		- Your shift cannot be more than $D_{max}$.
 - Your tools: **Define variables, constraints, objective function**!
 
 ---
 layout: image-right
-image: https://images.unsplash.com/photo-1619796753108-cba77bacf03d?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+image: https://images.unsplash.com/photo-1499796683658-b659bc751db1?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
+
 # The Simple Model
 Chapter 2
 
 
 ---
+layout: two-cols-header
+---
 
 # Assignment Problem Formulation
 We have our input:
+::left::
+
+<v-click>
+
 - number of workers $N$, 
 - $K$ tasks with start and end time each, 
 - $D_{min}$, 
 - $D_{max}$
 
+</v-click>
+
+<v-click at="+2">
+
 We need:
 - Variables
 - Constraints
 - Objective Function
+
+</v-click>
+
+::right::
+
+
+<v-click at="-1" >
+
+```python
+class Task(BaseModel, frozen=True):
+    """Represents a task with an id, start time and end time."""
+    id: int
+    start: int
+    end: int
+
+
+class Problem(BaseModel):
+    """Represents the problem instance."""
+    tasks: list[Task] = Field(description="tasks to be assigned to workers")
+    N: int = Field(description="Number of workers N", ge=1)
+    D_min: int = Field(description="Minimum shift length", ge=0)
+    D_max: int = Field(description="Maximum shift length", ge=0)
+```
+
+
+</v-click>
+
 
 ---
 
@@ -240,7 +288,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel
     m = pyo.ConcreteModel("Worker Task Assignment")
     
     # Define Sets
-    m.workers = pyo.RangeSet(problem.N)
+    m.workers = pyo.RangeSet(0, problem.N-1)
     m.tasks = pyo.Set(initialize=problem.tasks)
 ```
 
@@ -259,7 +307,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel
 ---
 
 ## Going back to the example
-![Visualization](/assets/baby_example_solution.png)
+![Visualization](https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/baby_example_solution.png)
 
 - $x_{1,1} = 1$ because worker 1 does task 1.
 - $y_2 = 0$ because worker 2 does not work.
@@ -277,7 +325,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel
     m = pyo.ConcreteModel("Worker Task Assignment")
     
     # Define Sets
-    m.workers = pyo.RangeSet(problem.N)
+    m.workers = pyo.RangeSet(0, problem.N-1)
     m.tasks = pyo.Set(initialize=problem.tasks)
 
     # Define Variables
@@ -551,7 +599,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel:
     m = pyo.ConcreteModel("Worker Task Assignment")
     
     # Define Sets
-    m.workers = pyo.RangeSet(problem.N)
+    m.workers = pyo.RangeSet(0, problem.N-1)
     m.tasks = pyo.Set(initialize=problem.tasks)
     m.overlapping_tasks = pyo.Set(initialize=overlapping_task_pairs)
 
@@ -612,7 +660,7 @@ def create_model_instance(problem: Problem) -> pyo.ConcreteModel:
 
 ---
 
-## Let's solve some problems
+## [Let's solve some problems](https://colab.research.google.com/github/jpjj/O4A-Hands-On-Modeling/blob/main/mathematical_modeling_complete.ipynb)
 
 
 ```python
@@ -676,7 +724,7 @@ Model Analysis:
 <v-clicks>
 
 1. **Many variables and constraints**
-2. **Many overlap constraints** - Scales with $O(K^2)$
+2. **Many overlap constraints** - Scales with $O(N\cdot K^2)$
 3. **Symmetry is a problem** - Permuting workers gives equivalent solutions
 4. **Big-M is bad** - Creates weak LP relaxations
 
@@ -684,7 +732,7 @@ Model Analysis:
 
 ---
 layout: image-right
-image: https://images.unsplash.com/photo-1621537108694-3a8259512251?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+image: https://images.unsplash.com/photo-1517217004452-4ff260cb5598?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
 
 # The Improved Formulation
@@ -693,30 +741,70 @@ Chapter 3
 ---
 layout: image-right
 
-image: /assets/loose_formulation.png
----
-## Some theory
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/branch_and_bound.png
+backgroundSize: 80%
+zoom: 0.9
 
-Weak/loose formulation: 
-- The linear relaxation's feasible region is much larger than necessary
-- Solving the relaxed LP gets us fractional solutions that are far from any integer solution. 
-- Large integrality gap, 
-- More branch-and-bound nodes & longer solve times.
+---
+## Some Theory 1
+
+Modern solvers use "Branch & Bound" to solve MIPs:
+
+<v-clicks depth="2">
+
+- Solve the linear relaxation (LR) of the problem.
+- If not all variables of the optimal solution have integer values, pick one with float value $(y_i= 0.5)$ and create 2 new scenarios (branches):
+    1. LR with constraint $y_i \leq 0$
+    2. LR with constraint $y_i \geq 1$
+- Rinse and repeat until LR has integral solution. Use the solution's value as a bound to cut off branches.
+- If no branch is left to be discovered, return best integral solution found.
+
+</v-clicks>
+
 
 ---
 layout: image-right
 
-image: /assets/tight_formulation.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/loose_formulation.png
+backgroundSize: 80%
 ---
-## Some theory
+## Some Theory 2
 
-Tight formulation: 
+Weak/loose formulation: 
+
+<v-clicks>
+
+- The LR's feasible region is much larger than necessary
+- Solving the relaxed MIP gets us fractional solutions that are far from any integer solution. 
+- More branch-and-bound nodes & longer solve times.
+
+</v-clicks>
+
+---
+layout: image-right
+
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/tight_formulation.png
+backgroundSize: 80%
+---
+## Some Theory 3
+
+
+Tight formulation:
+
+<v-clicks depth="2">
+
 - The linear relaxation's feasible region closely approximates the convex hull of integer feasible solutions. 
 - The LP relaxation bound is close to the optimal integer solution value!
 - Branch & Bound finds integer solution much faster.
 
+</v-clicks>
+
+<v-click>
+
 ## Goal:
 Revisit our constraints, make them tighter!
+
+</v-click>
 
 
 ---
@@ -725,17 +813,17 @@ layout: center
 
 ## Improvement 1: Tighter Big-M
 
-Problem constraint:
 $$s_i \leq x_{i,j} \cdot \alpha_j + (1 - x_{i,j}) \cdot M$$
-
-<v-click>
 
 **Why is a large M bad?** 
 
+<v-clicks>
+
 - In the linear relaxation, the optimal solution can exploit slack.
 - Example: for $M=1000$ and $x_{i,j}= 0.99$, we get: $s_i \leq 0.99 \cdot \alpha_j + 10$
+- This means the shift start of a worker $i$ doing a 99% share of task $j$ can be almost 10 hours after the task's start time! 
 
-</v-click>
+</v-clicks>
 
 <v-click>
 
@@ -761,17 +849,60 @@ $$x_{i,j_1} + x_{i,j_2} \leq 1 \quad \forall i, \forall \text{ overlapping } (j_
 
 **Better:** For each hour, at most one task active at that hour can be assigned to a worker.
 
-$$\sum_{j \text{ active at hour } h} x_{i,j} \leq 1 \quad \forall i, \forall h \in [0, 23]$$
+$$\sum_{j \text{ active at hour } h} x_{i,j} \leq 1 \quad \forall i, \forall h \in \mathbb{N}_{<24}$$
 
 </v-click>
+
+
+---
+layout: two-cols-header
+---
+
+## Why is the new formulation tighter?
+<br>
+
+<v-clicks>
+
+### Example:
+
+Let us say we have 3 overlapping tasks $j_1, j_2, j_3$.
+
+</v-clicks>
+
+::left::
+
+<v-clicks>
+
+**Original overlap constraint:**:
+$$x_{i,j_1} + x_{i,j_2} \leq 1$$
+$$x_{i,j_2} + x_{i,j_3} \leq 1$$
+$$x_{i,j_1} + x_{i,j_3} \leq 1$$
+Feasible values for $x$:
+$$x_{i,j_1} = x_{i,j_2} = x_{i,j_3} = 0.5$$
+
+</v-clicks>
+
+::right::
+
+<v-clicks>
+
+**New overlap constraint:** Since all three tasks overlap, there must be an hour $h'$ where they are all active.
+
+$$x_{i,j_1} + x_{i,j_2} + x_{i,j_3} \leq \sum_{j \text{ active at hour } h'} x_{i,j}\leq 1$$
+Setting the three variables to $0.5$ is no longer feasible!
+
+</v-clicks>
+
+
+
 
 ---
 
 ### Two big wins:
 1. Formulation just got tighter!
 2. Huge reduction in number of constraints:
-    - Number of old overlapping constraints scaled at $O(K²)$.
-    - New variant: constant $24$.
+    - Number of old overlapping constraints scaled at $O(N\cdot K²)$.
+    - New variant: $24$ per worker: $O(N)$.
 
 <v-click>
 
@@ -792,7 +923,7 @@ def no_overlapping_tasks(m, i, h):
 ---
 layout: image-right
 
-image: /assets/meme_symmetry.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/meme_symmetry.png
 ---
 
 ## Improvement 3: Symmetry Breaking
@@ -810,7 +941,7 @@ For instance (25,10), a single solution can have up to $10!$ duplicate solutions
 Order workers by shift start time (or some other criterion).
 New constraint:
 
-$$s_{i-1}  \leq s_i \quad \forall i > 1$$
+$$s_{i-1}  \leq s_i \quad \forall i > 0$$
 
 
 </v-click>
@@ -821,7 +952,7 @@ $$s_{i-1}  \leq s_i \quad \forall i > 1$$
 ```python
     @m.Constraint(m.workers)
     def symmetry_breaker(m, i):
-        if i == 1:
+        if i == 0:
             return pyo.Constraint.Skip
         return m.s[i - 1] <= m.s[i]
 ```
@@ -878,7 +1009,7 @@ Think about:
 
 ---
 layout: image-right
-image: https://plus.unsplash.com/premium_photo-1708078449934-4de2318cdc84?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+image: https://images.unsplash.com/photo-1502933691298-84fc14542831?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
 
 # The Flow Formulation
@@ -893,14 +1024,29 @@ backgroundSize: contain
 
 ## Introduction to Minimum Cost Flow
 
+
+<v-click>
+
 A **minimum cost flow** problem consists of:
+
+</v-click>
+
+<v-clicks>
+
 - A directed graph $G=(V, A)$ with nodes $V$ and arcs $A$
 - One **source** node with a certain supply
 - One **sink** node with a demand equal to the supply
 - Each arc has a **capacity** (max flow that can pass)
 - Each arc has a **cost** (incurred per unit of flow)
 
+</v-clicks>
+
+<v-click>
+
+
 **Goal:** Move all flow from source to sink with minimum total cost.
+
+</v-click>
 
 ---
 layout: image-right
@@ -918,7 +1064,8 @@ $$
 
 ---
 layout: image-right
-image: assets/tight_formulation.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/tight_formulation.png
+backgroundSize: 80%
 ---
 
 ### The big benefit
@@ -942,69 +1089,69 @@ The LP solution found by simplex is guaranteed to be integer!
 
 ---
 layout: image
-image: /assets/graph1.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph1.png
 backgroundSize: 40em
 ---
 
 ---
 layout: image
-image: /assets/graph2.png
-backgroundSize: 40em
----
-
-
----
-layout: image
-image: /assets/graph3.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph2.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph4.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph3.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph5.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph4.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph6.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph5.png
+backgroundSize: 40em
+---
+
+
+---
+layout: image
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph6.png
 backgroundSize: 52em
 ---
 
 
 ---
 layout: image
-image: /assets/graph7.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph7.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph8.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph8.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph9.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph9.png
 backgroundSize: 40em
 ---
 
 
 ---
 layout: image
-image: /assets/graph10.png
+image: https://raw.githubusercontent.com/jpjj/presentations/hands-on-session-presentation/assets/graph10.png
 backgroundSize: 40em
 ---
 
@@ -1044,9 +1191,9 @@ def create_flow_model(graph: Graph) -> pyo.ConcreteModel:
         return pyo.quicksum(m.f[e] for e in graph.task_to_arcs[task]) <= 1
 
     # Objective: Minimize total cost
-        @m.Objective(sense=pyo.minimize)
-        def total_costs(m):
-            return pyo.quicksum(m.cost[e] * m.f[e] for e in m.arcs)
+    @m.Objective(sense=pyo.minimize)
+    def total_costs(m):
+        return pyo.quicksum(m.cost[e] * m.f[e] for e in m.arcs)
 
     return m
 
@@ -1064,9 +1211,9 @@ layoutClass: gap-16
 
 | Model | Variables | Constraints |
 |---------|-------------|---------------|
-| Simple | $O(N \cdot K)$ | $O(N \cdot K +  K^2)$ |
+| Simple | $O(N \cdot K)$ | $O(N \cdot K^2)$ |
 | Improved | $O(N \cdot K)$ | $O(N \cdot K)$ |
-| Flow | $O(D_{max} \cdot K)$ | $O(D_{max} \cdot K)$ |
+| Flow | $O(K)$ | $O(K)$ |
 
 </v-click>
 
@@ -1085,12 +1232,18 @@ MIP formulation is extremely tight, thanks to
 
 ## Takeaways
 
-<v-clicks>
+<v-clicks depth="2">
 
-1. **Start simple** to understand the problem
-2. **Analyze and improve** and make use of best-practices
-3. **Know the catalog of well-studied MO problems**. Maybe it fits in one of these categories.
-4. **Know your tools**: 
+1. **Start simple** to understand the problem.
+2. If your formulation is hard to solve:
+   - Can the number of variables/constraints be reduced? What information do we really need?
+   - How tight is your formulation? Can the LR exploit some constraints? 
+   - Symmetries?
+3. **Know the catalog of well-studied MO problems**. Some are much easier to solve than others:
+    - Graph problems: Paths, Trees, Flows, Matchings
+    - Set Cover/Partitioning Problems
+    - ...
+4. There are great open source tools out there:
    - [Pyomo for Modeling](https://pyomo.readthedocs.io/)
    - [HiGHS as powerful Open Source Solver](https://highs.dev/)
    - [Pydantic for data validation](https://docs.pydantic.dev/latest/) (read: less headache)
@@ -1098,14 +1251,16 @@ MIP formulation is extremely tight, thanks to
 
 </v-clicks>
 
+<!-- Like partition problem. Max Cover Problem. Set Cover, Shortest path + Minimum Spanning tree have exact algorithms. Assignment problems are flow problems etc. There is a lot to know. I recommend following Optimization4All, they have a lot more to cover. -->
+
 ---
 
 ## Further Topics
 
 
-<v-clicks>
+<v-clicks depth="2">
 
-For even larger instances:
+For larger instances:
 - Decomposition strategies (Column Generation)
 - Metaheuristics (this is scheduling, after all!)
 - Constraint Programming
@@ -1122,9 +1277,39 @@ Extensions to the problem:
 
 
 ---
-layout: end
+layout: cover
+background: https://images.unsplash.com/photo-1466094899371-97b327dff551?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
 
-Thank you!
 
-**Let's connect on linkedin:** [Jens-Peter Joost](https://www.linkedin.com/in/jens-peter-joost/)
+<br>
+<br>
+
+##  Thank you!
+
+
+<br>
+<br>
+<br>
+<br>
+
+<div class="flex flex-col gap-4 mt-8">
+
+  <a href="https://colab.research.google.com/github/jpjj/O4A-Hands-On-Modeling/blob/main/mathematical_modeling_complete.ipynb" target="_blank" class="flex items-center gap-2 text-xl opacity-85 hover:opacity-100">
+    <carbon-logo-python class="text-2xl" /> All the code to run in google colab
+  </a>
+  <a href="https://www.youtube.com/@Optimization4All/playlists" target="_blank" class="flex items-center gap-2 text-xl opacity-85 hover:opacity-100">
+    <carbon-logo-youtube class="text-2xl" /> More O4A Hands-On Sessions
+  </a>
+  <a href="https://www.linkedin.com/in/jens-peter-joost/" target="_blank" class="flex items-center gap-2 text-xl opacity-85 hover:opacity-100">
+    <carbon-logo-linkedin class="text-2xl" /> Let's connect
+  </a>
+</div>
+
+
+<br>
+<br>
+<br>
+<br>
+
+jpjsolutions.com/presentations/hands-on-modeling
