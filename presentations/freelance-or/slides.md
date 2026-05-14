@@ -76,20 +76,63 @@ zoom: 1.0
 
 # Today's chapters
 
+<div class="flex flex-col gap-2">
+
 <v-clicks>
 
-1. Why freelancing & the first year
-2. A typical day at work
-3. The hardest task: finding clients
-4. What makes a good OR freelancer
+<div class="chapter-row">
+  <div class="chapter-num">01</div>
+  <div class="chapter-title">Why freelancing &amp; the first year</div>
+</div>
+
+<div class="chapter-row">
+  <div class="chapter-num">02</div>
+  <div class="chapter-title">A typical day at work</div>
+</div>
+
+<div class="chapter-row">
+  <div class="chapter-num">03</div>
+  <div class="chapter-title">The hardest task: finding clients</div>
+</div>
+
+<div class="chapter-row last">
+  <div class="chapter-num">04</div>
+  <div class="chapter-title">What makes a good OR freelancer</div>
+</div>
 
 </v-clicks>
+
+</div>
 
 <!--
 50 minutes total. Plenty to share, so I'll keep moving.
 Questions in the middle and at the end.
 -->
 
+<style scoped>
+.chapter-row {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+.chapter-row.last { border-bottom: none; }
+.chapter-num {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: #0c384a;
+  line-height: 1;
+}
+.chapter-title {
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 1.3;
+}
+</style>
 
 ---
 layout: image-right
@@ -200,8 +243,8 @@ and how the first year unfolded
 <v-clicks>
 
 - It's where I see my **deepest knowledge** amongst the three domains.
-- OR is a **hidden champion**. It is underrated, and more companies could benefit from it.
 - For OR projects, clients prefer the **"OR person"** over the *"I can do everything"* generalist.
+- OR is a **hidden champion**. It is underrated, and more companies could benefit from it.
 
 </v-clicks>
 
@@ -303,6 +346,9 @@ Good when **requirements need iteration**.
 - The most important task becomes finding **the next** one.
 - Networking, content, conversations, follow-ups.
 - "Sales" is part of the job &mdash; whether you like it or not.
+- **Personal rule:** Even with active client:
+  - 4 days work for client
+  - 1 day reserved for business development
 
 </v-clicks>
 
