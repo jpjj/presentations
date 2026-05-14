@@ -536,7 +536,7 @@ lessons after one year in
 - They say:
   > *"Our last-mile delivery is messy. Couriers seem to be all over the place."*
 - Try to step into their shoes. **What do they actually need?**
-- When would the client consider the project succesful?
+- When would the client consider the project successful?
 - What are risks, uncertainties, show stoppers to the project?
 
 </v-clicks>
