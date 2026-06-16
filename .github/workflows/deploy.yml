@@ -48,6 +48,12 @@ jobs:
             --base /presentations/freelance-or/ \
             --out ${{ github.workspace }}/dist/freelance-or
 
+      - name: Build freelance-or-carousel
+        run: |
+          bun run slidev build presentations/freelance-or-carousel/slides.md \
+            --base /presentations/freelance-or-carousel/ \
+            --out ${{ github.workspace }}/dist/freelance-or-carousel
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
