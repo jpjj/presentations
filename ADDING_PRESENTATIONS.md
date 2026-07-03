@@ -38,6 +38,10 @@
 
 7. **Commit and push**
    - Your presentation will be available at: `https://jpjsolutions.com/presentations/your-presentation-name/`
+   - That link is a redirect: this repo deploys to **GitHub Pages** at
+     `https://jpjj.github.io/presentations/your-presentation-name/`, and the
+     website (now on Cloudflare Pages) 302-redirects `/presentations/*` there
+     via its `public/_redirects` — so both URLs work, no extra setup needed here.
 
 ## Directory Structure
 
@@ -61,5 +65,6 @@ presentations/
 - Each presentation keeps its images under `public/assets/` (Slidev's per-slides `public/` directory is copied verbatim to the dist root)
 - Reference images with leading-slash paths (`/assets/foo.png`) in slides.md — works for `image:` frontmatter, markdown `![](...)`, and `<img src="...">`
 - The `--base` path in deploy.yml must match the URL path
-- The `--out` path in deploy.yml is `dist/<presentation-name>` (no extra `presentations/` segment — the dist root maps to `jpjsolutions.com/presentations/`)
+- The `--out` path in deploy.yml is `dist/<presentation-name>` (no extra `presentations/` segment — the dist root maps to `jpjj.github.io/presentations/`, which `jpjsolutions.com/presentations/` redirects to)
+- Hosting history: before the website moved to Cloudflare Pages (2026-06-15), these decks were served directly at `jpjsolutions.com/presentations/...` through the GitHub Pages custom domain. The Cloudflare move broke that path until the website added the `_redirects` rule (2026-07-03). If decks ever move off GitHub Pages, update that rule in the `jpjj.github.io` repo.
 - Optionally copy `global-bottom.vue` and `components/` if you need them
