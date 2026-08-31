@@ -6,9 +6,12 @@
     "dev": "slidev presentations/hands-on-modeling/slides.md --open",
     "dev:hands-on": "slidev presentations/hands-on-modeling/slides.md --open",
     "dev:freelance": "slidev presentations/freelance-or/slides.md --open",
+    "dev:freelance-carousel": "slidev presentations/freelance-or-carousel/slides.md --open",
     "build": "slidev build presentations/hands-on-modeling/slides.md",
     "build:hands-on": "slidev build presentations/hands-on-modeling/slides.md",
     "build:freelance": "slidev build presentations/freelance-or/slides.md",
+    "build:freelance-carousel": "slidev build presentations/freelance-or-carousel/slides.md",
+    "export:freelance-carousel": "slidev export presentations/freelance-or-carousel/slides.md --format pdf --output presentations/freelance-or-carousel/freelance-or-carousel.pdf",
     "export": "slidev export presentations/hands-on-modeling/slides.md"
   },
   "dependencies": {
