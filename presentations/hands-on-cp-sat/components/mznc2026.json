@@ -1,0 +1,421 @@
+{
+ "source": "https://www.minizinc.org/challenge/2026/results.json",
+ "ranking_free": [
+  {
+   "solver": "OR-Tools CP-SAT",
+   "score": 2124.0,
+   "group": "cpsat",
+   "reference": false
+  },
+  {
+   "solver": "Huub (Diff. Logic)",
+   "score": 1803.5,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "Huub",
+   "score": 1790.9,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "IBM CP Optimizer",
+   "score": 1768.0,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "PicatSAT",
+   "score": 1658.3,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Chuffed",
+   "score": 1634.6,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "Gurobi 12",
+   "score": 1539.3,
+   "group": "mip",
+   "reference": true
+  },
+  {
+   "solver": "Pumpkin",
+   "score": 1366.2,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Sabori CSP",
+   "score": 1312.8,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "CPLEX",
+   "score": 1137.5,
+   "group": "mip",
+   "reference": true
+  },
+  {
+   "solver": "HiGHS",
+   "score": 1084.5,
+   "group": "mip",
+   "reference": true
+  },
+  {
+   "solver": "SCIP",
+   "score": 1053.9,
+   "group": "mip",
+   "reference": true
+  },
+  {
+   "solver": "QiuQi-MIXSolver",
+   "score": 1010.0,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Choco (CP)",
+   "score": 976.8,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "CP-SAT LS",
+   "score": 927.3,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Choco (CP+LCG)",
+   "score": 902.7,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Thornbill",
+   "score": 827.1,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "SICStus Prolog",
+   "score": 784.4,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Gecode",
+   "score": 747.5,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "Gecode + Scheduling",
+   "score": 710.3,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "JaCoP",
+   "score": 689.0,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Yuck",
+   "score": 661.1,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Cbc",
+   "score": 483.5,
+   "group": "mip",
+   "reference": true
+  },
+  {
+   "solver": "Crusher",
+   "score": 347.2,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "NuCS",
+   "score": 288.1,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Atlantis",
+   "score": 205.4,
+   "group": "other",
+   "reference": false
+  }
+ ],
+ "ranking_parallel": [
+  {
+   "solver": "OR-Tools CP-SAT",
+   "score": 2188.4,
+   "group": "cpsat",
+   "reference": false
+  },
+  {
+   "solver": "Gurobi 12",
+   "score": 1743.5,
+   "group": "mip",
+   "reference": true
+  },
+  {
+   "solver": "Huub (Diff. Logic)",
+   "score": 1722.3,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "IBM CP Optimizer",
+   "score": 1721.7,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "Huub",
+   "score": 1705.1,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "PicatSAT",
+   "score": 1580.6,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Chuffed",
+   "score": 1549.9,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "Choco (CP)",
+   "score": 1487.0,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "CPLEX",
+   "score": 1359.3,
+   "group": "mip",
+   "reference": true
+  },
+  {
+   "solver": "Pumpkin",
+   "score": 1302.8,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Choco (CP+LCG)",
+   "score": 1276.7,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Sabori CSP",
+   "score": 1219.9,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "HiGHS",
+   "score": 1046.0,
+   "group": "mip",
+   "reference": true
+  },
+  {
+   "solver": "Thornbill",
+   "score": 1042.0,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "QiuQi-MIXSolver",
+   "score": 1034.3,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "CP-SAT LS",
+   "score": 1017.2,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "SCIP",
+   "score": 992.0,
+   "group": "mip",
+   "reference": true
+  },
+  {
+   "solver": "Gecode + Scheduling",
+   "score": 778.1,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "Gecode",
+   "score": 777.7,
+   "group": "other",
+   "reference": true
+  },
+  {
+   "solver": "Yuck",
+   "score": 775.6,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "SICStus Prolog",
+   "score": 723.8,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "JaCoP",
+   "score": 643.2,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Cbc",
+   "score": 423.9,
+   "group": "mip",
+   "reference": true
+  },
+  {
+   "solver": "Crusher",
+   "score": 361.7,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "NuCS",
+   "score": 255.9,
+   "group": "other",
+   "reference": false
+  },
+  {
+   "solver": "Atlantis",
+   "score": 216.7,
+   "group": "other",
+   "reference": false
+  }
+ ],
+ "cpsat_vs_gurobi_free": [
+  {
+   "problem": "surface-based-tsp",
+   "a": 1.0,
+   "b": 4.0
+  },
+  {
+   "problem": "warehouse",
+   "a": 1.0,
+   "b": 4.0
+  },
+  {
+   "problem": "gbac",
+   "a": 1.5,
+   "b": 3.5
+  },
+  {
+   "problem": "zephyrus-2016",
+   "a": 2.17,
+   "b": 2.83
+  },
+  {
+   "problem": "rect-euler",
+   "a": 2.2,
+   "b": 2.8
+  },
+  {
+   "problem": "kitchen",
+   "a": 2.65,
+   "b": 2.35
+  },
+  {
+   "problem": "community-detection-2021",
+   "a": 3.02,
+   "b": 1.98
+  },
+  {
+   "problem": "sdn-chain",
+   "a": 3.09,
+   "b": 1.91
+  },
+  {
+   "problem": "gcc-benchmark",
+   "a": 3.38,
+   "b": 1.62
+  },
+  {
+   "problem": "workforce-alloc",
+   "a": 3.42,
+   "b": 1.58
+  },
+  {
+   "problem": "nside",
+   "a": 3.5,
+   "b": 1.5
+  },
+  {
+   "problem": "atp-stage2",
+   "a": 3.88,
+   "b": 1.12
+  },
+  {
+   "problem": "orthorio",
+   "a": 4.13,
+   "b": 0.87
+  },
+  {
+   "problem": "multiple-constant-multiplication",
+   "a": 4.14,
+   "b": 0.86
+  },
+  {
+   "problem": "filters",
+   "a": 4.49,
+   "b": 0.51
+  },
+  {
+   "problem": "nonogram",
+   "a": 4.5,
+   "b": 0.5
+  },
+  {
+   "problem": "saeling",
+   "a": 4.5,
+   "b": 0.5
+  },
+  {
+   "problem": "tdtsp",
+   "a": 4.67,
+   "b": 0.33
+  },
+  {
+   "problem": "spot5",
+   "a": 5.0,
+   "b": 0.0
+  },
+  {
+   "problem": "vrplc",
+   "a": 5.0,
+   "b": 0.0
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="89.192299mm"
+   height="76.932899mm"
+   viewBox="0 0 89.192299 76.932899"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.3 (fcd0343856, 2026-01-01)"
+   sodipodi:docname="jpjsolutions_logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.72871773"
+     inkscape:cx="91.942321"
+     inkscape:cy="225.05285"
+     inkscape:window-width="1920"
+     inkscape:window-height="1043"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient12"
+       id="linearGradient6"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.21793409,0,0,0.21793409,-946.6648,1020.9031)"
+       x1="4579.228"
+       y1="-3756.3538"
+       x2="5262.8335"
+       y2="-4442.7744" />
+    <linearGradient
+       id="linearGradient12"
+       inkscape:collect="always">
+      <stop
+   style="stop-color:#353f52;stop-opacity:1;"
+   offset="0"
+   id="stop11" />
+
+      <stop
+   style="stop-color:#005597;stop-opacity:1;"
+   offset="0.99989998"
+   id="stop12" />
+
+    </linearGradient>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-80.4331,-88.9001)">
+    <path
+       id="path6-1-5-1-8-81-6-7-8-1-8-3-6-7-2-2-9"
+       style="fill:url(#linearGradient6);stroke-width:0.217934;stroke-linejoin:bevel;stroke-miterlimit:5.2;stroke-dashoffset:15.7814;paint-order:markers stroke fill"
+       d="m 123.9072,88.9001 -43.4741,74.9856 1.1221,1.9473 h 86.948 l 1.1222,-1.9473 -43.4742,-74.9856 z m -0.1707,5.4664 0.039,44.4381 -38.6756,22.2007 z m 2.594,0.016 38.6229,66.6165 -38.5833,-22.1929 z m -1.2573,46.6698 38.5743,22.188 H 86.419 Z" />
+  </g>
+</svg>

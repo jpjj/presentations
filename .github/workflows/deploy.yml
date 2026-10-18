@@ -48,6 +48,12 @@ jobs:
             --base /presentations/freelance-or/ \
             --out ${{ github.workspace }}/dist/freelance-or
 
+      - name: Build hands-on-cp-sat
+        run: |
+          bun run slidev build presentations/hands-on-cp-sat/slides.md \
+            --base /presentations/hands-on-cp-sat/ \
+            --out ${{ github.workspace }}/dist/hands-on-cp-sat
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
