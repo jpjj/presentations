@@ -59,7 +59,7 @@ layout: image-right
 image: /assets/peter.png
 ---
 
-# Hello again!
+# Hello!
 
 I'm Peter!
 
@@ -74,38 +74,6 @@ Since 2025       OR Freelancer
 </v-clicks>
 
 ---
-
-## Last time: Hands-On MIP Modeling
-
-<div class="grid grid-cols-2 gap-12 mt-6">
-<div>
-
-<v-clicks>
-
-- A worker/task assignment problem
-- Pyomo + HiGHS
-- Big-M constraints, tight formulations, symmetry breaking
-- A flow formulation that turned an overnight run into seconds
-
-</v-clicks>
-
-</div>
-<div v-click>
-
-**Further Topics** (last slide of session #1)
-
-- Decomposition strategies
-- Metaheuristics
-- **Constraint Programming** ← today!
-
-</div>
-</div>
-
-<!--
-Quick recap for everyone who missed session 1 (recording on the O4A YouTube channel).
--->
-
----
 zoom: 1.0
 ---
 
@@ -117,31 +85,27 @@ zoom: 1.0
 
 <div class="chapter-row">
   <div class="chapter-num">01</div>
-  <div class="chapter-title">CP-SAT &amp; the MiniZinc Challenge</div>
+  <div class="chapter-title">Why do I need CP-SAT?</div>
 </div>
 
 <div class="chapter-row">
   <div class="chapter-num">02</div>
-  <div class="chapter-title">What is inside CP-SAT?</div>
+  <div class="chapter-title">Let's model!</div>
 </div>
 
 <div class="chapter-row">
   <div class="chapter-num">03</div>
-  <div class="chapter-title">Three use cases from the MiniZinc Challenge 2026</div>
+  <div class="chapter-title">A quick look into CP-SAT's engine room</div>
 </div>
 
 <div class="chapter-row last">
   <div class="chapter-num">04</div>
-  <div class="chapter-title">When to use CP-SAT, wrap-up &amp; Q&amp;A</div>
+  <div class="chapter-title">When to (not) use CP-SAT, wrap-up &amp; Q&amp;A</div>
 </div>
 
 </v-clicks>
 
 </div>
-
-<!--
-Timing: ch. 1 ~13 min, ch. 2 ~15 min, ch. 3 ~65 min (incl. two breakouts), ch. 4 ~15 min.
--->
 
 <style scoped>
 .chapter-row {
@@ -172,7 +136,7 @@ Timing: ch. 1 ~13 min, ch. 2 ~15 min, ch. 3 ~65 min (incl. two breakouts), ch. 4
 
 ## Tech Stack:
 <br>
-<div class="grid grid-cols-3 gap-8 mt-8">
+<div class="grid grid-cols-2 gap-8 mt-8">
   <div class="flex flex-col items-center">
     <img src="/assets/ortools.png" class="h-20 mb-4" alt="OR-Tools" />
     <code>ortools</code>
@@ -182,14 +146,6 @@ Timing: ch. 1 ~13 min, ch. 2 ~15 min, ch. 3 ~65 min (incl. two breakouts), ch. 4
     <img src="/assets/pydantic.svg" class="h-20 mb-4" alt="Pydantic" style="filter: brightness(0) saturate(100%) invert(12%) sepia(95%) saturate(7471%) hue-rotate(304deg) brightness(101%) contrast(109%);" />
     <code>pydantic</code>
     <span class="text-sm opacity-70">for data validation</span>
-  </div>
-  <div class="flex flex-col items-center">
-    <div class="flex gap-4 items-center h-20 mb-4">
-      <img src="/assets/pyomo.png" class="h-12" alt="Pyomo" />
-      <img src="/assets/highs.png" class="h-12" alt="HiGHS" />
-    </div>
-    <code>pyomo + highspy</code>
-    <span class="text-sm opacity-70">the MIP baseline from last time</span>
   </div>
 </div>
 
@@ -208,7 +164,7 @@ layout: image-right
 image: https://images.unsplash.com/photo-1578269174936-2709b6aeb913?q=80&w=1287&auto=format&fit=crop
 ---
 
-# CP-SAT & the MiniZinc Challenge
+# Why do I need CP-SAT?
 Chapter 1
 
 ---
@@ -216,13 +172,28 @@ layout: center
 class: text-center
 ---
 
-# There is a solver out there that keeps winning OR challenges
+# CP-SAT is ...
 
-<v-click>
+<v-clicks>
 
-### and not enough people know about it!
+- powerful
+- useful
+- accessible
 
-</v-click>
+</v-clicks>
+
+---
+layout: image-right
+image: /assets/screenshot_cpsat_challenge_results.png
+---
+
+## CP-SAT is powerful
+
+<div class="absolute bottom-6 left-14 text-xs opacity-60">
+
+Source: [minizinc.org/challenge](https://www.minizinc.org/challenge/)
+
+</div>
 
 ---
 
@@ -235,9 +206,9 @@ class: text-center
 
 - Annual competition of **constraint programming solvers**, held since **2008**
 - Organized by the MiniZinc team (Monash University, OPTIMA)
-- Winners are announced at the **CP conference**, 2026 in Lisbon
+- A wide variaty of combinatorial problems need to be solved.
+- Various CP solvers (and MIP solvers) compete.
 - Everyone gets the **same models**, written in the solver-independent language MiniZinc
-
 </v-clicks>
 
 </div>
@@ -245,10 +216,13 @@ class: text-center
 
 <v-clicks>
 
-- **20 problems × 5 instances = 100 instances**
+- The CP modelling language MiniZinc has been featured at an O4A event. If you want to find out more, check out [Guido Tack's seminar on Youtube](https://www.youtube.com/watch?v=uXBGAiRPRPY)
+
+
+<!-- - **20 problems × 5 instances = 100 instances**
 - **20 minutes** per instance
 - Categories: *Fixed search*, *Free* (1 core), *Parallel* (8 cores), *Open* (portfolios), *Local search*
-- **Borda scoring:** on every instance, every solver plays against every other solver: solved beats unsolved, better beats worse, faster breaks ties
+- **Borda scoring:** on every instance, every solver plays against every other solver: solved beats unsolved, better beats worse, faster breaks ties -->
 
 </v-clicks>
 
@@ -259,7 +233,7 @@ class: text-center
 Borda / "complete scoring": a solver earns points by beating each other solver on each instance.
 -->
 
----
+<!-- ---
 
 ## Who competes?
 
@@ -292,7 +266,7 @@ The organizers run the big commercial MIP solvers on every instance too. The Min
 </div>
 
 </div>
-</div>
+</div> -->
 
 <!--
 Important: the MIP solvers do not compete for medals. They are reference entries, but they do take part in the scoring.
@@ -300,61 +274,17 @@ Important: the MIP solvers do not compete for medals. They are reference entries
 
 ---
 
-## The 20 problems of 2026
+## CP-SAT is useful
 
-<div class="grid grid-cols-4 gap-x-6 gap-y-1 mt-6 text-sm">
 
-<div>atp-stage2</div><div>kitchen</div><div>rect-euler</div><div>tdtsp</div>
-<div>community-detection</div><div>multiple-constant-mult.</div><div><b>saeling</b> (job shop)</div><div><b>vrplc</b> (vehicle routing)</div>
-<div>filters</div><div class="hl">nonogram</div><div>sdn-chain</div><div><b>warehouse</b> (facility location)</div>
-<div>gbac</div><div>nside</div><div>spot5 (satellite photos)</div><div class="hl">workforce-alloc</div>
-<div>gcc-benchmark</div><div class="hl">orthorio</div><div>surface-based-tsp</div><div>zephyrus-2016</div>
 
-</div>
+60 problems featured in the last 3 years of the MiniZinc Challenge
 
-<div v-click class="mt-10">
+I will later insert the iframe to the website I created for all the different problems. I will pick some here and browse a little bit for people to understand that it CP-SAT is useful in solving a bit variaty of OR problems.
 
-Scheduling, routing, puzzles, packing, configuration. Today we take a closer look at the three <span class="hl">highlighted</span> ones.
 
-</div>
 
-<style scoped>
-.hl {
-  font-weight: 700;
-  color: #2a78d6;
-}
-</style>
-
----
-
-## Results 2026
-
-<div class="grid grid-cols-[3fr_2fr] gap-10 mt-6">
-<div class="text-sm results">
-
-| Category | Gold | Silver | Bronze |
-|---|---|---|---|
-| Fixed | **CP&#8209;SAT** | Pumpkin | Choco (CP+LCG) |
-| Free | **CP&#8209;SAT** | PicatSAT | Pumpkin |
-| Parallel | **CP&#8209;SAT** | PicatSAT | Choco (CP) |
-| Open | **CP&#8209;SAT** | Parasol | CUFE |
-| Local search | QiuQi | **CP&#8209;SAT LS** | Yuck |
-
-</div>
-<div v-click>
-
-> "CP-SAT has won multiple gold medals at the MiniZinc challenge since its debut in 2017."
->
-> <span class="text-sm opacity-70">— official CP-SAT solver description, MiniZinc Challenge 2026</span>
-
-</div>
-</div>
-
-<style scoped>
-.results :deep(td), .results :deep(th) { padding-top: 0.45rem; padding-bottom: 0.45rem; white-space: nowrap; }
-</style>
-
----
+<!-- ---
 
 ## Counting the MIP solvers, too
 
@@ -376,11 +306,705 @@ Scheduling, routing, puzzles, packing, configuration. Today we take a closer loo
 </v-clicks>
 
 </div>
+</div> -->
+
+
+
+---
+
+## CP-SAT is accessible
+
+<v-clicks>
+
+- **Open source** (Apache 2.0), part of Google OR-Tools, free for commercial use
+- `pip install ortools` and you are ready to go: Python, C++, Java, C#
+- Excellent free learning material: [**The CP-SAT Primer**](https://d-krupke.github.io/cpsat-primer/) by Dominik Krupke
+- And it is **easy to model**. Let's see!
+
+</v-clicks>
+
+---
+
+## Your first CP-SAT model: an assignment problem
+
+<div class="grid grid-cols-[2fr_3fr] gap-8 mt-2">
+<div>
+
+4 workers, 4 jobs, a cost per (worker, job).
+
+Every worker does exactly one job, every job is done by exactly one worker.
+
+<div class="text-sm mt-4">
+
+| | Excav. | Concr. | Wiring | Paint. |
+|---|---|---|---|---|
+| Ana | 90 | 80 | 75 | **70** |
+| Ben | 35 | 85 | **55** | 65 |
+| Chloe | 125 | **95** | 90 | 95 |
+| David | **45** | 110 | 95 | 115 |
+
+</div>
+
+<div v-click="5" class="text-sm">
+
+Optimal: **265**
+
+</div>
+
+</div>
+<div>
+
+```python {all|1|3|5-8|10|12-13}
+model = cp_model.CpModel()
+
+x = {(w, j): model.new_bool_var("") for w in W for j in J}
+
+for w in W:  # every worker does exactly one job
+    model.add(sum(x[w, j] for j in J) == 1)
+for j in J:  # every job is done by exactly one worker
+    model.add(sum(x[w, j] for w in W) == 1)
+
+model.minimize(sum(cost[w][j] * x[w, j] for w in W for j in J))
+
+solver = cp_model.CpSolver()
+status = solver.solve(model)
+```
+
+<div class="text-sm opacity-70 mt-2">
+
+Looks just like a MIP. And that's fine!
+
+</div>
+
+</div>
 </div>
 
 <!--
-Source: minizinc.org/challenge/2026/results.json, complete (Borda) scoring over all 26 entries of the free category.
+Four steps: model, variables, constraints + objective, solve. Whoever has written a MIP feels at home.
 -->
+
+---
+
+## The same model, the CP-SAT way
+
+<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
+<div>
+
+```python {all|3|5|6-7|9}
+model = cp_model.CpModel()
+
+job_of = [model.new_int_var(0, 3, "") for w in W]   # which job?
+cost_of = [model.new_int_var(0, 125, "") for w in W]
+
+model.add_all_different(job_of)
+for w in W:  # cost_of[w] == cost[w][job_of[w]]
+    model.add_element(job_of[w], cost[w], cost_of[w])
+
+model.minimize(sum(cost_of))
+```
+
+</div>
+<div class="text-sm">
+
+<v-clicks>
+
+- Say **what you mean**: "which job does Ana do?" is one integer, not four Booleans
+- `add_all_different`: both families of constraints in **one line**
+- `add_element`: look up a value with a variable index
+- These are **global constraints**: they capture a whole substructure, and the solver has specialized algorithms for each of them
+
+</v-clicks>
+
+</div>
+</div>
+
+<div v-click class="mt-6">
+
+**The CP-SAT way:** find the structure in your problem and use the global constraint that describes it. Let's do this on a real problem!
+
+</div>
+
+---
+layout: image-right
+image: https://images.unsplash.com/photo-1588591795084-1770cb3be374?q=80&w=1287&auto=format&fit=crop
+---
+
+# Let's model!
+Chapter 2
+
+
+
+---
+layout: image-right
+image: https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1287&auto=format&fit=crop
+---
+ 
+# Workforce Allocation & Scheduling
+Use case
+
+---
+
+## The problem
+
+<div class="grid grid-cols-2 gap-10 mt-2">
+<div>
+
+From industry (Bleukx et al., CP 2025), part of the MiniZinc Challenge 2026.
+
+<v-clicks>
+
+- $N$ **teams**, $K$ **tasks**
+- Every task has a duration and a **time window**: we decide *when* it starts
+- Only **compatible** teams can do a task
+- A team does one task at a time and has **unavailabilities**
+- **Precedences** and **same-team groups**
+
+</v-clicks>
+
+</div>
+<div v-click>
+
+**Objectives** (lexicographic)
+
+1. Minimize the number of teams
+2. Minimize unfairness: max − min working time
+
+</div>
+</div>
+
+<div v-click class="mt-8 text-xl text-center">
+
+That's a lot at once. Let's **slice the elephant**.
+
+</div>
+
+---
+
+## Slicing the elephant
+
+<div class="steps mt-4">
+
+<div class="step-row" v-click>
+  <div class="step-num">1</div>
+  <div><b>Who does what?</b> Fixed start times, compatibility, minimize #teams</div>
+  <div class="step-tag">intervals, <code>add_no_overlap</code></div>
+</div>
+
+<div class="step-row breakout" v-click>
+  <div class="step-num">🗣️</div>
+  <div><b>Breakout 1</b></div>
+  <div></div>
+</div>
+
+<div class="step-row" v-click>
+  <div class="step-num">2</div>
+  <div><b>When?</b> Time windows: we decide the start times</div>
+  <div class="step-tag">enforcement literals</div>
+</div>
+
+<div class="step-row" v-click>
+  <div class="step-num">3</div>
+  <div><b>The real world:</b> precedences, same-team groups, lunch breaks</div>
+  <div class="step-tag">fixed intervals</div>
+</div>
+
+<div class="step-row breakout" v-click>
+  <div class="step-num">🗣️</div>
+  <div><b>Breakout 2</b></div>
+  <div></div>
+</div>
+
+<div class="step-row last" v-click>
+  <div class="step-num">4</div>
+  <div><b>Fair is fair:</b> fairness as a second objective</div>
+  <div class="step-tag">lexicographic objectives</div>
+</div>
+
+</div>
+
+<div v-click class="mt-6 text-sm opacity-80">
+
+Steps 1 and 2: first the **MIP way**, then the **CP-SAT way**. Everything is in the notebook.
+
+</div>
+
+<style scoped>
+.step-row {
+  display: grid;
+  grid-template-columns: 3rem 1fr 14rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+.step-row.last { border-bottom: none; }
+.step-row.breakout { color: #52514e; font-size: 0.9rem; }
+.step-num {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #0c384a;
+  line-height: 1;
+  text-align: center;
+}
+.step-tag { font-size: 0.85rem; color: #52514e; }
+</style>
+
+---
+
+## Step 1: Who does what?
+
+<v-clicks>
+
+- For now, every task has a **fixed start time**: $release + duration = due$
+- Decide only which **compatible** team does which task
+- A team does one task at a time
+- Minimize the number of teams used
+
+</v-clicks>
+
+<div v-click class="mt-6">
+
+<img src="/assets/workforce_baby_step1.png" class="w-full" />
+
+<div class="text-sm opacity-70 mt-1 text-center">
+
+Baby example: 6 tasks, 3 teams. Tasks 0, 1 and 4 all run between 1 and 2: we need **3 teams**.
+
+</div>
+
+</div>
+
+---
+
+## Step 1: the MIP way
+
+<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
+<div>
+
+```python {all|2-3|5-6|7-8|10-13|15}
+# x[j, k]: team k does task j     used[k]: team k is used
+x = {(t.id, k): model.new_bool_var("") for t in tasks for k in t.compatible_teams}
+used = {k: model.new_bool_var("") for k in teams}
+
+for t in tasks:  # every task is done by one compatible team
+    model.add_exactly_one(x[t.id, k] for k in t.compatible_teams)
+for (j, k) in x:  # a team that does a task is used
+    model.add_implication(x[j, k], used[k])
+
+for a, b in combinations(tasks, 2):
+    if a.release < b.due and b.release < a.due:  # overlap in time
+        for k in set(a.compatible_teams) & set(b.compatible_teams):
+            model.add(x[a.id, k] + x[b.id, k] <= 1)
+
+model.minimize(sum(used.values()))
+```
+
+</div>
+<div class="text-sm mt-4">
+
+<v-clicks>
+
+- One constraint per **pair** of overlapping tasks and per team that could do both
+- Works fine. But the solver sees thousands of small, unrelated constraints instead of the structure behind them:
+
+</v-clicks>
+
+<div v-click class="mt-4 text-base">
+
+*Every team has a timeline, and its tasks must not overlap on it.*
+
+</div>
+
+</div>
+</div>
+
+---
+
+## Interval variables
+
+<div class="iv-demo">
+  <div class="iv-line"><span class="iv-label">team k</span>
+    <div class="iv-track">
+      <div class="iv-box" style="left: 18%; width: 34%;">task j</div>
+      <div class="iv-off" style="left: 60%; width: 12%;">lunch</div>
+    </div>
+  </div>
+  <div class="iv-legend">
+    <span style="left: 18%;">start<sub>j</sub></span>
+    <span style="left: 52%;">start<sub>j</sub> + d<sub>j</sub></span>
+  </div>
+</div>
+
+<v-clicks>
+
+- An **interval** has a start, a size and an end with $start + size = end$
+- An **optional interval** has a **presence literal**: it only exists if the literal is true
+- One optional interval per (task $j$, team $k$), present iff $x_{j,k}$
+- `add_no_overlap(intervals of team k)` lets only **present** intervals take part
+
+</v-clicks>
+
+<style scoped>
+.iv-demo { margin: 1.5rem 0 2rem; }
+.iv-line { display: flex; align-items: center; gap: 1rem; }
+.iv-label { width: 4rem; color: #52514e; font-size: 0.9rem; }
+.iv-track { position: relative; flex: 1; height: 2.2rem; border-bottom: 1px solid #c3c2b7; }
+.iv-box, .iv-off { position: absolute; top: 0.2rem; height: 1.8rem; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+.iv-box { background: #4682b4; color: white; font-weight: 700; }
+.iv-off { background: repeating-linear-gradient(45deg, #e1e0d9, #e1e0d9 4px, #f4f4f2 4px, #f4f4f2 8px); color: #52514e; }
+.iv-legend { position: relative; height: 1.4rem; margin-left: 5rem; font-size: 0.75rem; color: #52514e; }
+.iv-legend span { position: absolute; transform: translateX(-50%); }
+</style>
+
+---
+
+## Step 1: the CP-SAT way
+
+```python {all|1|3-6|7}
+start = {t.id: t.release for t in tasks}  # fixed start times, for now
+for k in teams:
+    intervals = [model.new_optional_fixed_size_interval_var(
+                     start[t.id], t.duration, x[t.id, k], "")
+                 for t in tasks
+                 if k in t.compatible_teams]
+    model.add_no_overlap(intervals)
+```
+
+<v-clicks>
+
+- Replaces all the pairwise constraints: **one global constraint per team**
+- Same answer on the baby example: **3 teams**
+- Note: `start` is just a parameter here. Keep that in mind!
+
+</v-clicks>
+
+---
+layout: center
+class: text-center
+---
+
+# 🗣️ Breakout session 1
+
+<div class="text-left mt-8 text-lg">
+
+In reality, a customer gives us a **time window**, and *we* decide when a task starts.
+
+<v-clicks>
+
+- What changes in the **MIP way**? Which new variables and constraints do you need? How many?
+- What changes in the **CP-SAT way**?
+- Can we save a team in the baby example?
+
+</v-clicks>
+
+</div>
+
+<!--
+~10 minutes. Afterwards collect answers: ordering variables per pair, Big-M / enforcement literals. CP-SAT way: almost nothing changes.
+-->
+
+---
+
+## Step 2: When? Time windows
+
+<v-clicks>
+
+- Every task gets a real time window, the start time becomes a **variable**
+- The time window is the variable's **domain**, no constraints needed:
+
+</v-clicks>
+
+<v-click>
+
+```python
+start = {t.id: model.new_int_var(t.release, t.due - t.duration, "") for t in tasks}
+```
+
+</v-click>
+
+<div v-click class="mt-6">
+
+<img src="/assets/workforce_baby_step2.png" class="w-full" />
+
+<div class="text-sm opacity-70 mt-1 text-center">
+
+The flexibility saves a team: **2 teams** are enough now.
+
+</div>
+
+</div>
+
+---
+
+## Step 2: the MIP way
+
+```python {all|2|3|4-7}
+for a, b in combinations(tasks, 2):
+    if a.release < b.due and b.release < a.due:  # windows overlap
+        a_first = model.new_bool_var("")
+        for k in set(a.compatible_teams) & set(b.compatible_teams):
+            xa, xb = x[a.id, k], x[b.id, k]
+            model.add(start[a.id] + a.duration <= start[b.id]).only_enforce_if(xa, xb, a_first)
+            model.add(start[b.id] + b.duration <= start[a.id]).only_enforce_if(xa, xb, ~a_first)
+```
+
+<div class="grid grid-cols-[1fr_1.5fr_1fr] gap-6 mt-6 text-sm">
+
+<div v-click>
+
+If two tasks share a team, **one of them comes first**: a new Boolean per pair.
+
+</div>
+
+<div v-click>
+
+In a MIP solver, this is a **Big-M** constraint:
+
+$$s_a + d_a \leq s_b + M (3 - x_{a,k} - x_{b,k} - first)$$
+
+</div>
+
+<div v-click>
+
+In CP-SAT: an **enforcement literal**. The constraint only holds if all literals are true. No $M$ to choose!
+
+</div>
+
+</div>
+
+---
+
+## Step 2: the CP-SAT way
+
+```diff
+- start = {t.id: t.release for t in tasks}
++ start = {t.id: model.new_int_var(t.release, t.due - t.duration, "") for t in tasks}
+```
+
+<v-click>
+
+**That's it.** The intervals move along with their start, the rest of the model stays the same.
+
+</v-click>
+
+<div v-click class="mt-8">
+
+Model size on a challenge instance (58 tasks, 18 teams):
+
+| | variables | constraints |
+|---|---|---|
+| MIP way | 1,725 | 22,740 |
+| CP-SAT way | 1,088 | 2,118 |
+
+<div class="text-sm opacity-70">
+
+The MIP way grows with *pairs of tasks × teams*, the CP-SAT way with *compatible (task, team) pairs*.
+
+</div>
+
+</div>
+
+---
+
+## Step 3: The real world strikes back
+
+<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
+<div>
+
+```python {all|1-3|5-6|8-11}
+# lunch breaks: fixed intervals in the same no_overlap
+intervals += [model.new_fixed_size_interval_var(u.start, u.duration, "")
+              for u in team.unavailabilities]
+
+for a, b in problem.precedence:  # a ends before b starts
+    model.add(start[a] + duration[a] <= start[b])
+
+for first, *others in problem.same_team:  # same team
+    for other in others:
+        for k in teams:
+            model.add(x.get((first, k), 0) == x.get((other, k), 0))
+```
+
+</div>
+<div class="text-sm">
+
+<v-clicks>
+
+- An unavailability is an interval that is **always present**. One new line!
+- Precedences: one linear constraint each
+- Same-team groups: equal assignment variables
+
+</v-clicks>
+
+</div>
+</div>
+
+<div v-click class="mt-4">
+
+<img src="/assets/workforce_baby_step3.png" class="w-5/6 mx-auto" />
+
+<div class="text-sm opacity-70 mt-1 text-center">
+
+Team 0 has lunch from 4 to 5, task 0 before task 2, tasks 3 and 5 by the same team. Still **2 teams**. Is the work shared fairly? Only by luck.
+
+</div>
+
+</div>
+
+---
+layout: center
+class: text-center
+---
+
+# 🗣️ Breakout session 2
+
+<div class="text-left mt-8 text-lg">
+
+Second objective: **fairness**, the max − min working time of the **used** teams. The number of teams still comes first.
+
+<v-clicks>
+
+- How do you model the maximum and the minimum working time?
+- Why is the minimum harder than the maximum?
+- How do you combine two objectives, so that saving a team always beats fairness?
+
+</v-clicks>
+
+</div>
+
+<!--
+~10 minutes. Key insights: min over used teams needs an enforcement literal; weight the first objective with the total duration.
+-->
+
+---
+
+## Step 4: Fair is fair
+
+<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
+<div>
+
+```python {all|1-2|3-4|5-7|9}
+worked = {k: sum(t.duration * x[t.id, k] for t in tasks if k in t.compatible_teams)
+          for k in teams}
+max_worked = model.new_int_var(0, total, "")
+min_worked = model.new_int_var(0, total, "")
+for k in teams:
+    model.add(max_worked >= worked[k])
+    model.add(min_worked <= worked[k]).only_enforce_if(used[k])
+
+model.minimize(total * sum(used.values()) + max_worked - min_worked)
+```
+
+</div>
+<div class="text-sm">
+
+<v-clicks>
+
+- Unused teams work 0: without the enforcement literal, they pull the minimum down to 0
+- Lexicographic: the unfairness is always smaller than the total duration, so **saving a team always wins**
+
+</v-clicks>
+
+</div>
+</div>
+
+<div v-click class="mt-4">
+
+<img src="/assets/workforce_baby_step4.png" class="w-5/6 mx-auto" />
+
+<div class="text-sm opacity-70 mt-1 text-center">
+
+Optimal: 2 teams, unfairness 2, cost $12 \cdot 2 + 2 = 26$. Why is 6/6 impossible? (Hint: tasks 3 and 5.)
+
+</div>
+
+</div>
+
+---
+
+## A challenge instance: 58 tasks, 18 teams
+
+<img src="/assets/workforce_71.png" class="mt-4" />
+
+<v-click>
+
+CP-SAT finds this solution quickly. But **proving** that it is optimal is hard: on Colab's 2 cores, the bound is still far off after 20 seconds.
+
+</v-click>
+
+---
+layout: image-right
+image: /assets/meme_symmetry.png
+backgroundSize: contain
+---
+
+## Best practice: break symmetries
+
+Most teams are **interchangeable**: same skills, same calendar.
+
+A solution with 5 teams can be relabeled in $18 \cdot 17 \cdot 16 \cdot 15 \cdot 14 > 10^6$ ways.
+
+<v-click>
+
+```python
+# interchangeable teams k1 < k2
+model.add(used[k1] >= used[k2])
+model.add(worked[k1] >= worked[k2])
+```
+
+</v-click>
+
+<v-click>
+
+| (2 cores, 20 s) | best | bound |
+|---|---|---|
+| without | 10125 | 2357 |
+| **with** | **10125** | **10125** in 0.3 s |
+
+**Optimal:** 5 teams, perfectly fair (405 each).
+
+</v-click>
+
+---
+
+## [Live: the MIP way vs. the CP-SAT way](https://colab.research.google.com/github/jpjj/O4A-Hands-On-CP-SAT/blob/main/cp_sat_complete.ipynb)
+
+Same solver, same constraints, same symmetry breaking, 30 s each. The only difference: how we model *one task at a time*.
+
+<div class="text-sm compact">
+
+| Instance | Tasks | constraints MIP way | constraints CP-SAT way | MIP way | CP-SAT way |
+|---|---|---|---|---|---|
+| instance_202 | 26 | 5,261 | 1,175 | optimal, 0.3 s | optimal, 0.1 s |
+| instance_24_56 | 25 | 4,431 | 1,083 | optimal, 0.2 s | optimal, 0.2 s |
+| instance_71 | 58 | 23,013 | 2,391 | optimal, 7.3 s | optimal, **0.6 s** |
+| instance_19 | 62 | 33,501 | 2,931 | 9000, bound 7200 | optimal, **0.4 s** |
+
+</div>
+
+<v-click>
+
+On small instances, the MIP way keeps up. At scale, the global constraint wins. On Colab's 2 cores, the MIP way does not even prove instance_71 optimal within 30 s.
+
+<div class="text-xs opacity-60">Measured locally (16 cores) with the complete notebook; your Colab numbers will differ.</div>
+
+</v-click>
+
+<v-click>
+
+<div class="text-sm opacity-70 mt-2">
+
+MiniZinc Challenge (1 core, 20 min): CP-SAT proved all 5 workforce instances optimal, Gurobi (non-eligible reference entry) 3. On two instances Gurobi's best solution was **20% and 40% worse**.
+
+</div>
+
+</v-click>
+
+<style scoped>
+.compact :deep(td), .compact :deep(th) { padding-top: 0.3rem; padding-bottom: 0.3rem; }
+</style>
 
 ---
 layout: image-right
@@ -388,86 +1012,10 @@ image: https://images.unsplash.com/photo-1701448150058-43d6d199b103?q=80&w=1287&
 ---
 
 # What is inside CP&#8209;SAT?
-Chapter 2
+Chapter 3
 
 ---
-
-## Declarative vs. imperative
-
-<div class="grid grid-cols-2 gap-8 mt-6">
-<div>
-
-**Imperative:** you write *how*
-
-```python
-# a greedy heuristic
-for task in sorted(tasks, key=lambda t: t.release):
-    for team in teams:
-        if team.is_free(task.release, task.duration):
-            team.assign(task)
-            break
-```
-
-</div>
-<div v-click>
-
-**Declarative:** you write *what*
-
-```python
-# a CP-SAT model
-for j in tasks:
-    model.add_exactly_one(x[j, k] for k in teams)
-for k in teams:
-    model.add_no_overlap(intervals[k])
-model.minimize(total * sum(used) + unfairness)
-
-solver.solve(model)
-```
-
-</div>
-</div>
-
-<v-click>
-
-The solver figures out *how*: search, propagation, learning, relaxations, heuristics.
-
-</v-click>
-
----
-
-## Constraint Programming in a nutshell
-
-<div class="grid grid-cols-2 gap-10 mt-4">
-<div>
-
-<v-clicks>
-
-- **Variables** with finite **domains**
-- **Constraints** remove values that cannot be part of a solution: **propagation**
-- **Search:** pick a variable, try a value, propagate, backtrack if a domain runs empty
-- **Global constraints** (`all_different`, `no_overlap`, `circuit`, ...) come with specialized propagators
-
-</v-clicks>
-
-</div>
-<div v-click>
-
-```python
-x, y in {0..10}
-x + y <= 12
-
-decide:     x >= 7
-propagate:  y <= 12 - 7 = 5
-            y in {0..5}
-```
-
-One decision, and the domain of `y` shrinks without any search.
-
-</div>
-</div>
-
----
-
+   
 ## SAT solving: conflict-driven clause learning (CDCL)
 
 <div class="grid grid-cols-2 gap-10 mt-4">
@@ -475,7 +1023,7 @@ One decision, and the domain of `y` shrinks without any search.
 
 Boolean variables, constraints are **clauses**:
 
-$$(\neg a \lor b) \quad (\neg b \lor c) \quad (\neg a \lor \neg c)$$
+$$(\neg a \lor b) \land (\neg b \lor c) \land (\neg a \lor \neg c)$$
 
 <v-clicks>
 
@@ -517,15 +1065,7 @@ $$\neg[x \geq 7] \lor [y \leq 5] \quad \text{(from } x + y \leq 12\text{)}$$
 </v-clicks>
 
 </div>
-<div v-click>
 
-Look at the top of the ranking again:
-
-**CP-SAT, Huub, Chuffed, Pumpkin**
-
-All of them combine CP propagation with SAT-style learning.
-
-</div>
 </div>
 
 ---
@@ -587,637 +1127,9 @@ Log taken from our workforce model (instance_71, 8 workers).
 
 </div>
 
-<div v-click class="mt-12">
 
-But this is a **hands-on** session. Let's model!
 
-</div>
 
----
-layout: image-right
-image: https://images.unsplash.com/photo-1588591795084-1770cb3be374?q=80&w=1287&auto=format&fit=crop
----
-
-# Three use cases
-Chapter 3
-
-<div class="mt-8 text-left">
-
-1. **Nonogram:** Booleans, enforcement literals, `add_automaton`
-2. **Workforce allocation:** interval variables, `add_no_overlap`
-3. **Orthorio:** routing belts in Factorio with `add_circuit`
-
-</div>
-
----
-layout: image-right
-image: https://images.unsplash.com/photo-1612611741189-a9b9eb01d515?q=80&w=1287&auto=format&fit=crop
----
-
-# Nonogram
-Use case 1
-
----
-layout: two-cols
-layoutClass: gap-12
----
-
-## The rules
-
-<v-clicks>
-
-- Every cell is **filled** or **empty**
-- Every row and column has a **clue**: the lengths of its blocks of filled cells, in order
-- Blocks are separated by at least one empty cell
-- Find a grid that satisfies **all clues**
-- No objective: a pure **satisfaction problem**
-
-</v-clicks>
-
-::right::
-
-<img src="/assets/nonogram_baby.png" class="h-95 mx-auto" />
-
----
-layout: two-cols
-layoutClass: gap-12
----
-
-## The baby example, solved
-
-Can you guess what it is?
-
-<v-click>
-
-A light bulb 💡, the symbol of the homework notebook.
-
-</v-click>
-
-<v-click>
-
-<div class="mt-8">
-
-**MiniZinc Challenge 2026** (5 instances, up to 35×35)
-
-| Solver | solved (1 core) | solved (8 cores) |
-|---|---|---|
-| **CP-SAT** | **5 / 5** | **5 / 5** |
-| Gurobi 12 | 1 / 5 | 2 / 5 |
-| CPLEX | 2 / 5 | 2 / 5 |
-| HiGHS | 1 / 5 | 1 / 5 |
-
-</div>
-
-</v-click>
-
-::right::
-
-<img src="/assets/nonogram_baby_solution.png" class="h-95 mx-auto" />
-
----
-
-# Breakout Session #1
-Your turn!
-
-Model **one line** (row or column) of a nonogram.
-
-- What are your variables?
-- How do you make sure the blocks appear in the right **order** and with the right **lengths**?
-- How would you do this as a **MIP**?
-- And how would you explain the rule of a line to a friend? Is there a more natural way to state it?
-
-<!--
-~10 minutes. Collect ideas afterwards: cell variables, block start variables, Big-M vs. implications, automata/regular expressions.
--->
-
----
-
-## Model 1: blocks with enforcement literals
-
-| Variable | Domain | Description |
-|----------|--------|-------------|
-| $cell_{c}$ | $\{0,1\}$ | cell $c$ of the line is filled (shared by row and column) |
-| $start_i$ | $\{0, \dots, n - \ell_i\}$ | first cell of block $i$ with length $\ell_i$ |
-| $covers_{i,c}$ | $\{0,1\}$ | block $i$ covers cell $c$ |
-
-<v-clicks>
-
-1. Blocks are ordered and separated: $start_i + \ell_i + 1 \leq start_{i+1}$
-2. Block $i$ covers exactly $\ell_i$ cells: $\sum_c covers_{i,c} = \ell_i$
-3. Covered cells lie inside the block: $covers_{i,c} \Rightarrow start_i \leq c \leq start_i + \ell_i - 1$
-4. A cell is filled iff a block covers it: $cell_c = \sum_i covers_{i,c}$
-
-</v-clicks>
-
----
-
-## Model 1 in CP-SAT
-
-```python {all|5-7|9-10|11-14|15-17}
-def add_line_blocks(model, cells, clue):
-    n = len(cells)
-    starts = [model.new_int_var(0, n - length, "") for length in clue]
-    covers = [[model.new_bool_var("") for c in range(n)] for _ in clue]
-    # 1. blocks are ordered and separated by at least one empty cell
-    for i in range(len(clue) - 1):
-        model.add(starts[i] + clue[i] + 1 <= starts[i + 1])
-    for i, length in enumerate(clue):
-        # 2. block i covers exactly 'length' cells ...
-        model.add(sum(covers[i]) == length)
-        # 3. ... and all of them lie inside the block
-        for c in range(n):
-            model.add(starts[i] <= c).only_enforce_if(covers[i][c])
-            model.add(starts[i] + length - 1 >= c).only_enforce_if(covers[i][c])
-    # 4. a cell is filled if and only if one block covers it
-    for c in range(n):
-        model.add(cells[c] == sum(covers[i][c] for i in range(len(clue))))
-```
-
-<v-click>
-
-`only_enforce_if`: **no Big-M**. The constraint is only active if the literal is true.
-
-</v-click>
-
----
-
-## Model 2: use a global constraint
-
-A line is valid **iff a finite automaton accepts it**. Clue `[2, 1]` → shortest valid line `1 1 0 1`:
-
-<div class="automaton">
-  <div class="state start">0<span>↻ 0</span></div><div class="edge">1</div>
-  <div class="state">1</div><div class="edge">1</div>
-  <div class="state">2</div><div class="edge">0</div>
-  <div class="state">3<span>↻ 0</span></div><div class="edge">1</div>
-  <div class="state final">4<span>↻ 0</span></div>
-</div>
-
-```python
-def add_line_automaton(model, cells, clue):
-    start, finals, transitions = line_automaton(clue)  # (state, value, next state)
-    model.add_automaton(cells, start, finals, transitions)
-```
-
-<v-click>
-
-One constraint per line, and CP-SAT brings a **specialized propagator** for it.
-
-</v-click>
-
-<style scoped>
-.automaton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  margin: 2rem 0 1.5rem;
-}
-.state {
-  position: relative;
-  width: 2.6rem;
-  height: 2.6rem;
-  border-radius: 9999px;
-  border: 2px solid #2a78d6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-}
-.state.final { box-shadow: 0 0 0 4px white, 0 0 0 6px #2a78d6; }
-.state span {
-  position: absolute;
-  top: -1.5rem;
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: #52514e;
-  white-space: nowrap;
-}
-.edge {
-  min-width: 3.2rem;
-  text-align: center;
-  border-bottom: 2px solid #898781;
-  line-height: 1.2rem;
-  font-size: 0.85rem;
-  color: #52514e;
-  position: relative;
-}
-.edge::after {
-  content: '';
-  position: absolute;
-  right: -2px;
-  bottom: -6px;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 8px solid #898781;
-}
-</style>
-
----
-
-## Global constraints pay off
-
-<div class="grid grid-cols-[3fr_2fr] gap-10 mt-4">
-<div>
-
-| Instance | Size | Model 1 (blocks) | Model 2 (automaton) |
-|---|---|---|---|
-| easy_01 | 15×15 | 0.4 s | 0.1 s |
-| medium_05 | 25×25 | 7.8 s | 1.0 s |
-| hard_02 | 35×35 | 32 s | 5.5 s |
-| hard_03 | 35×35 | > 120 s | **16 s** |
-| hard_01 | 35×35 | > 120 s | **38 s** |
-
-<div class="text-xs opacity-60 mt-2">CP-SAT 9.15 with 2 workers (like a free Colab instance), time limit 120 s</div>
-
-</div>
-<div v-click>
-
-<img src="/assets/nonogram_hard_03.png" class="h-80 mx-auto" />
-
-</div>
-</div>
-
----
-
-## [Let's solve some nonograms](https://colab.research.google.com/github/jpjj/O4A-Hands-On-CP-SAT/blob/main/cp_sat_complete.ipynb)
-
-```python
-puzzle = Nonogram(**load_instance("nonogram", "hard_03"))
-solution = solve_nonogram(puzzle, add_line_automaton)
-plot_nonogram(puzzle, solution)
-```
-
-<v-click>
-
-**Takeaways**
-
-- No objective, no LP guidance: MIP solvers struggle. Propagation + clause learning thrive.
-- **Use global constraints** whenever your structure matches one.
-
-</v-click>
-
----
-layout: image-right
-image: https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1287&auto=format&fit=crop
----
-
-# Workforce Allocation & Scheduling
-Use case 2
-
----
-
-## The problem
-
-<div class="grid grid-cols-2 gap-10 mt-2">
-<div>
-
-From industry (Bleukx et al., CP 2025), part of the MiniZinc Challenge 2026.
-
-<v-clicks>
-
-- $N$ **teams**, $K$ **tasks**
-- Every task has a duration and a **time window**: we decide *when* it starts
-- Only **compatible** teams can do a task
-- A team does one task at a time and has **unavailabilities**
-- **Precedences** and **same-team groups**
-
-</v-clicks>
-
-</div>
-<div v-click>
-
-**Objectives** (lexicographic)
-
-1. Minimize the number of teams
-2. Minimize unfairness: max − min working time
-
-$$\Big(\sum_j d_j\Big) \cdot \#\text{teams} + (\max - \min)$$
-
-</div>
-</div>
-
----
-
-## Sounds familiar?
-
-<div class="grid grid-cols-2 gap-10 mt-2">
-<div>
-
-**Session #1:** workers, tasks with **fixed** times
-
-$$s_i \leq x_{i,j} \cdot \alpha_j + (1 - x_{i,j}) \cdot M$$
-
-</div>
-<div v-click>
-
-**Today:** the start times are **variables** too. As a MIP, every pair of tasks $(a, b)$ that might share a team needs an ordering binary, a "same team" variable and two Big-M constraints: $O(K^2)$ of them.
-
-</div>
-</div>
-
-<div v-click class="mt-6">
-
-<img src="/assets/workforce_baby.png" class="w-full" />
-
-<div class="text-sm opacity-70 mt-1 text-center">
-
-Baby example: 6 tasks, 3 teams, team 0 has a lunch break (hatched). Optimal: 2 teams, cost 26.
-
-</div>
-
-</div>
-
----
-
-## Interval variables
-
-<div class="iv-demo">
-  <div class="iv-line"><span class="iv-label">team k</span>
-    <div class="iv-track">
-      <div class="iv-box" style="left: 18%; width: 34%;">task j</div>
-      <div class="iv-off" style="left: 60%; width: 12%;">lunch</div>
-    </div>
-  </div>
-  <div class="iv-legend">
-    <span style="left: 18%;">start<sub>j</sub></span>
-    <span style="left: 52%;">start<sub>j</sub> + d<sub>j</sub></span>
-  </div>
-</div>
-
-<v-clicks>
-
-- An **interval** has a start, a size and an end with $start + size = end$
-- An **optional interval** has a **presence literal**: it only exists if the literal is true
-- One optional interval per (task $j$, team $k$), present iff $x_{j,k}$
-- `add_no_overlap(intervals of team k)` lets only **present** intervals take part
-
-</v-clicks>
-
-<style scoped>
-.iv-demo { margin: 1.5rem 0 2rem; }
-.iv-line { display: flex; align-items: center; gap: 1rem; }
-.iv-label { width: 4rem; color: #52514e; font-size: 0.9rem; }
-.iv-track { position: relative; flex: 1; height: 2.2rem; border-bottom: 1px solid #c3c2b7; }
-.iv-box, .iv-off { position: absolute; top: 0.2rem; height: 1.8rem; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
-.iv-box { background: #4682b4; color: white; font-weight: 700; }
-.iv-off { background: repeating-linear-gradient(45deg, #e1e0d9, #e1e0d9 4px, #f4f4f2 4px, #f4f4f2 8px); color: #52514e; }
-.iv-legend { position: relative; height: 1.4rem; margin-left: 5rem; font-size: 0.75rem; color: #52514e; }
-.iv-legend span { position: absolute; transform: translateX(-50%); }
-</style>
-
----
-
-## The model
-
-```python {all|2-3|4-6|8-12|all}
-# Variables
-x = {(t.id, k): model.new_bool_var("") for t in tasks for k in t.compatible_teams}
-start = {t.id: model.new_int_var(t.release, t.due - t.duration, "") for t in tasks}
-interval = {(t.id, k): model.new_optional_fixed_size_interval_var(
-                start[t.id], t.duration, x[t.id, k], "")
-            for t in tasks for k in t.compatible_teams}
-
-for t in tasks:  # every task is done by exactly one compatible team
-    model.add_exactly_one(x[t.id, k] for k in t.compatible_teams)
-for k in teams:  # one task at a time, respect the calendar
-    off = [model.new_fixed_size_interval_var(u.start, u.duration, "") for u in unavailable[k]]
-    model.add_no_overlap([interval[t.id, k] for t in tasks if (t.id, k) in interval] + off)
-```
-
-<v-click>
-
-No ordering variables, no Big-M. Precedences, same-team groups and the fairness objective are a few linear constraints (see notebook).
-
-</v-click>
-
----
-
-## A challenge instance: 58 tasks, 18 teams
-
-<img src="/assets/workforce_71.png" class="mt-4" />
-
-<v-click>
-
-**Optimal**: 5 teams, perfectly fair (405 each). CP-SAT proves it in **under a second**.
-
-</v-click>
-
----
-layout: image-right
-image: /assets/meme_symmetry.png
----
-
-## Best practice: break symmetries
-
-Most teams are **interchangeable**: same skills, same calendar.
-
-A solution with 5 teams can be relabeled in $18 \cdot 17 \cdot 16 \cdot 15 \cdot 14 > 10^6$ ways.
-
-<v-click>
-
-```python
-# interchangeable teams k1 < k2
-model.add(used[k1] >= used[k2])
-model.add(worked[k1] >= worked[k2])
-```
-
-</v-click>
-
-<v-click>
-
-| (2 workers, 120 s) | best | bound |
-|---|---|---|
-| without | 10125 | 2163 |
-| **with** | **10125** | **10125** in 0.7 s |
-
-</v-click>
-
-<!--
-Callback to session 1: same meme! Without symmetry breaking CP-SAT finds the optimum quickly but cannot prove it.
--->
-
----
-
-## [Live: CP-SAT vs. MIP](https://colab.research.google.com/github/jpjj/O4A-Hands-On-CP-SAT/blob/main/cp_sat_complete.ipynb)
-
-Same instances, same symmetry breaking, tight pair-specific Big-M for the MIP (Pyomo + HiGHS), 30 s each:
-
-<div class="text-sm compact">
-
-| Instance | Tasks | CP-SAT | time | MIP (HiGHS) | bound | time |
-|---|---|---|---|---|---|---|
-| instance_202 | 26 | **1125** | 0.1 s | **1125** | 1125 | 5.2 s |
-| instance_24_56 | 25 | **1425** | 0.1 s | **1425** | 1425 | 0.4 s |
-| instance_71 | 58 | **10125** | 0.4 s | no solution | 4050 | 30 s |
-| instance_19 | 62 | **9000** | 0.7 s | 21690 | 3600 | 30 s |
-
-</div>
-
-<v-click>
-
-MIP is **not hopeless**: on small instances HiGHS keeps up. The disjunctive structure at scale is what hurts.
-
-<div class="text-xs opacity-60">Measured locally with the complete notebook; your Colab numbers will differ slightly.</div>
-
-</v-click>
-
-<v-click>
-
-<div class="text-sm opacity-70 mt-2">
-
-MiniZinc Challenge (1 core, 20 min): CP-SAT proved all 5 instances optimal, Gurobi 3. On two instances Gurobi's best solution was **20% and 40% worse**.
-
-</div>
-
-</v-click>
-
-<style scoped>
-.compact :deep(td), .compact :deep(th) { padding-top: 0.3rem; padding-bottom: 0.3rem; }
-</style>
-
----
-layout: image-right
-image: https://images.unsplash.com/photo-1734238734314-38f47a6e3931?q=80&w=1287&auto=format&fit=crop
----
-
-# Orthorio
-Use case 3: conveyor belts in Factorio
-
----
-layout: two-cols
-layoutClass: gap-10
----
-
-## The problem
-
-Submitted to the MiniZinc Challenge 2026 by Julia Dijkstra, a hobby project inspired by the game **Factorio**.
-
-<v-clicks>
-
-- Route every **belt** from its **start** to its **end**
-- **Surface belts:** straight or turn, never back
-- **Underground belts:** dive and resurface with up to 4 cells in between, other belts may cross above
-- Belts **must not mix**
-- **Objective:** as few belt tiles as possible
-
-</v-clicks>
-
-::right::
-
-<img src="/assets/factory_baby.png" class="mt-10 mx-auto h-44" />
-
-<v-click>
-
-<img src="/assets/factory_baby_solution.png" class="mt-2 mx-auto h-48" />
-
-</v-click>
-
----
-
-# Breakout Session #2
-Your turn!
-
-How would you model the belt routing?
-
-- How do you make sure every belt is **one connected path** from its start to its end?
-- How do you make sure belts **never mix**?
-- How do you model the **underground belts**?
-
-<!--
-~10 minutes. Expected ideas: flow formulation (session 1!), successor variables, paths as sequences of cells, labels per cell.
--->
-
----
-layout: two-cols
-layoutClass: gap-10
----
-
-## The circuit trick
-
-<v-clicks>
-
-- Every cell is a **node**, every possible belt piece is an **arc** to the cell it feeds into
-- Connect the end of belt $a$ to the start of belt $a + 1$: all belts form **one big circuit**
-- Unused cells get a **self-loop**
-- `add_circuit` supports exactly that: a circuit through a subset of the nodes
-
-</v-clicks>
-
-::right::
-
-<img src="/assets/factory_circuit.png" class="mt-6 mx-auto" />
-
----
-
-## The model
-
-```python {all|1-4|5|7-13|all}
-# one Boolean per possible piece: (kind, direction, target cell)
-arcs = [(index[u], index[u], empty[u]) for u in cells]                      # self-loops
-arcs += [(index[u], index[mv.target], mv.literal) for u in cells for mv in moves[u]]
-arcs += [(index[end(a)], index[start(a + 1)], true) for a in belts]           # one big loop
-model.add_circuit(arcs)
-
-# belts must not mix: every used cell is owned by exactly one belt
-for u in cells:
-    model.add_exactly_one(owner[u] + [empty[u]])
-for u in cells:
-    for mv in moves[u]:
-        for b in belts:
-            model.add(owner[u][b] == owner[mv.target][b]).only_enforce_if(mv.literal)
-```
-
-<v-clicks>
-
-- Plus: valid transitions (`add_bool_or(...).only_enforce_if(...)`), underground rules, forbidden 2×2 detours
-- **Objective:** `model.minimize(sum(~empty[u] for u in cells))`
-
-</v-clicks>
-
----
-
-## Results
-
-<div class="grid grid-cols-2 gap-6 mt-2">
-<div>
-
-<img src="/assets/factory_01.png" />
-
-<div class="text-sm text-center opacity-70">challenge_01: optimal, 43 tiles in ~3 s (2 workers)</div>
-
-</div>
-<div v-click>
-
-<img src="/assets/factory_03.png" />
-
-<div class="text-sm text-center opacity-70">challenge_03: optimal, 48 tiles in ~1 min (2 workers)</div>
-
-</div>
-</div>
-
-<v-click>
-
-**MiniZinc Challenge** (8 cores, 20 min): on challenge_12 (12×9, 8 belts), **no MIP solver found a single feasible layout**. CP-SAT proved the optimum (88 tiles) in 6 minutes.
-
-</v-click>
-
----
-
-## Best practices from the belt factory
-
-<v-clicks>
-
-- **The circuit trick:** chaining all belts into one loop turns multi-belt routing into one `add_circuit`
-- **Booleans propagate well:** the first version used an integer label per cell (`label[u] == label[v]`). Boolean `owner` literals made it **2–3× faster**.
-- **Dominance rules** (forbidden detours, underground belts that do not pass under anything) cut the search space without losing optimal solutions
-- **Validate your solutions** with pydantic: the layout validator traces every belt from start to end
-
-</v-clicks>
-
-<!--
-Anecdote: parallel arcs (a surface belt and an underground exit pointing at the same cell, as two separate literals) made CP-SAT 9.15 crash sporadically with 8+ workers. One literal per arc fixed it.
--->
 
 ---
 layout: image-right
@@ -1229,7 +1141,7 @@ Chapter 4
 
 ---
 
-## CP-SAT vs. Gurobi, problem by problem
+## CP-SAT vs. Gurobi, problem by problem from the 2026 Challenge
 
 <div class="grid grid-cols-[3fr_2fr] gap-8">
 <div>
@@ -1244,7 +1156,7 @@ Chapter 4
 - Head-to-head points per problem (free category, 1 core, 5 instances each)
 - CP-SAT wins **15 of 20** problems
 - Gurobi wins on **warehouse** (facility location), **surface-based TSP** and **gbac**: problems with strong LP relaxations
-- Our three use cases: **nonogram 4.5 : 0.5, orthorio 4.1 : 0.9, workforce 3.4 : 1.6**
+- Our workforce problem: **3.4 : 1.6** for CP-SAT
 
 </v-clicks>
 
@@ -1252,7 +1164,7 @@ Chapter 4
 </div>
 
 ---
-
+ 
 ## When to use CP-SAT, when to use MIP?
 
 | CP-SAT shines | MIP shines |
