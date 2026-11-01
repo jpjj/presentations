@@ -372,7 +372,7 @@ status = solver.solve(model)
 
 <div class="text-sm opacity-70 mt-2">
 
-Looks just like a MIP. And that's fine!
+Looks just like a MIP. With `model.add()`, any linear inequality goes: we could model any integer linear problem. But CP-SAT has more in store...
 
 </div>
 
@@ -385,33 +385,38 @@ Four steps: model, variables, constraints + objective, solve. Whoever has writte
 
 ---
 
-## The same model, the CP-SAT way
+## Global constraints
 
 <div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
 <div>
 
-```python {all|3|5|6-7|9}
+```python {all|3|5-6|7-8|10}
 model = cp_model.CpModel()
 
-job_of = [model.new_int_var(0, 3, "") for w in W]   # which job?
-cost_of = [model.new_int_var(0, 125, "") for w in W]
+x = {(w, j): model.new_bool_var("") for w in W for j in J}
 
-model.add_all_different(job_of)
-for w in W:  # cost_of[w] == cost[w][job_of[w]]
-    model.add_element(job_of[w], cost[w], cost_of[w])
+for j in J:  # every job is done by exactly one worker
+    model.add_exactly_one(x[w, j] for w in W)
+for w in W:  # every worker does exactly one job
+    model.add_exactly_one(x[w, j] for j in J)
 
-model.minimize(sum(cost_of))
+model.minimize(sum(cost[w][j] * x[w, j] for w in W for j in J))
 ```
+
+<div class="text-sm opacity-70 mt-2">
+
+Same optimum: **265**
+
+</div>
 
 </div>
 <div class="text-sm">
 
 <v-clicks>
 
-- Say **what you mean**: "which job does Ana do?" is one integer, not four Booleans
-- `add_all_different`: both families of constraints in **one line**
-- `add_element`: look up a value with a variable index
-- These are **global constraints**: they capture a whole substructure, and the solver has specialized algorithms for each of them
+- Instead of `sum(...) == 1`: the global constraint `add_exactly_one`
+- **Descriptive**: you say exactly *what* should be enforced
+- Global constraints capture a whole **substructure** of the problem, and the solver has specialized algorithms for each of them
 
 </v-clicks>
 
@@ -420,7 +425,7 @@ model.minimize(sum(cost_of))
 
 <div v-click class="mt-6">
 
-**The CP-SAT way:** find the structure in your problem and use the global constraint that describes it. Let's do this on a real problem!
+**Rule of thumb:** if a global constraint captures a substructure of your problem, use it. The model gets more concise, and the solver gets more insight into its structure. Let's do this on a real problem!
 
 </div>
 
@@ -566,11 +571,11 @@ Steps 1 and 2: first the **MIP way**, then the **CP-SAT way**. Everything is in 
 
 <div v-click class="mt-6">
 
-<img src="/assets/workforce_baby_step1.png" class="w-full" />
+<img src="/assets/workforce_baby_problem1.png" class="w-full" />
 
 <div class="text-sm opacity-70 mt-1 text-center">
 
-Baby example: 6 tasks, 3 teams. Tasks 0, 1 and 4 all run between 1 and 2: we need **3 teams**.
+Baby example: 6 tasks, 3 teams, a working day of 8 hours. Teams in brackets: only these are compatible.
 
 </div>
 
@@ -578,25 +583,21 @@ Baby example: 6 tasks, 3 teams. Tasks 0, 1 and 4 all run between 1 and 2: we nee
 
 ---
 
-## Step 1: the MIP way
+## Step 1: the assignment
 
 <div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
 <div>
 
-```python {all|2-3|5-6|7-8|10-13|15}
+```python {all|2|3|5-6|8-9|11}
 # x[j, k]: team k does task j     used[k]: team k is used
 x = {(t.id, k): model.new_bool_var("") for t in tasks for k in t.compatible_teams}
 used = {k: model.new_bool_var("") for k in teams}
 
-for t in tasks:  # every task is done by one compatible team
+for t in tasks:  # every task is done by exactly one compatible team
     model.add_exactly_one(x[t.id, k] for k in t.compatible_teams)
+
 for (j, k) in x:  # a team that does a task is used
     model.add_implication(x[j, k], used[k])
-
-for a, b in combinations(tasks, 2):
-    if a.release < b.due and b.release < a.due:  # overlap in time
-        for k in set(a.compatible_teams) & set(b.compatible_teams):
-            model.add(x[a.id, k] + x[b.id, k] <= 1)
 
 model.minimize(sum(used.values()))
 ```
@@ -606,8 +607,37 @@ model.minimize(sum(used.values()))
 
 <v-clicks>
 
+- Only **compatible** (task, team) pairs get a variable
+- `add_exactly_one` instead of $\sum_k x_{j,k} = 1$
+- `add_implication(a, b)` means $a \Rightarrow b$, i.e. $x_{j,k} \leq used_k$
+- This part is the same for **both** ways. The difference: *a team does one task at a time*
+
+</v-clicks>
+
+</div>
+</div>
+
+---
+
+## Step 1: the MIP way
+
+<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
+<div>
+
+```python {all|1-2|3-4}
+for a, b in combinations(tasks, 2):
+    if a.release < b.due and b.release < a.due:  # overlap in time
+        for k in set(a.compatible_teams) & set(b.compatible_teams):
+            model.add(x[a.id, k] + x[b.id, k] <= 1)
+```
+
+</div>
+<div class="text-sm mt-4">
+
+<v-clicks>
+
 - One constraint per **pair** of overlapping tasks and per team that could do both
-- Works fine. But the solver sees thousands of small, unrelated constraints instead of the structure behind them:
+- Would work. But it is a decomposition: the solver sees thousands of small, unrelated constraints instead of the structure behind them:
 
 </v-clicks>
 
@@ -675,10 +705,21 @@ for k in teams:
 <v-clicks>
 
 - Replaces all the pairwise constraints: **one global constraint per team**
-- Same answer on the baby example: **3 teams**
 - Note: `start` is just a parameter here. Keep that in mind!
 
 </v-clicks>
+
+<div v-click class="mt-4">
+
+<img src="/assets/workforce_baby_step1.png" class="w-full" />
+
+<div class="text-sm opacity-70 mt-1 text-center">
+
+Both ways agree: **3 teams**. Between 1 and 2, tasks 0, 1 and 4 run at the same time.
+
+</div>
+
+</div>
 
 ---
 layout: center
@@ -726,11 +767,11 @@ start = {t.id: model.new_int_var(t.release, t.due - t.duration, "") for t in tas
 
 <div v-click class="mt-6">
 
-<img src="/assets/workforce_baby_step2.png" class="w-full" />
+<img src="/assets/workforce_baby_problem2.png" class="w-full" />
 
 <div class="text-sm opacity-70 mt-1 text-center">
 
-The flexibility saves a team: **2 teams** are enough now.
+Same tasks, now with real time windows. Do we still need 3 teams?
 
 </div>
 
@@ -785,26 +826,39 @@ In CP-SAT: an **enforcement literal**. The constraint only holds if all literals
 
 <v-click>
 
-**That's it.** The intervals move along with their start, the rest of the model stays the same.
+**Nothing else to do.** `add_no_overlap_intervals` already takes `start` as a parameter: we pass variables instead of numbers, the intervals move along.
 
 </v-click>
 
-<div v-click class="mt-8">
+<v-switch class="mt-6">
+<template #1>
+
+<img src="/assets/workforce_baby_step2.png" class="w-full" />
+
+<div class="text-sm opacity-70 mt-1 text-center">
+
+The flexibility saves a team: **2 teams** are enough now.
+
+</div>
+
+</template>
+<template #2>
 
 Model size on a challenge instance (58 tasks, 18 teams):
 
 | | variables | constraints |
 |---|---|---|
-| MIP way | 1,725 | 22,740 |
-| CP-SAT way | 1,088 | 2,118 |
+| MIP way | 1,725 | 22,722 |
+| CP-SAT way | 1,088 | 2,100 |
 
 <div class="text-sm opacity-70">
 
-The MIP way grows with *pairs of tasks × teams*, the CP-SAT way with *compatible (task, team) pairs*.
+The MIP way grows with *pairs of tasks × teams*, the CP-SAT way with *compatible (task, team) pairs*. From here on, we continue with the CP-SAT way only.
 
 </div>
 
-</div>
+</template>
+</v-switch>
 
 ---
 
@@ -813,7 +867,7 @@ The MIP way grows with *pairs of tasks × teams*, the CP-SAT way with *compatibl
 <div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
 <div>
 
-```python {all|1-3|5-6|8-11}
+```python {all|1-3|5-6|8-12}
 # lunch breaks: fixed intervals in the same no_overlap
 intervals += [model.new_fixed_size_interval_var(u.start, u.duration, "")
               for u in team.unavailabilities]
@@ -824,7 +878,8 @@ for a, b in problem.precedence:  # a ends before b starts
 for first, *others in problem.same_team:  # same team
     for other in others:
         for k in teams:
-            model.add(x.get((first, k), 0) == x.get((other, k), 0))
+            if (first, k) in x or (other, k) in x:
+                model.add(x.get((first, k), 0) == x.get((other, k), 0))
 ```
 
 </div>
@@ -834,24 +889,37 @@ for first, *others in problem.same_team:  # same team
 
 - An unavailability is an interval that is **always present**. One new line!
 - Precedences: one linear constraint each
-- Same-team groups: equal assignment variables
+- Same-team groups: equal assignment variables. If only one task is compatible with team $k$, the other can't be done by $k$ either
 
 </v-clicks>
 
 </div>
 </div>
 
-<div v-click class="mt-4">
+<v-switch class="mt-2">
+<template #1>
+
+<img src="/assets/workforce_baby_problem3.png" class="w-4/6 mx-auto" />
+
+<div class="text-sm opacity-70 text-center">
+
+Team 0 has lunch from 4 to 5 (quite late), task 0 before task 2, tasks 3 and 5 by the same team.
+
+</div>
+
+</template>
+<template #2>
 
 <img src="/assets/workforce_baby_step3.png" class="w-5/6 mx-auto" />
 
 <div class="text-sm opacity-70 mt-1 text-center">
 
-Team 0 has lunch from 4 to 5, task 0 before task 2, tasks 3 and 5 by the same team. Still **2 teams**. Is the work shared fairly? Only by luck.
+Still **2 teams**. Is the work shared fairly? Nobody told the solver: only by luck.
 
 </div>
 
-</div>
+</template>
+</v-switch>
 
 ---
 layout: center
@@ -977,10 +1045,10 @@ Same solver, same constraints, same symmetry breaking, 30 s each. The only diffe
 
 | Instance | Tasks | constraints MIP way | constraints CP-SAT way | MIP way | CP-SAT way |
 |---|---|---|---|---|---|
-| instance_202 | 26 | 5,261 | 1,175 | optimal, 0.3 s | optimal, 0.1 s |
-| instance_24_56 | 25 | 4,431 | 1,083 | optimal, 0.2 s | optimal, 0.2 s |
-| instance_71 | 58 | 23,013 | 2,391 | optimal, 7.3 s | optimal, **0.6 s** |
-| instance_19 | 62 | 33,501 | 2,931 | 9000, bound 7200 | optimal, **0.4 s** |
+| instance_202 | 26 | 5,243 | 1,157 | optimal, 0.3 s | optimal, 0.1 s |
+| instance_24_56 | 25 | 4,413 | 1,065 | optimal, 0.2 s | optimal, 0.2 s |
+| instance_71 | 58 | 22,995 | 2,373 | optimal, 7.3 s | optimal, **0.6 s** |
+| instance_19 | 62 | 33,481 | 2,911 | 9000, bound 7200 | optimal, **0.4 s** |
 
 </div>
 
