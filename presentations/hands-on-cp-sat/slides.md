@@ -276,11 +276,26 @@ Important: the MIP solvers do not compete for medals. They are reference entries
 
 ## CP-SAT is useful
 
+<div class="text-sm opacity-70 -mt-2 mb-2">
 
+60 problems featured in the last 3 years of the MiniZinc Challenge · [jpjsolutions.com/minizinc-challenge](https://jpjsolutions.com/minizinc-challenge)
 
-60 problems featured in the last 3 years of the MiniZinc Challenge
+</div>
 
-I will later insert the iframe to the website I created for all the different problems. I will pick some here and browse a little bit for people to understand that it CP-SAT is useful in solving a bit variaty of OR problems.
+<div class="relative overflow-hidden rounded border border-gray-300" style="height: 360px;">
+  <iframe
+    src="https://jpjsolutions.com/minizinc-challenge"
+    class="absolute inset-0"
+    style="width: 125%; height: 125%; transform: scale(0.8); transform-origin: top left; border: 0;"
+    frameborder="0"
+    allowfullscreen
+  />
+</div>
+
+<!--
+Pick a few problems and browse a little, to show the wide variety of OR problems CP-SAT solves well.
+Clicking into the iframe gives it the keyboard focus: click outside it (e.g. on the title) before using the arrow keys to move on.
+-->
 
 
 
