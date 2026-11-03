@@ -1037,6 +1037,79 @@ model.add(worked[k1] >= worked[k2])
 
 ---
 
+## Best practice: redundant constraints
+
+<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
+<div>
+
+<div class="text-lg mb-3">
+
+*At any time: number of running tasks* $\leq$ *number of used teams*
+
+</div>
+
+```python {all|1-2|3-5|6}
+num_used = model.new_int_var(0, len(teams), "")
+model.add(num_used == sum(used.values()))
+all_tasks = [model.new_fixed_size_interval_var(
+                 start[t.id], t.duration, "")
+             for t in tasks]
+model.add_cumulative(all_tasks, [1] * len(tasks), num_used)
+```
+
+<div class="text-sm">
+
+<v-clicks>
+
+- **Implied** by the model: it removes no solution, unlike symmetry breaking
+- One `add_cumulative` over **all** tasks: a direct lower bound on the number of teams, instead of failing team by team
+
+</v-clicks>
+
+</div>
+
+</div>
+<div class="text-sm compact" v-click>
+
+With symmetry breaking, time to optimal:
+
+| Instance | Tasks | without | with |
+|---|---|---|---|
+| instance_202 | 26 | **0.07 s** | 0.25 s |
+| instance_24_56 | 25 | **0.19 s** | 0.69 s |
+| instance_71 | 58 | 3.4 s | **0.9 s** |
+| instance_19 | 62 | 4.9 s | **0.31 s** |
+
+<div class="text-xs opacity-60">Median of 3 seeds, 4 cores, 30 s limit.</div>
+
+<div v-click class="mt-4">
+
+Without symmetry breaking, nothing is proven optimal, but on instance_19 the bound rises from **3 to 4** proven teams.
+
+</div>
+
+</div>
+</div>
+
+<div v-click class="mt-4 text-center">
+
+Redundant constraints cost propagation time: small instances get slower, large ones faster. **Measure!**
+
+</div>
+
+<!--
+Bleukx et al. use the same idea in their original model: they solve this cumulative relaxation (all teams identical) separately and add sum(used) >= lb.
+Per-seed times: instance_71 3.4/0.4/3.8 s vs 2.7/0.9/0.3 s (high variance), instance_19 6.6/4.9/3.6 s vs 0.31/0.45/0.22 s.
+The cumulative capacity must be a single (affine) variable, hence num_used: passing sum(used) directly gives MODEL_INVALID.
+Valid only without team unavailabilities: with calendars the capacity would have to drop during off-times. The challenge instances have none.
+-->
+
+<style scoped>
+.compact :deep(td), .compact :deep(th) { padding-top: 0.3rem; padding-bottom: 0.3rem; }
+</style>
+
+---
+
 ## [Live: the MIP way vs. the CP-SAT way](https://colab.research.google.com/github/jpjj/O4A-Hands-On-CP-SAT/blob/main/cp_sat_complete.ipynb)
 
 Same solver, same constraints, same symmetry breaking, 30 s each. The only difference: how we model *one task at a time*.
