@@ -3,7 +3,7 @@ theme: default
 colorSchema: light
 routerMode: hash
 favicon: 'https://raw.githubusercontent.com/jpjj/jpjj.github.io/main/assets/favicon_jpjsolutions.png'
-background: https://images.unsplash.com/photo-1466094899371-97b327dff551?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+background: https://images.unsplash.com/photo-1606567595334-d39972c85dbe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D
 title: Hands-On CP-SAT
 info: |
   ## Jens-Peter Joost
@@ -149,7 +149,9 @@ zoom: 1.0
   </div>
 </div>
 
-<div class="mt-12 text-sm opacity-70">
+<div class="absolute bottom-6 left-14 text-xs opacity-60">
+
+
 
 All code runs in Google Colab: [homework notebook](https://colab.research.google.com/github/jpjj/O4A-Hands-On-CP-SAT/blob/main/cp_sat_homework.ipynb) · [complete notebook](https://colab.research.google.com/github/jpjj/O4A-Hands-On-CP-SAT/blob/main/cp_sat_complete.ipynb)
 
@@ -161,7 +163,8 @@ Ask: Who did the homework? Hands up / emoji in the chat.
 
 ---
 layout: image-right
-image: https://images.unsplash.com/photo-1578269174936-2709b6aeb913?q=80&w=1287&auto=format&fit=crop
+image: https://images.unsplash.com/photo-1621088358485-6bbd5bb488b2?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D 
+#https://images.unsplash.com/photo-1578269174936-2709b6aeb913?q=80&w=1287&auto=format&fit=crop
 ---
 
 # Why do I need CP-SAT?
@@ -276,21 +279,11 @@ Important: the MIP solvers do not compete for medals. They are reference entries
 
 ## CP-SAT is useful
 
-<div class="text-sm opacity-70 -mt-2 mb-2">
 
-60 problems featured in the last 3 years of the MiniZinc Challenge · [jpjsolutions.com/minizinc-challenge](https://jpjsolutions.com/minizinc-challenge)
+60 problems featured in the last 3 years of the MiniZinc Challenge:
+- [jpjsolutions.com/minizinc-challenge](https://jpjsolutions.com/minizinc-challenge)
 
-</div>
 
-<div class="relative overflow-hidden rounded border border-gray-300" style="height: 360px;">
-  <iframe
-    src="https://jpjsolutions.com/minizinc-challenge"
-    class="absolute inset-0"
-    style="width: 125%; height: 125%; transform: scale(0.8); transform-origin: top left; border: 0;"
-    frameborder="0"
-    allowfullscreen
-  />
-</div>
 
 <!--
 Pick a few problems and browse a little, to show the wide variety of OR problems CP-SAT solves well.
@@ -334,7 +327,6 @@ Clicking into the iframe gives it the keyboard focus: click outside it (e.g. on 
 - **Open source** (Apache 2.0), part of Google OR-Tools, free for commercial use
 - `pip install ortools` and you are ready to go: Python, C++, Java, C#
 - Excellent free learning material: [**The CP-SAT Primer**](https://d-krupke.github.io/cpsat-primer/) by Dominik Krupke
-- And it is **easy to model**. Let's see!
 
 </v-clicks>
 
@@ -345,31 +337,24 @@ Clicking into the iframe gives it the keyboard focus: click outside it (e.g. on 
 <div class="grid grid-cols-[2fr_3fr] gap-8 mt-2">
 <div>
 
-4 workers, 4 jobs, a cost per (worker, job).
+<br>
 
-Every worker does exactly one job, every job is done by exactly one worker.
+- Given $n$ workers, $n$ jobs, a cost per (worker, job) pair.
+- Every worker does exactly one job, every job is done by exactly one worker.
+- Minimze the total cost.
 
-<div class="text-sm mt-4">
 
-| | Excav. | Concr. | Wiring | Paint. |
-|---|---|---|---|---|
-| Ana | 90 | 80 | 75 | **70** |
-| Ben | 35 | 85 | **55** | 65 |
-| Chloe | 125 | **95** | 90 | 95 |
-| David | **45** | 110 | 95 | 115 |
-
-</div>
-
-<div v-click="5" class="text-sm">
-
-Optimal: **265**
-
-</div>
 
 </div>
 <div>
 
+<v-click>
+
+Model it like an IP:
+
 ```python {all|1|3|5-8|10|12-13}
+J, W = range(n), range(n)
+# given cost as a matrix
 model = cp_model.CpModel()
 
 x = {(w, j): model.new_bool_var("") for w in W for j in J}
@@ -379,17 +364,13 @@ for w in W:  # every worker does exactly one job
 for j in J:  # every job is done by exactly one worker
     model.add(sum(x[w, j] for w in W) == 1)
 
-model.minimize(sum(cost[w][j] * x[w, j] for w in W for j in J))
+model.minimize(sum(cost[w,j] * x[w, j] for w in W for j in J))
 
 solver = cp_model.CpSolver()
 status = solver.solve(model)
 ```
 
-<div class="text-sm opacity-70 mt-2">
-
-Looks just like a MIP. With `model.add()`, any linear inequality goes: we could model any integer linear problem. But CP-SAT has more in store...
-
-</div>
+</v-click>
 
 </div>
 </div>
@@ -405,7 +386,7 @@ Four steps: model, variables, constraints + objective, solve. Whoever has writte
 <div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
 <div>
 
-```python {all|3|5-6|7-8|10}
+```python {all|6,8}
 model = cp_model.CpModel()
 
 x = {(w, j): model.new_bool_var("") for w in W for j in J}
@@ -418,11 +399,7 @@ for w in W:  # every worker does exactly one job
 model.minimize(sum(cost[w][j] * x[w, j] for w in W for j in J))
 ```
 
-<div class="text-sm opacity-70 mt-2">
 
-Same optimum: **265**
-
-</div>
 
 </div>
 <div class="text-sm">
@@ -456,11 +433,12 @@ Chapter 2
 
 ---
 layout: image-right
-image: https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1287&auto=format&fit=crop
+image: https://images.unsplash.com/photo-1714632427779-7a7fc09ec9ed?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D&auto=format&fit=crop
+#https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1287&auto=format&fit=crop
 ---
  
 # Workforce Allocation & Scheduling
-Use case
+Chapter 2
 
 ---
 
@@ -469,201 +447,479 @@ Use case
 <div class="grid grid-cols-2 gap-10 mt-2">
 <div>
 
-From industry (Bleukx et al., CP 2025), part of the MiniZinc Challenge 2026.
+From industry (Bleukx et al., CP 2025, KU Leuven & Airbus)
+
 
 <v-clicks>
 
 - $N$ **teams**, $K$ **tasks**
 - Every task has a duration and a **time window**: we decide *when* it starts
-- Only **compatible** teams can do a task
+- Teams and tasks must be **compatible**
+
+
+</v-clicks>
+
+</div>
+<v-clicks>
+
 - A team does one task at a time and has **unavailabilities**
 - **Precedences** and **same-team groups**
+
+- **Objectives** (lexicographic)
+
+  1. Minimize the number of teams
+  2. Minimize unfairness: max − min working time
+
+</v-clicks>
+</div>
+
+<img src="/assets/workforce_baby_problem3.png" class="w-5/6 mx-auto" />
+<!-- KU Leuven and Airbus -->
+---
+layout: two-cols-header
+layout-Class: gap-8
+---
+
+## Data Structures
+
+::left:: 
+
+- Teams
+- Tasks
+- Time Intervals
+- A Problem Class
+
+```python
+TeamId = NewType("TeamId", int)
+TaskId = NewType("TaskId", int)
+
+
+class TimeInterval(BaseModel, frozen=True):
+    """A period of time [start, end)."""
+    start: int = Field(ge=0)
+    end: int = Field(gt=0)
+
+    @property
+    def duration(self) -> int:
+        return self.end - self.start
+```
+
+
+::right::
+
+
+<v-click at="-1" >
+
+```python
+class Team(BaseModel, frozen=True):
+    id: TeamId
+    unavailabilities: list[TimeInterval] = []
+
+
+class Task(BaseModel, frozen=True):
+    id: TaskId
+    release: int = Field(ge=0)
+    due: int = Field(gt=0)
+    duration: int = Field(gt=0)
+    compatible_teams: list[TeamId]
+
+
+class WorkforceProblem(BaseModel):
+    """Represents the problem instance."""
+    name: str = ""
+    teams: list[Team]
+    tasks: list[Task]
+    precedence: list[tuple[TaskId, TaskId]] = []  
+    same_team: list[list[TaskId]] = []  
+```
+
+
+</v-click>
+---
+
+## What do we need?
+
+<v-clicks>
+
+Like in MIP modeling:
+- Variables
+- Constraints
+- Objective Function
+
+</v-clicks>
+
+
+---
+
+## Lets define functions to create the different variables.
+
+```python
+def add_assignment_variables(model: cp_model.CpModel, problem: WorkforceProblem):
+    """x[j, k] = 1: team k does task j."""
+    return {(t.id, k): model.new_bool_var(f"x_{t.id}_{k}") for t in problem.tasks for k in t.compatible_teams}
+
+def add_used_team_variables(model: cp_model.CpModel, problem: WorkforceProblem):
+    """used[k] = 1: team k does at least one task."""
+    return {team.id: model.new_bool_var(f"used_{team.id}") for team in problem.teams}
+
+def add_start_times_variables(model: cp_model.CpModel, problem: WorkforceProblem):
+    """start[j] = z: task j starts at time z"""
+    return {t.id: model.new_int_var(t.release, t.due - t.duration, f"start_{t.id}") for t in problem.tasks}
+```
+
+
+---
+
+## The Integer Programming (IP) way: assignment
+
+```python {all|3-4|5-6}
+def add_assignment_constraints_ip(model: cp_model.CpModel, problem: WorkforceProblem, x, used):
+    """Every task is done by exactly one compatible team, a team that does a task is used."""
+    for t in problem.tasks:
+        model.add(sum(x[t.id, k] for k in t.compatible_teams) == 1)
+    for (j, k) in x:
+        model.add(x[j, k] <= used[k])
+```
+
+<div class="grid grid-cols-2 gap-8 mt-6 text-sm">
+<div>
+
+<v-clicks>
+
+- $\sum_{k \in K_j} x_{j,k} = 1 \quad \forall j$
+- $x_{j,k} \leq used_k \quad \forall j,\ k \in K_j$
+
+</v-clicks>
+
+</div>
+<div>
+
+<v-clicks>
+
+- $K_j$: the teams compatible with task $j$. Only compatible pairs get a variable.
+- Time windows need no constraint at all: they are the **domain** of the start variable, $s_j \in [r_j,\ D_j - d_j]$
+
+</v-clicks>
+
+</div>
+</div>
+
+<!--
+Notation for the whole chapter: s_j start, d_j duration, [r_j, D_j] time window (release, due).
+-->
+
+---
+
+## The IP way: one task at a time
+
+<v-click>
+
+If two tasks share a team, **one of them comes first**: a new Boolean $y_{a,b}$ per pair of overlapping time windows.
+
+</v-click>
+
+```python {all|3-5|6|7-10}
+def add_no_overlap_constraints_ip(model: cp_model.CpModel, problem: WorkforceProblem, x, start):
+    """Two tasks on the same team must not overlap: one of them comes first."""
+    for a, b in combinations(problem.tasks, 2):
+        if a.release < b.due and b.release < a.due:  # windows overlap
+            a_first = model.new_bool_var(f"first_{a.id}_{b.id}")
+            M_ab, M_ba = a.due - b.release, b.due - a.release
+            for k in set(a.compatible_teams) & set(b.compatible_teams):
+                xa, xb = x[a.id, k], x[b.id, k]
+                model.add(start[a.id] + a.duration <= start[b.id] + M_ab * (3 - xa - xb - a_first))
+                model.add(start[b.id] + b.duration <= start[a.id] + M_ba * (2 - xa - xb + a_first))
+```
+
+<div v-click class="mt-4">
+
+$$
+\begin{aligned}
+s_a + d_a &\leq s_b + M_{ab}\,(3 - x_{a,k} - x_{b,k} - y_{a,b}) \\
+s_b + d_b &\leq s_a + M_{ba}\,(2 - x_{a,k} - x_{b,k} + y_{a,b})
+\end{aligned}
+\qquad \forall\, a, b \text{ overlapping},\ k \in K_a \cap K_b
+$$
+
+</div>
+
+---
+
+## How big is $M$?
+
+<div class="grid grid-cols-2 gap-10 mt-4">
+<div>
+
+$$
+s_a + d_a \leq s_b + M_{ab}\,\underbrace{(3 - x_{a,k} - x_{b,k} - y_{a,b})}_{=:\ \beta}
+$$
+
+<v-clicks>
+
+- $\beta = 0$: both tasks on team $k$ **and** $a$ first. Then $s_a + d_a \leq s_b$ is enforced.
+- $\beta \geq 1$: the constraint must be **switched off**, i.e. it may never cut anything:
+
+</v-clicks>
+
+<div v-click>
+
+$$
+M_{ab} \geq \max\,(s_a + d_a - s_b) = (D_a - d_a) + d_a - r_b = D_a - r_b
+$$
+
+</div>
+
+</div>
+<div>
+
+<v-clicks>
+
+- $M$ too **small**: cuts off feasible solutions, the "optimum" is wrong
+- $M$ too **large**: weak LP relaxation, numerical trouble
+- So we take the smallest valid $M$, per pair: `M_ab = a.due - b.release`
+- Model size: one Boolean per pair, two constraints per pair **and** per shared team
+
+</v-clicks>
+
+</div>
+</div>
+
+<!--
+Ask the audience first: what happens if M is too small? Too large?
+-->
+
+---
+
+## The IP way: lunch breaks
+
+<v-click>
+
+Same pattern: a task on team $k$ is either **before** or **after** the break $u$, a new Boolean $b_{j,u}$.
+
+</v-click>
+
+```python {all|3-7|8-11}
+def add_unavailability_constraints_ip(model: cp_model.CpModel, problem: WorkforceProblem, x, start):
+    """A task on a team is either before or after each of the team's breaks."""
+    for team in problem.teams:
+        k = team.id
+        for u in team.unavailabilities:
+            for t in problem.tasks:
+                if k in t.compatible_teams and t.release < u.end and u.start < t.due:
+                    before = model.new_bool_var(f"before_{t.id}_{k}_{u.start}")
+                    M1, M2 = t.due - u.start, u.end - t.release
+                    model.add(start[t.id] + t.duration <= u.start + M1 * (2 - x[t.id, k] - before))
+                    model.add(u.end <= start[t.id] + M2 * (1 - x[t.id, k] + before))
+```
+
+<div v-click class="mt-4">
+
+$$
+\begin{aligned}
+s_j + d_j &\leq u^{start} + (D_j - u^{start})\,(2 - x_{j,k} - b_{j,u}) \\
+u^{end} &\leq s_j + (u^{end} - r_j)\,(1 - x_{j,k} + b_{j,u})
+\end{aligned}
+$$
+
+</div>
+
+<div v-click class="text-sm opacity-70 mt-2">
+
+Again two Big-M constraints, now per (task, team, break). The $M$s follow the same reasoning as before.
+
+</div>
+
+---
+
+## The IP way: precedences and same-team groups
+
+```python {all|1-5|8-15}
+def add_precedence_constraints(model: cp_model.CpModel, problem: WorkforceProblem, start):
+    """Task a ends before task b starts."""
+    duration = {t.id: t.duration for t in problem.tasks}
+    for a, b in problem.precedence:
+        model.add(start[a] + duration[a] <= start[b])
+
+
+def add_same_team_constraints(model: cp_model.CpModel, problem: WorkforceProblem, x):
+    """All tasks of a group are done by the same team."""
+    for first, *others in problem.same_team:
+        for other in others:
+            for team in problem.teams:
+                k = team.id
+                if (first, k) in x or (other, k) in x:
+                    model.add(x.get((first, k), 0) == x.get((other, k), 0))
+```
+
+<div class="grid grid-cols-2 gap-8 mt-4 text-sm">
+<div>
+
+<v-clicks>
+
+- $s_a + d_a \leq s_b \quad \forall (a, b) \in P$
+- $x_{a,k} = x_{b,k} \quad \forall$ groups, $\forall k \in K_a \cup K_b$
 
 </v-clicks>
 
 </div>
 <div v-click>
 
-**Objectives** (lexicographic)
-
-1. Minimize the number of teams
-2. Minimize unfairness: max − min working time
+If only one of the two tasks is compatible with team $k$, the missing variable is $0$: the other task can't be done by $k$ either.
 
 </div>
-</div>
-
-<div v-click class="mt-8 text-xl text-center">
-
-That's a lot at once. Let's **slice the elephant**.
-
 </div>
 
 ---
 
-## Slicing the elephant
+## The IP way: fair is fair
 
-<div class="steps mt-4">
+```python {all|3-4|5-6|7-9}
+def add_fairness_constraints_ip(model: cp_model.CpModel, problem: WorkforceProblem, x, used):
+    """Working time per team, and its max and min over the used teams."""
+    total = sum(t.duration for t in problem.tasks)
+    worked = {k: sum(t.duration * x[t.id, k] for t in problem.tasks if (t.id, k) in x) for k in used}
+    max_worked = model.new_int_var(0, total, "max_worked")
+    min_worked = model.new_int_var(0, total, "min_worked")
+    for k in used:
+        model.add(max_worked >= worked[k])
+        model.add(min_worked <= worked[k] + total * (1 - used[k]))
+    return worked, max_worked, min_worked
+```
 
-<div class="step-row" v-click>
-  <div class="step-num">1</div>
-  <div><b>Who does what?</b> Fixed start times, compatibility, minimize #teams</div>
-  <div class="step-tag">intervals, <code>add_no_overlap</code></div>
-</div>
-
-<div class="step-row breakout" v-click>
-  <div class="step-num">🗣️</div>
-  <div><b>Breakout 1</b></div>
-  <div></div>
-</div>
-
-<div class="step-row" v-click>
-  <div class="step-num">2</div>
-  <div><b>When?</b> Time windows: we decide the start times</div>
-  <div class="step-tag">enforcement literals</div>
-</div>
-
-<div class="step-row" v-click>
-  <div class="step-num">3</div>
-  <div><b>The real world:</b> precedences, same-team groups, lunch breaks</div>
-  <div class="step-tag">fixed intervals</div>
-</div>
-
-<div class="step-row breakout" v-click>
-  <div class="step-num">🗣️</div>
-  <div><b>Breakout 2</b></div>
-  <div></div>
-</div>
-
-<div class="step-row last" v-click>
-  <div class="step-num">4</div>
-  <div><b>Fair is fair:</b> fairness as a second objective</div>
-  <div class="step-tag">lexicographic objectives</div>
-</div>
-
-</div>
-
-<div v-click class="mt-6 text-sm opacity-80">
-
-Steps 1 and 2: first the **MIP way**, then the **CP-SAT way**. Everything is in the notebook.
-
-</div>
-
-<style scoped>
-.step-row {
-  display: grid;
-  grid-template-columns: 3rem 1fr 14rem;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.45rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-.step-row.last { border-bottom: none; }
-.step-row.breakout { color: #52514e; font-size: 0.9rem; }
-.step-num {
-  font-family: 'Georgia', serif;
-  font-style: italic;
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: #0c384a;
-  line-height: 1;
-  text-align: center;
-}
-.step-tag { font-size: 0.85rem; color: #52514e; }
-</style>
-
----
-
-## Step 1: Who does what?
+<div class="grid grid-cols-2 gap-8 mt-6 text-sm">
+<div>
 
 <v-clicks>
 
-- For now, every task has a **fixed start time**: $release + duration = due$
-- Decide only which **compatible** team does which task
-- A team does one task at a time
-- Minimize the number of teams used
+- $w_k = \sum_{j} d_j\, x_{j,k}$, $\quad w^{max} \geq w_k$
+- $w^{min} \leq w_k + T\,(1 - used_k)$ with $T = \sum_j d_j$
 
 </v-clicks>
 
-<div v-click class="mt-6">
+</div>
+<div v-click>
 
-<img src="/assets/workforce_baby_problem1.png" class="w-full" />
+Unused teams work $0$: without the Big-M, they pull the minimum down to $0$.
+
+</div>
+</div>
+
+---
+
+## The objective
+
+```python {all|3|4}
+def add_objective(model: cp_model.CpModel, problem: WorkforceProblem, used, max_worked, min_worked):
+    """Lexicographic: first the number of teams, then the unfairness."""
+    total = sum(t.duration for t in problem.tasks)
+    model.minimize(total * sum(used.values()) + max_worked - min_worked)
+```
+
+<v-clicks>
+
+- $\min\ T \sum_k used_k + (w^{max} - w^{min})$
+- The unfairness is always smaller than $T$, so **saving a team always wins**
+
+</v-clicks>
+
+---
+
+## The complete IP
+
+<div class="text-sm">
+
+$$
+\begin{aligned}
+\min \quad & T \textstyle\sum_k used_k + w^{max} - w^{min} \\
+\text{s.t.} \quad & \textstyle\sum_{k \in K_j} x_{j,k} = 1, \quad x_{j,k} \leq used_k && \text{assignment} \\
+& s_a + d_a \leq s_b + M_{ab}\,(3 - x_{a,k} - x_{b,k} - y_{a,b}) && \text{one task at a time} \\
+& s_b + d_b \leq s_a + M_{ba}\,(2 - x_{a,k} - x_{b,k} + y_{a,b}) \\
+& s_j + d_j \leq u^{start} + M\,(2 - x_{j,k} - b_{j,u}), \quad u^{end} \leq s_j + M'\,(1 - x_{j,k} + b_{j,u}) && \text{lunch breaks} \\
+& s_a + d_a \leq s_b, \quad x_{a,k} = x_{b,k} && \text{precedence, same team} \\
+& w^{max} \geq w_k, \quad w^{min} \leq w_k + T\,(1 - used_k) && \text{fairness} \\
+& s_j \in [r_j,\ D_j - d_j], \quad x, y, b, used \in \{0, 1\}
+\end{aligned}
+$$
+
+</div>
+
+<div v-click class="mt-4">
+
+Only `model.add(...)`: every line is a linear constraint. Any MIP solver could take this model as it is.
+
+</div>
+
+---
+
+## The complete IP in code
+
+```python {all|2-5|7-12|14}
+def create_ip_model(problem: WorkforceProblem):
+    model = cp_model.CpModel()
+    x = add_assignment_variables(model, problem)
+    used = add_used_team_variables(model, problem)
+    start = add_start_times_variables(model, problem)
+
+    add_assignment_constraints_ip(model, problem, x, used)
+    add_no_overlap_constraints_ip(model, problem, x, start)
+    add_unavailability_constraints_ip(model, problem, x, start)
+    add_precedence_constraints(model, problem, start)
+    add_same_team_constraints(model, problem, x)
+    worked, max_worked, min_worked = add_fairness_constraints_ip(model, problem, x, used)
+
+    add_objective(model, problem, used, max_worked, min_worked)
+    return model, x, start
+```
+
+---
+
+## [Live: solve the IP](https://colab.research.google.com/github/jpjj/O4A-Hands-On-CP-SAT/blob/main/cp_sat_complete.ipynb)
+
+<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
+<div>
+
+<img src="/assets/workforce_baby_step4.png" class="w-full" />
 
 <div class="text-sm opacity-70 mt-1 text-center">
 
-Baby example: 6 tasks, 3 teams, a working day of 8 hours. Teams in brackets: only these are compatible.
+Baby example: optimal with 2 teams, unfairness 2, cost $12 \cdot 2 + 2 = 26$. Why is 6/6 impossible? (Hint: tasks 3 and 5.)
 
 </div>
 
 </div>
+<div class="text-sm" v-click>
 
----
+On the challenge instances (30 s each):
 
-## Step 1: the assignment
+| Instance | Tasks | constraints | result |
+|---|---|---|---|
+| instance_202 | 26 | 5,209 | optimal, 12.9 s |
+| instance_24_56 | 25 | 4,379 | 1425, bound 1420 |
+| instance_71 | 58 | 22,963 | 10125, bound 8912 |
+| instance_19 | 62 | 33,445 | 9000, bound 5605 |
 
-<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
-<div>
+<div class="text-xs opacity-60">Measured locally (16 cores) with the complete notebook.</div>
 
-```python {all|2|3|5-6|8-9|11}
-# x[j, k]: team k does task j     used[k]: team k is used
-x = {(t.id, k): model.new_bool_var("") for t in tasks for k in t.compatible_teams}
-used = {k: model.new_bool_var("") for k in teams}
+<div v-click class="mt-4">
 
-for t in tasks:  # every task is done by exactly one compatible team
-    model.add_exactly_one(x[t.id, k] for k in t.compatible_teams)
-
-for (j, k) in x:  # a team that does a task is used
-    model.add_implication(x[j, k], used[k])
-
-model.minimize(sum(used.values()))
-```
+Correct, but the model grows with *pairs of tasks × teams*, and optimality is proven only once. Can we tell the solver more about the structure?
 
 </div>
-<div class="text-sm mt-4">
-
-<v-clicks>
-
-- Only **compatible** (task, team) pairs get a variable
-- `add_exactly_one` instead of $\sum_k x_{j,k} = 1$
-- `add_implication(a, b)` means $a \Rightarrow b$, i.e. $x_{j,k} \leq used_k$
-- This part is the same for **both** ways. The difference: *a team does one task at a time*
-
-</v-clicks>
 
 </div>
 </div>
 
 ---
 
-## Step 1: the MIP way
-
-<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
-<div>
-
-```python {all|1-2|3-4}
-for a, b in combinations(tasks, 2):
-    if a.release < b.due and b.release < a.due:  # overlap in time
-        for k in set(a.compatible_teams) & set(b.compatible_teams):
-            model.add(x[a.id, k] + x[b.id, k] <= 1)
-```
-
-</div>
-<div class="text-sm mt-4">
+## The CP-SAT way
 
 <v-clicks>
 
-- One constraint per **pair** of overlapping tasks and per team that could do both
-- Would work. But it is a decomposition: the solver sees thousands of small, unrelated constraints instead of the structure behind them:
+- Same variables, same problem, same optimal solutions
+- But we describe the **structure** with global constraints, instead of encoding it in linear inequalities
+- And we use **enforcement literals** instead of Big-M: `model.add(...).only_enforce_if(b)` only holds if `b` is true. No $M$ to choose!
 
 </v-clicks>
-
-<div v-click class="mt-4 text-base">
-
-*Every team has a timeline, and its tasks must not overlap on it.*
-
-</div>
-
-</div>
-</div>
 
 ---
 
@@ -705,305 +961,183 @@ for a, b in combinations(tasks, 2):
 
 ---
 
-## Step 1: the CP-SAT way
+## The CP-SAT way: assignment
 
-```python {all|1|3-6|7}
-start = {t.id: t.release for t in tasks}  # fixed start times, for now
-for k in teams:
-    intervals = [model.new_optional_fixed_size_interval_var(
-                     start[t.id], t.duration, x[t.id, k], "")
-                 for t in tasks
-                 if k in t.compatible_teams]
-    model.add_no_overlap(intervals)
+```python {all|3-4|5-6}
+def add_assignment_constraints_cp(model: cp_model.CpModel, problem: WorkforceProblem, x, used):
+    """Every task is done by exactly one compatible team, a team that does a task is used."""
+    for t in problem.tasks:
+        model.add_exactly_one(x[t.id, k] for k in t.compatible_teams)
+    for (j, k) in x:
+        model.add_implication(x[j, k], used[k])
 ```
 
 <v-clicks>
 
-- Replaces all the pairwise constraints: **one global constraint per team**
-- Note: `start` is just a parameter here. Keep that in mind!
+- `add_exactly_one` instead of $\sum_k x_{j,k} = 1$
+- `add_implication(a, b)` means $a \Rightarrow b$, i.e. $x_{j,k} \leq used_k$
 
 </v-clicks>
 
-<div v-click class="mt-4">
-
-<img src="/assets/workforce_baby_step1.png" class="w-full" />
-
-<div class="text-sm opacity-70 mt-1 text-center">
-
-Both ways agree: **3 teams**. Between 1 and 2, tasks 0, 1 and 4 run at the same time.
-
-</div>
-
-</div>
-
----
-layout: center
-class: text-center
 ---
 
-# 🗣️ Breakout session 1
+## The CP-SAT way: one task at a time, lunch breaks included
 
-<div class="text-left mt-8 text-lg">
-
-In reality, a customer gives us a **time window**, and *we* decide when a task starts.
+```python {all|5-6|7-8|9}
+def add_no_overlap_constraints_cp(model: cp_model.CpModel, problem: WorkforceProblem, x, start):
+    """One optional interval per (task, team), plus the team's breaks. No overlap per team."""
+    for team in problem.teams:
+        k = team.id
+        intervals = [model.new_optional_fixed_size_interval_var(start[t.id], t.duration, x[t.id, k], "")
+                     for t in problem.tasks if k in t.compatible_teams]
+        intervals += [model.new_fixed_size_interval_var(u.start, u.duration, "")
+                      for u in team.unavailabilities]
+        model.add_no_overlap(intervals)
+```
 
 <v-clicks>
 
-- What changes in the **MIP way**? Which new variables and constraints do you need? How many?
-- What changes in the **CP-SAT way**?
-- Can we save a team in the baby example?
+- **One** `add_no_overlap` per team replaces all pairwise Big-M constraints and all $y_{a,b}$
+- A lunch break is an interval that is **always present**: it replaces `add_unavailability_constraints_ip` and all $b_{j,u}$
 
 </v-clicks>
-
-</div>
-
-<!--
-~10 minutes. Afterwards collect answers: ordering variables per pair, Big-M / enforcement literals. CP-SAT way: almost nothing changes.
--->
 
 ---
 
-## Step 2: When? Time windows
+## The CP-SAT way: fair is fair
+
+```python {all|7|8-9}
+def add_fairness_constraints_cp(model: cp_model.CpModel, problem: WorkforceProblem, x, used):
+    """Working time per team, and its max and min over the used teams."""
+    total = sum(t.duration for t in problem.tasks)
+    worked = {k: sum(t.duration * x[t.id, k] for t in problem.tasks if (t.id, k) in x) for k in used}
+    max_worked = model.new_int_var(0, total, "max_worked")
+    min_worked = model.new_int_var(0, total, "min_worked")
+    model.add_max_equality(max_worked, list(worked.values()))
+    for k in used:
+        model.add(min_worked <= worked[k]).only_enforce_if(used[k])
+    return worked, max_worked, min_worked
+```
 
 <v-clicks>
 
-- Every task gets a real time window, the start time becomes a **variable**
-- The time window is the variable's **domain**, no constraints needed:
+- `add_max_equality`: $w^{max} = \max_k w_k$
+- The minimum only counts **used** teams: an enforcement literal instead of $T\,(1 - used_k)$
+- Precedences, same-team groups and the objective are linear already: we reuse them as they are
 
 </v-clicks>
 
-<v-click>
+---
 
+## The complete CP-SAT model in code
+
+````md magic-move {lines: true}
 ```python
-start = {t.id: model.new_int_var(t.release, t.due - t.duration, "") for t in tasks}
+def create_ip_model(problem: WorkforceProblem):
+    model = cp_model.CpModel()
+    x = add_assignment_variables(model, problem)
+    used = add_used_team_variables(model, problem)
+    start = add_start_times_variables(model, problem)
+
+    add_assignment_constraints_ip(model, problem, x, used)
+    add_no_overlap_constraints_ip(model, problem, x, start)
+    add_unavailability_constraints_ip(model, problem, x, start)
+    add_precedence_constraints(model, problem, start)
+    add_same_team_constraints(model, problem, x)
+    worked, max_worked, min_worked = add_fairness_constraints_ip(model, problem, x, used)
+
+    add_objective(model, problem, used, max_worked, min_worked)
+    return model, x, start
 ```
+```python
+def create_cp_model(problem: WorkforceProblem):
+    model = cp_model.CpModel()
+    x = add_assignment_variables(model, problem)
+    used = add_used_team_variables(model, problem)
+    start = add_start_times_variables(model, problem)
 
-</v-click>
+    add_assignment_constraints_cp(model, problem, x, used)
+    add_no_overlap_constraints_cp(model, problem, x, start)
 
-<div v-click class="mt-6">
+    add_precedence_constraints(model, problem, start)
+    add_same_team_constraints(model, problem, x)
+    worked, max_worked, min_worked = add_fairness_constraints_cp(model, problem, x, used)
 
-<img src="/assets/workforce_baby_problem2.png" class="w-full" />
+    add_objective(model, problem, used, max_worked, min_worked)
+    return model, x, start
+```
+````
 
-<div class="text-sm opacity-70 mt-1 text-center">
+<div v-click class="mt-4 text-sm">
 
-Same tasks, now with real time windows. Do we still need 3 teams?
-
-</div>
+Same variables, same objective. Only the constraint functions change.
 
 </div>
 
 ---
 
-## Step 2: the MIP way
+## IP way vs. CP-SAT way
 
-```python {all|2|3|4-7}
-for a, b in combinations(tasks, 2):
-    if a.release < b.due and b.release < a.due:  # windows overlap
-        a_first = model.new_bool_var("")
-        for k in set(a.compatible_teams) & set(b.compatible_teams):
-            xa, xb = x[a.id, k], x[b.id, k]
-            model.add(start[a.id] + a.duration <= start[b.id]).only_enforce_if(xa, xb, a_first)
-            model.add(start[b.id] + b.duration <= start[a.id]).only_enforce_if(xa, xb, ~a_first)
-```
+<div class="text-sm compact">
 
-<div class="grid grid-cols-[1fr_1.5fr_1fr] gap-6 mt-6 text-sm">
-
-<div v-click>
-
-If two tasks share a team, **one of them comes first**: a new Boolean per pair.
+| | IP way | CP-SAT way |
+|---|---|---|
+| one team per task | `sum(...) == 1` | `add_exactly_one` |
+| a team that works is used | `x <= used` | `add_implication` |
+| one task at a time | $y_{a,b}$ + 2 Big-M per pair and shared team | optional intervals + `add_no_overlap` per team |
+| lunch breaks | $b_{j,u}$ + 2 Big-M per (task, team, break) | fixed intervals in the same `add_no_overlap` |
+| maximum working time | $w^{max} \geq w_k$ | `add_max_equality` |
+| minimum over used teams | Big-M with $T$ | `only_enforce_if(used[k])` |
+| precedences, same team | linear | linear |
 
 </div>
 
-<div v-click>
-
-In a MIP solver, this is a **Big-M** constraint:
-
-$$s_a + d_a \leq s_b + M (3 - x_{a,k} - x_{b,k} - first)$$
-
-</div>
-
-<div v-click>
-
-In CP-SAT: an **enforcement literal**. The constraint only holds if all literals are true. No $M$ to choose!
-
-</div>
-
-</div>
+<style scoped>
+.compact :deep(td), .compact :deep(th) { padding-top: 0.3rem; padding-bottom: 0.3rem; }
+</style>
 
 ---
 
-## Step 2: the CP-SAT way
+## [Live: solve the CP-SAT way](https://colab.research.google.com/github/jpjj/O4A-Hands-On-CP-SAT/blob/main/cp_sat_complete.ipynb)
 
-```diff
-- start = {t.id: t.release for t in tasks}
-+ start = {t.id: model.new_int_var(t.release, t.due - t.duration, "") for t in tasks}
-```
+Same solver, same problem, 30 s each. The only difference: how we model it.
+
+<div class="text-sm compact">
+
+| Instance | Tasks | constraints IP way | constraints CP-SAT way | IP way | CP-SAT way |
+|---|---|---|---|---|---|
+| instance_202 | 26 | 5,209 | 1,106 | optimal, 12.9 s | optimal, **2.2 s** |
+| instance_24_56 | 25 | 4,379 | 1,014 | 1425, bound 1420 | optimal, **7.9 s** |
+| instance_71 | 58 | 22,963 | 2,324 | 10125, bound 8912 | optimal, **10.2 s** |
+| instance_19 | 62 | 33,445 | 2,856 | 9000, bound 5605 | optimal, **18.5 s** |
+
+</div>
+
+<div class="text-xs opacity-60">Measured locally (16 cores) with the complete notebook; your Colab numbers will differ.</div>
 
 <v-click>
 
-**Nothing else to do.** `add_no_overlap_intervals` already takes `start` as a parameter: we pass variables instead of numbers, the intervals move along.
+The **same** best solutions everywhere. But the CP-SAT way proves all four optimal, the IP way only one.
 
 </v-click>
 
-<v-switch class="mt-6">
-<template #1>
+<v-click>
 
-<img src="/assets/workforce_baby_step2.png" class="w-full" />
+<div class="text-sm opacity-70 mt-2">
 
-<div class="text-sm opacity-70 mt-1 text-center">
-
-The flexibility saves a team: **2 teams** are enough now.
+MiniZinc Challenge (1 core, 20 min): CP-SAT proved all 5 workforce instances optimal, Gurobi (non-eligible reference entry) 3. On two instances Gurobi's best solution was **20% and 40% worse**.
 
 </div>
 
-</template>
-<template #2>
-
-Model size on a challenge instance (58 tasks, 18 teams):
-
-| | variables | constraints |
-|---|---|---|
-| MIP way | 1,725 | 22,722 |
-| CP-SAT way | 1,088 | 2,100 |
-
-<div class="text-sm opacity-70">
-
-The MIP way grows with *pairs of tasks × teams*, the CP-SAT way with *compatible (task, team) pairs*. From here on, we continue with the CP-SAT way only.
-
-</div>
-
-</template>
-</v-switch>
-
----
-
-## Step 3: The real world strikes back
-
-<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
-<div>
-
-```python {all|1-3|5-6|8-12}
-# lunch breaks: fixed intervals in the same no_overlap
-intervals += [model.new_fixed_size_interval_var(u.start, u.duration, "")
-              for u in team.unavailabilities]
-
-for a, b in problem.precedence:  # a ends before b starts
-    model.add(start[a] + duration[a] <= start[b])
-
-for first, *others in problem.same_team:  # same team
-    for other in others:
-        for k in teams:
-            if (first, k) in x or (other, k) in x:
-                model.add(x.get((first, k), 0) == x.get((other, k), 0))
-```
-
-</div>
-<div class="text-sm">
-
-<v-clicks>
-
-- An unavailability is an interval that is **always present**. One new line!
-- Precedences: one linear constraint each
-- Same-team groups: equal assignment variables. If only one task is compatible with team $k$, the other can't be done by $k$ either
-
-</v-clicks>
-
-</div>
-</div>
-
-<v-switch class="mt-2">
-<template #1>
-
-<img src="/assets/workforce_baby_problem3.png" class="w-4/6 mx-auto" />
-
-<div class="text-sm opacity-70 text-center">
-
-Team 0 has lunch from 4 to 5 (quite late), task 0 before task 2, tasks 3 and 5 by the same team.
-
-</div>
-
-</template>
-<template #2>
-
-<img src="/assets/workforce_baby_step3.png" class="w-5/6 mx-auto" />
-
-<div class="text-sm opacity-70 mt-1 text-center">
-
-Still **2 teams**. Is the work shared fairly? Nobody told the solver: only by luck.
-
-</div>
-
-</template>
-</v-switch>
-
----
-layout: center
-class: text-center
----
-
-# 🗣️ Breakout session 2
-
-<div class="text-left mt-8 text-lg">
-
-Second objective: **fairness**, the max − min working time of the **used** teams. The number of teams still comes first.
-
-<v-clicks>
-
-- How do you model the maximum and the minimum working time?
-- Why is the minimum harder than the maximum?
-- How do you combine two objectives, so that saving a team always beats fairness?
-
-</v-clicks>
-
-</div>
+</v-click>
 
 <!--
-~10 minutes. Key insights: min over used teams needs an enforcement literal; weight the first objective with the total duration.
+Single run, no symmetry breaking yet: that comes next and brings instance_71 down to about a second.
 -->
 
----
-
-## Step 4: Fair is fair
-
-<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
-<div>
-
-```python {all|1-2|3-4|5-7|9}
-worked = {k: sum(t.duration * x[t.id, k] for t in tasks if k in t.compatible_teams)
-          for k in teams}
-max_worked = model.new_int_var(0, total, "")
-min_worked = model.new_int_var(0, total, "")
-for k in teams:
-    model.add(max_worked >= worked[k])
-    model.add(min_worked <= worked[k]).only_enforce_if(used[k])
-
-model.minimize(total * sum(used.values()) + max_worked - min_worked)
-```
-
-</div>
-<div class="text-sm">
-
-<v-clicks>
-
-- Unused teams work 0: without the enforcement literal, they pull the minimum down to 0
-- Lexicographic: the unfairness is always smaller than the total duration, so **saving a team always wins**
-
-</v-clicks>
-
-</div>
-</div>
-
-<div v-click class="mt-4">
-
-<img src="/assets/workforce_baby_step4.png" class="w-5/6 mx-auto" />
-
-<div class="text-sm opacity-70 mt-1 text-center">
-
-Optimal: 2 teams, unfairness 2, cost $12 \cdot 2 + 2 = 26$. Why is 6/6 impossible? (Hint: tasks 3 and 5.)
-
-</div>
-
-</div>
+<style scoped>
+.compact :deep(td), .compact :deep(th) { padding-top: 0.3rem; padding-bottom: 0.3rem; }
+</style>
 
 ---
 
@@ -1054,25 +1188,20 @@ model.add(worked[k1] >= worked[k2])
 
 ## Best practice: redundant constraints
 
-<div class="grid grid-cols-[3fr_2fr] gap-8 mt-2">
-<div>
-
-<div class="text-lg mb-3">
+<div class="text-lg mb-4">
 
 *At any time: number of running tasks* $\leq$ *number of used teams*
 
 </div>
 
-```python {all|1-2|3-5|6}
-num_used = model.new_int_var(0, len(teams), "")
-model.add(num_used == sum(used.values()))
-all_tasks = [model.new_fixed_size_interval_var(
-                 start[t.id], t.duration, "")
-             for t in tasks]
-model.add_cumulative(all_tasks, [1] * len(tasks), num_used)
+```python {all|3-4|5-6}
+def add_redundant_cumulative(model: cp_model.CpModel, problem: WorkforceProblem, used, start):
+    """At any time: number of running tasks <= number of used teams."""
+    num_used = model.new_int_var(0, len(problem.teams), "num_used")
+    model.add(num_used == sum(used.values()))
+    all_tasks = [model.new_fixed_size_interval_var(start[t.id], t.duration, "") for t in problem.tasks]
+    model.add_cumulative(all_tasks, [1] * len(problem.tasks), num_used)
 ```
-
-<div class="text-sm">
 
 <v-clicks>
 
@@ -1081,42 +1210,43 @@ model.add_cumulative(all_tasks, [1] * len(tasks), num_used)
 
 </v-clicks>
 
-</div>
-
-</div>
-<div class="text-sm compact" v-click>
-
-With symmetry breaking, time to optimal:
-
-| Instance | Tasks | without | with |
-|---|---|---|---|
-| instance_202 | 26 | **0.07 s** | 0.25 s |
-| instance_24_56 | 25 | **0.19 s** | 0.69 s |
-| instance_71 | 58 | 3.4 s | **0.9 s** |
-| instance_19 | 62 | 4.9 s | **0.31 s** |
-
-<div class="text-xs opacity-60">Median of 3 seeds, 4 cores, 30 s limit.</div>
-
-<div v-click class="mt-4">
-
-Without symmetry breaking, nothing is proven optimal, but on instance_19 the bound rises from **3 to 4** proven teams.
-
-</div>
-
-</div>
-</div>
-
-<div v-click class="mt-4 text-center">
-
-Redundant constraints cost propagation time: small instances get slower, large ones faster. **Measure!**
-
-</div>
-
 <!--
 Bleukx et al. use the same idea in their original model: they solve this cumulative relaxation (all teams identical) separately and add sum(used) >= lb.
-Per-seed times: instance_71 3.4/0.4/3.8 s vs 2.7/0.9/0.3 s (high variance), instance_19 6.6/4.9/3.6 s vs 0.31/0.45/0.22 s.
 The cumulative capacity must be a single (affine) variable, hence num_used: passing sum(used) directly gives MODEL_INVALID.
 Valid only without team unavailabilities: with calendars the capacity would have to drop during off-times. The challenge instances have none.
+-->
+
+---
+
+## Best practices pay off
+
+CP-SAT way, time to optimal:
+
+<div class="compact mt-4">
+
+| Instance | Tasks | CP-SAT way | + symmetry breaking | + redundant constraint | + both |
+|---|---|---|---|---|---|
+| instance_202 | 26 | 1.6 s | **0.06 s** | 2.3 s | 0.08 s |
+| instance_24_56 | 25 | 7.2 s | **0.08 s** | 5.8 s | 0.09 s |
+| instance_71 | 58 | 11.9 s | 0.69 s | 0.65 s | **0.47 s** |
+| instance_19 | 62 | 25.6 s | 1.41 s | 1.00 s | **0.63 s** |
+
+</div>
+
+<div class="text-xs opacity-60">Median of 3 seeds, 16 cores, 30 s limit. All runs optimal.</div>
+
+<v-clicks>
+
+- Symmetry breaking: **10 to 100 times** faster on every instance
+- The redundant constraint alone only pays off on the **large** instances: there, it is as good as symmetry breaking
+- Both together: fastest on the large instances, a bit slower on the small ones. Redundant constraints cost propagation time. **Measure!**
+
+</v-clicks>
+
+<!--
+Measured with the functions of the complete notebook (create_cp_model, create_cp_model_tuned).
+Per-seed times: instance_19 plain 27.4/18.8/25.6 s, + symmetry 1.73/0.90/1.41 s, + redundant 1.00/1.59/0.88 s, + both 0.63/0.47/1.91 s. instance_71 plain 9.7/12.8/11.9 s, + symmetry 0.89/0.34/0.69 s, + redundant 0.57/0.65/0.74 s, + both 0.52/0.38/0.47 s.
+The "CP-SAT way" column differs slightly from the live slide: that one is a single run.
 -->
 
 <style scoped>
@@ -1124,47 +1254,10 @@ Valid only without team unavailabilities: with calendars the capacity would have
 </style>
 
 ---
-
-## [Live: the MIP way vs. the CP-SAT way](https://colab.research.google.com/github/jpjj/O4A-Hands-On-CP-SAT/blob/main/cp_sat_complete.ipynb)
-
-Same solver, same constraints, same symmetry breaking, 30 s each. The only difference: how we model *one task at a time*.
-
-<div class="text-sm compact">
-
-| Instance | Tasks | constraints MIP way | constraints CP-SAT way | MIP way | CP-SAT way |
-|---|---|---|---|---|---|
-| instance_202 | 26 | 5,243 | 1,157 | optimal, 0.3 s | optimal, 0.1 s |
-| instance_24_56 | 25 | 4,413 | 1,065 | optimal, 0.2 s | optimal, 0.2 s |
-| instance_71 | 58 | 22,995 | 2,373 | optimal, 7.3 s | optimal, **0.6 s** |
-| instance_19 | 62 | 33,481 | 2,911 | 9000, bound 7200 | optimal, **0.4 s** |
-
-</div>
-
-<v-click>
-
-On small instances, the MIP way keeps up. At scale, the global constraint wins. On Colab's 2 cores, the MIP way does not even prove instance_71 optimal within 30 s.
-
-<div class="text-xs opacity-60">Measured locally (16 cores) with the complete notebook; your Colab numbers will differ.</div>
-
-</v-click>
-
-<v-click>
-
-<div class="text-sm opacity-70 mt-2">
-
-MiniZinc Challenge (1 core, 20 min): CP-SAT proved all 5 workforce instances optimal, Gurobi (non-eligible reference entry) 3. On two instances Gurobi's best solution was **20% and 40% worse**.
-
-</div>
-
-</v-click>
-
-<style scoped>
-.compact :deep(td), .compact :deep(th) { padding-top: 0.3rem; padding-bottom: 0.3rem; }
-</style>
-
----
 layout: image-right
-image: https://images.unsplash.com/photo-1701448150058-43d6d199b103?q=80&w=1287&auto=format&fit=crop
+image: https://images.unsplash.com/photo-1787072966814-49a626076def?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D
+
+#https://images.unsplash.com/photo-1701448150058-43d6d199b103?q=80&w=1287&auto=format&fit=crop
 ---
 
 # What is inside CP&#8209;SAT?
@@ -1289,7 +1382,8 @@ Log taken from our workforce model (instance_71, 8 workers).
 
 ---
 layout: image-right
-image: https://images.unsplash.com/photo-1466094899371-97b327dff551?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+image: https://images.unsplash.com/photo-1658947969660-49437d905a75?q=80&w=2709&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D
+# https://images.unsplash.com/photo-1466094899371-97b327dff551?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
 ---
 
 # When to use CP-SAT?
@@ -1371,7 +1465,7 @@ More solver features:
 
 ---
 layout: cover
-background: https://images.unsplash.com/photo-1466094899371-97b327dff551?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+background: https://images.unsplash.com/photo-1606567595334-d39972c85dbe?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D
 ---
 
 <br>

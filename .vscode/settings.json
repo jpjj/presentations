@@ -1,6 +1,7 @@
 {
     "slidev.include": [
         "**/slides.md",
-        "README.md"
+        "README.md",
+        "presentations/hands-on-cp-sat/slides.md"
     ]
 }
