@@ -417,5 +417,107 @@
    "a": 5.0,
    "b": 0.0
   }
+ ],
+ "cpsat_vs_gurobi_open": [
+  {
+   "problem": "warehouse",
+   "a": 0.0,
+   "b": 5.0
+  },
+  {
+   "problem": "gbac",
+   "a": 0.55,
+   "b": 4.45
+  },
+  {
+   "problem": "surface-based-tsp",
+   "a": 1.25,
+   "b": 3.75
+  },
+  {
+   "problem": "rect-euler",
+   "a": 1.28,
+   "b": 3.72
+  },
+  {
+   "problem": "zephyrus-2016",
+   "a": 2.5,
+   "b": 2.5
+  },
+  {
+   "problem": "kitchen",
+   "a": 2.79,
+   "b": 2.21
+  },
+  {
+   "problem": "sdn-chain",
+   "a": 3.03,
+   "b": 1.97
+  },
+  {
+   "problem": "gcc-benchmark",
+   "a": 3.15,
+   "b": 1.85
+  },
+  {
+   "problem": "tdtsp",
+   "a": 3.4,
+   "b": 1.6
+  },
+  {
+   "problem": "workforce-alloc",
+   "a": 3.49,
+   "b": 1.51
+  },
+  {
+   "problem": "community-detection-2021",
+   "a": 4.17,
+   "b": 0.83
+  },
+  {
+   "problem": "filters",
+   "a": 4.21,
+   "b": 0.79
+  },
+  {
+   "problem": "nside",
+   "a": 4.26,
+   "b": 0.74
+  },
+  {
+   "problem": "atp-stage2",
+   "a": 4.32,
+   "b": 0.68
+  },
+  {
+   "problem": "saeling",
+   "a": 4.33,
+   "b": 0.67
+  },
+  {
+   "problem": "multiple-constant-multiplication",
+   "a": 4.4,
+   "b": 0.6
+  },
+  {
+   "problem": "nonogram",
+   "a": 4.49,
+   "b": 0.51
+  },
+  {
+   "problem": "orthorio",
+   "a": 4.73,
+   "b": 0.27
+  },
+  {
+   "problem": "spot5",
+   "a": 5.0,
+   "b": 0.0
+  },
+  {
+   "problem": "vrplc",
+   "a": 5.0,
+   "b": 0.0
+  }
  ]
 }
