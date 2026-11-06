@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import data from './mznc2026.json'
 
-// Head-to-head Borda points of CP-SAT vs. Gurobi 12 (free category, 1 core) per problem.
+// Head-to-head Borda points of CP-SAT vs. Gurobi 12 (open category, parallel entries) per problem.
 // Each problem has 5 instances, so both sides add up to 5 points.
-const highlight = ['nonogram', 'workforce-alloc', 'orthorio']
-const rows = [...data.cpsat_vs_gurobi_free].reverse() // CP-SAT's strongest problems first
+const highlight = ['workforce-alloc']
+const rows = [...data.cpsat_vs_gurobi_open].reverse() // CP-SAT's strongest problems first
 const MAX = 5
 </script>
 
