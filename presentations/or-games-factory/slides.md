@@ -101,25 +101,10 @@ Bridge from the game into the talk. Keep it short.
 The solver behind this game is a MILP (maximal covering location) solved by HiGHS in the browser.
 -->
 
----
-layout: image-right
-image: /assets/peter.png
----
-
-# Hello there!
-
-I'm Peter.
-
-```
-2018             M.Sc. Mathematics
-2019 - 2025      Data Scientist at DHL
-Since 04/2025    OR Freelancer, JPJ Solutions
-```
 
 ---
-layout: image-right
-image: /assets/apple-game.jpg
-backgroundSize: contain
+layout: two-cols
+layoutClass: gap-8
 ---
 
 # Games as a way in
@@ -134,8 +119,16 @@ What I have believed for years
 
 </v-clicks>
 
+::right::
+
+<div class="h-full flex items-center justify-center">
+
+[![The apple-collection game: click to open it](/assets/apple-game.jpg)](https://jpjj.github.io/cvrp_game/)
+
+</div>
+
 <!--
-The picture: my apple-collection game (a capacitated vehicle routing problem): jpjj.github.io/cvrp_game
+The picture is a link. My apple-collection game (a capacitated vehicle routing problem): jpjj.github.io/cvrp_game
 
 ANECDOTE (no slide): the fair at DHL. People had to solve a small CVRP instance by hand.
 It really made them understand what our division does.
@@ -160,9 +153,8 @@ layout: section
 # Building the arcade
 
 ---
-layout: image-right
-image: /assets/dh-2d.jpg
-backgroundSize: contain
+layout: two-cols
+layoutClass: gap-8
 ---
 
 # One flagship first
@@ -171,17 +163,21 @@ Dungeon Hoard
 
 <v-clicks>
 
-- The idea: the inventory from Diablo II.
-- Load all the valuable stuff into a pack that is too small.
-- Go back to the merchant and sell.
-- Underneath: a 2D knapsack problem, solved live.
+"Create a game where you are the hero slaying monsters. After a monster is slayn, you have to loot the items into your inventory. Your inventory is a 2d grid and every item has different shape and different value. The goal is to get as much value with you as possible since you cannot carry all (too many items for your inventory)."
 
 </v-clicks>
 
+::right::
+
+<GameEmbed src="/games/dungeon-hoard.html" poster="/assets/dh-2d.jpg" alt="Dungeon Hoard, the very first version" />
+
 <!--
-The picture is the very first version: one HTML file.
-Optional LIVE: open `dungeon-hoard.html` from the root of the games repo — it still runs.
+LIVE: the right side IS the very first version (one HTML file, copied from the root of the games repo
+to public/games/dungeon-hoard.html). Play it right on the slide; it scrolls inside the frame.
+After clicking into the game, click on the left half once before using the arrow keys again.
+Overview, presenter view and PDF show the picture instead; so does the slide if the game does not load.
 -->
+
 
 ---
 
@@ -262,7 +258,7 @@ The solvers were fine. The games were often the same game in a new costume.
 
 ---
 
-# Last week: the next level
+# With Fable 5.2 release: the next level
 
 <v-clicks>
 

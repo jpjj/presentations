@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dungeon Hoard — Loot the Slain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cell:48px;
+    --ink:#e9dcc2;
+    --ink-dim:#b6a888;
+    --gold:#e7bd5c;
+    --gold-deep:#c79433;
+    --blood:#a83a2c;
+    --panel:#171109;
+    --panel-2:#1f160b;
+    --leather:#241a0d;
+    --line:#4a3a1f;
+    --line-soft:#3a2c16;
+    /* rarity */
+    --c-common-1:#9a9ca6; --c-common-2:#5d6069; --c-common-b:#393b43;
+    --c-uncommon-1:#56c082; --c-uncommon-2:#2f8a52; --c-uncommon-b:#1c5a35;
+    --c-rare-1:#5fb0ec; --c-rare-2:#2f74b8; --c-rare-b:#1f4e86;
+    --c-epic-1:#b888f5; --c-epic-2:#7e44cd; --c-epic-b:#5a2f97;
+    --c-legend-1:#f6cd5f; --c-legend-2:#dd9c2c; --c-legend-b:#9c6c14;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; padding:0; min-height:100%; }
+  body{
+    font-family:'Spectral', Georgia, serif;
+    color:var(--ink);
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgba(231,189,92,.10), transparent 45%),
+      radial-gradient(100% 70% at 50% 115%, rgba(168,58,44,.12), transparent 50%),
+      radial-gradient(80% 80% at 50% 40%, #120c06 0%, #0a0703 70%, #060402 100%);
+    background-attachment:fixed;
+    overflow-x:hidden;
+  }
+  body::after{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.06; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .wrap{ position:relative; z-index:2; max-width:1180px; margin:0 auto; padding:18px 16px 60px; }
+
+  /* ---------- Header / HUD ---------- */
+  header{ text-align:center; margin:6px 0 18px; }
+  .title{
+    font-family:'Cinzel Decorative', serif; font-weight:900;
+    font-size:clamp(28px,6vw,52px); letter-spacing:.06em; line-height:1;
+    color:var(--gold);
+    text-shadow:0 2px 0 #2a1c08, 0 0 26px rgba(231,189,92,.25);
+    margin:0;
+  }
+  .subtitle{ font-style:italic; color:var(--ink-dim); letter-spacing:.18em; text-transform:uppercase; font-size:12px; margin-top:8px; }
+
+  .hud{
+    display:flex; gap:12px; flex-wrap:wrap; justify-content:center; align-items:stretch; margin-top:16px;
+  }
+  .hud .stat{
+    background:linear-gradient(180deg, var(--panel-2), var(--panel));
+    border:1px solid var(--line); border-radius:10px; padding:10px 18px; min-width:120px; text-align:center;
+    box-shadow:inset 0 1px 0 rgba(231,189,92,.08), 0 6px 16px rgba(0,0,0,.4);
+  }
+  .stat .lbl{ font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-dim); }
+  .stat .val{ font-family:'Cinzel', serif; font-weight:700; font-size:22px; margin-top:3px; }
+  .stat.value .val{ color:var(--gold); font-size:26px; }
+  .stat.value .val::before{ content:"✦ "; font-size:16px; color:var(--gold-deep); }
+
+  /* ---------- Layout ---------- */
+  .board{ display:flex; gap:22px; align-items:flex-start; justify-content:center; flex-wrap:wrap; margin-top:10px; }
+  .panel{
+    background:linear-gradient(180deg, rgba(36,26,13,.92), rgba(20,14,7,.95));
+    border:1px solid var(--line); border-radius:14px; padding:18px;
+    box-shadow:inset 0 1px 0 rgba(231,189,92,.07), 0 12px 30px rgba(0,0,0,.5);
+  }
+  .panel-title{
+    font-family:'Cinzel', serif; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    font-size:13px; color:var(--gold-deep); margin:0 0 12px; display:flex; align-items:center; gap:8px;
+  }
+  .panel-title::before,.panel-title::after{ content:""; height:1px; background:linear-gradient(90deg,transparent,var(--line),transparent); flex:1; }
+
+  /* ---------- Arena ---------- */
+  .arena{ width:340px; max-width:92vw; }
+  .mon-name{ font-family:'Cinzel', serif; font-size:20px; font-weight:700; text-align:center; color:var(--ink); }
+  .mon-flavor{ text-align:center; font-style:italic; color:var(--ink-dim); font-size:13px; margin-top:2px; min-height:18px; }
+  .hpbar{ margin:14px auto 6px; height:16px; width:100%; background:#1a0f07; border:1px solid var(--line); border-radius:20px; overflow:hidden; position:relative; }
+  .hpfill{ position:absolute; inset:0; right:auto; width:100%; background:linear-gradient(180deg,#d0432f,#8e2418); transition:width .18s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,.18); }
+  .hptext{ text-align:center; font-size:12px; color:var(--ink-dim); letter-spacing:.1em; }
+  .mon-stage{
+    position:relative; height:200px; display:flex; align-items:center; justify-content:center; margin:6px 0 4px;
+    transition:height .45s ease;
+  }
+  .mon{
+    font-size:120px; line-height:1; cursor:crosshair; user-select:none;
+    filter:drop-shadow(0 14px 18px rgba(0,0,0,.6));
+    transition:transform .08s ease;
+  }
+  .mon.alive:hover{ transform:scale(1.05) rotate(-2deg); }
+  .mon.alive:active{ transform:scale(.94); }
+  .mon.shake{ animation:shake .28s; }
+  @keyframes shake{ 0%,100%{transform:translate(0,0)} 20%{transform:translate(-8px,4px) rotate(-3deg)} 40%{transform:translate(7px,-3px) rotate(3deg)} 60%{transform:translate(-5px,2px)} 80%{transform:translate(4px,-2px)} }
+  .mon.slain{ animation:slain .5s forwards; cursor:default; }
+  @keyframes slain{ 0%{transform:scale(1)} 30%{transform:scale(1.2) rotate(6deg); filter:brightness(2)} 100%{transform:scale(.4) rotate(-40deg) translateY(40px); opacity:.18; filter:grayscale(1)} }
+  .attack-hint{ text-align:center; font-size:12px; color:var(--gold-deep); letter-spacing:.12em; text-transform:uppercase; margin-top:2px; min-height:16px; }
+
+  .dmg{ position:absolute; font-family:'Cinzel', serif; font-weight:700; font-size:26px; color:#ffd; text-shadow:0 2px 6px rgba(0,0,0,.8); pointer-events:none; animation:dmgUp .7s ease-out forwards; z-index:5; }
+  .dmg.crit{ color:#ffcf5a; font-size:34px; }
+  @keyframes dmgUp{ 0%{transform:translateY(0) scale(.7); opacity:0} 15%{opacity:1; transform:translateY(-6px) scale(1.1)} 100%{transform:translateY(-58px) scale(1); opacity:0} }
+
+  .proceed-row{ margin-top:8px; text-align:center; min-height:74px; }
+  .warn{ font-size:12px; color:var(--blood); font-style:italic; margin-bottom:8px; min-height:16px; }
+
+  .btn{
+    font-family:'Cinzel', serif; font-weight:700; letter-spacing:.06em; text-transform:uppercase; font-size:14px;
+    color:#1c1305; cursor:pointer; border:none; border-radius:10px; padding:12px 22px;
+    background:linear-gradient(180deg,var(--c-legend-1),var(--gold-deep));
+    box-shadow:0 5px 0 #6e4a0f, 0 8px 16px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.4);
+    transition:transform .08s, box-shadow .08s; position:relative;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:active{ transform:translateY(3px); box-shadow:0 2px 0 #6e4a0f, 0 4px 10px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.4); }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; filter:grayscale(.6); }
+  .btn.ghost{ background:linear-gradient(180deg,#2c2113,#1c140a); color:var(--ink); box-shadow:0 4px 0 #100a04, inset 0 1px 0 rgba(231,189,92,.12); border:1px solid var(--line); }
+
+  /* ---------- Inventory ---------- */
+  .inv{ width:100%; }
+  @media (min-width:761px){
+    .inv{ width:min(50vw, calc(100vw - 410px), 600px); flex:0 0 auto; }
+  }
+  .grid-holder{ display:flex; justify-content:center; }
+  .grid-stage{
+    position:relative; width:calc(var(--cell) * 8); height:calc(var(--cell) * 5);
+    border-radius:10px; padding:0;
+    background:
+      linear-gradient(180deg,#1a1207,#120b05);
+    border:2px solid var(--gold-deep);
+    box-shadow:0 0 0 4px #1a1207, 0 0 0 5px var(--line), inset 0 0 30px rgba(0,0,0,.6), 0 14px 34px rgba(0,0,0,.5);
+  }
+  .grid-slots, .grid-highlight, .grid-pieces{
+    position:absolute; inset:0;
+    display:grid; grid-template-columns:repeat(8,var(--cell)); grid-template-rows:repeat(5,var(--cell));
+  }
+  .grid-pieces{ display:block; z-index:3; }
+  .slot{
+    border:1px solid var(--line-soft);
+    background:radial-gradient(120% 120% at 30% 20%, rgba(231,189,92,.04), transparent 60%), #160f06;
+    box-shadow:inset 0 0 8px rgba(0,0,0,.55);
+  }
+  .hcell{ z-index:2; border-radius:6px; margin:3px; pointer-events:none; transition:background .05s; }
+  .hcell.valid{ background:rgba(96,200,130,.38); box-shadow:inset 0 0 0 1px rgba(120,255,160,.7); }
+  .hcell.invalid{ background:rgba(200,60,46,.40); box-shadow:inset 0 0 0 1px rgba(255,90,70,.8); }
+
+  /* ---------- Pieces ---------- */
+  .piece{ position:relative; touch-action:none; cursor:grab; user-select:none; -webkit-user-drag:none; }
+  .piece.in-grid{ position:absolute; }
+  .piece.dragging{ cursor:grabbing; z-index:99999; transform:scale(1.05); filter:drop-shadow(0 12px 16px rgba(0,0,0,.6)); }
+  .pshape{ position:absolute; inset:0; display:grid; gap:2px; }
+  .pcell{ border-radius:7px; }
+  .pcell.empty{ background:transparent; }
+  .pcell.fill{
+    border:1px solid var(--cb);
+    background:linear-gradient(160deg,var(--c1),var(--c2));
+    box-shadow:inset 0 2px 2px rgba(255,255,255,.28), inset 0 -3px 6px rgba(0,0,0,.35);
+  }
+  .picon{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; filter:drop-shadow(0 2px 3px rgba(0,0,0,.7)); }
+  .pval{
+    position:absolute; bottom:2px; right:3px; font-family:'Cinzel', serif; font-weight:700; font-size:11px; line-height:1;
+    color:#fff; background:rgba(0,0,0,.5); padding:2px 5px; border-radius:7px; pointer-events:none;
+    text-shadow:0 1px 1px #000; border:1px solid rgba(255,255,255,.08);
+  }
+  .rarity-common{ --c1:var(--c-common-1); --c2:var(--c-common-2); --cb:var(--c-common-b); }
+  .rarity-uncommon{ --c1:var(--c-uncommon-1); --c2:var(--c-uncommon-2); --cb:var(--c-uncommon-b); }
+  .rarity-rare{ --c1:var(--c-rare-1); --c2:var(--c-rare-2); --cb:var(--c-rare-b); }
+  .rarity-epic{ --c1:var(--c-epic-1); --c2:var(--c-epic-2); --cb:var(--c-epic-b); }
+  .rarity-legendary{ --c1:var(--c-legend-1); --c2:var(--c-legend-2); --cb:var(--c-legend-b); }
+  .rarity-epic .pcell.fill{ box-shadow:inset 0 2px 2px rgba(255,255,255,.3), inset 0 -3px 6px rgba(0,0,0,.35), 0 0 6px rgba(160,90,240,.45); }
+  .rarity-legendary .pcell.fill{ box-shadow:inset 0 2px 2px rgba(255,255,255,.4), inset 0 -3px 6px rgba(0,0,0,.35), 0 0 9px rgba(246,205,95,.6); }
+
+  /* ---------- Loot pile / tray ---------- */
+  .tray-wrap{ margin-top:18px; }
+  .tray{
+    min-height:96px; display:flex; flex-wrap:wrap; gap:14px; align-content:flex-start;
+    padding:14px; border-radius:12px;
+    background:repeating-linear-gradient(45deg,#150e05,#150e05 12px,#19110680 12px,#191106 24px);
+    border:1px dashed var(--line); box-shadow:inset 0 0 20px rgba(0,0,0,.5);
+  }
+  .tray.empty-state::before{ content:"— the pile is empty —"; color:var(--ink-dim); font-style:italic; margin:auto; }
+
+  .legend{ display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-top:14px; font-size:11px; color:var(--ink-dim); }
+  .legend span{ display:inline-flex; align-items:center; gap:6px; letter-spacing:.06em; }
+  .dot{ width:11px; height:11px; border-radius:3px; display:inline-block; }
+
+  .float{ position:absolute; z-index:50; font-family:'Cinzel',serif; font-weight:700; font-size:18px; pointer-events:none; animation:floatUp .9s ease-out forwards; text-shadow:0 2px 4px rgba(0,0,0,.8); }
+  .float.gain{ color:#ffe08a; }
+  .float.loss{ color:#e8867a; }
+  @keyframes floatUp{ 0%{opacity:0; transform:translateY(4px) scale(.8)} 15%{opacity:1} 100%{opacity:0; transform:translateY(-34px) scale(1)} }
+
+  .hintbar{ text-align:center; margin-top:18px; color:var(--ink-dim); font-size:13px; font-style:italic; }
+  .hintbar b{ color:var(--gold-deep); font-style:normal; }
+
+  /* ---------- Overlay ---------- */
+  .overlay{ position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; padding:20px;
+    background:radial-gradient(circle at 50% 40%, rgba(10,7,3,.82), rgba(4,2,1,.95)); backdrop-filter:blur(3px); }
+  .overlay.hidden{ display:none; }
+  .modal{
+    max-width:560px; width:100%; text-align:center; padding:34px 30px;
+    background:linear-gradient(180deg,#251a0d,#140d06); border:1px solid var(--gold-deep); border-radius:16px;
+    box-shadow:0 0 0 4px #140d06, 0 0 60px rgba(231,189,92,.2), 0 30px 70px rgba(0,0,0,.7);
+  }
+  .modal h2{ font-family:'Cinzel Decorative', serif; color:var(--gold); font-size:clamp(24px,5vw,38px); margin:0 0 6px; text-shadow:0 0 24px rgba(231,189,92,.3); }
+  .modal p{ color:var(--ink-dim); line-height:1.6; }
+  .rules{ text-align:left; margin:18px auto; max-width:430px; }
+  .rules li{ margin:9px 0; color:var(--ink); }
+  .rank{ font-family:'Cinzel', serif; font-weight:700; font-size:26px; color:var(--gold); margin:10px 0; letter-spacing:.04em; }
+  .final-val{ font-family:'Cinzel', serif; font-weight:900; font-size:56px; color:var(--gold); text-shadow:0 0 30px rgba(231,189,92,.35); line-height:1; }
+  .haul{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:18px 0; max-height:160px; overflow:auto; }
+  .haul .hitem{ font-size:12px; background:#1c140a; border:1px solid var(--line); border-radius:8px; padding:5px 9px; color:var(--ink); }
+  .haul .hitem b{ color:var(--gold); }
+
+  @media (max-width:760px){
+    .board{ gap:16px; }
+    .arena{ width:100%; }
+    .mon{ font-size:96px; }
+    .mon-stage{ height:164px; }
+    .mon-stage.looted{ height:78px; }
+    .hud .stat{ min-width:96px; padding:8px 12px; }
+  }
+
+  /* ================= OPTIMIZER EXTENSION ================= */
+  .end-actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:6px 0 14px; }
+  a.btn{ text-decoration:none; display:inline-block; }
+  .opt-prompt,.opt-perfect{ margin:8px auto 14px; max-width:440px; color:var(--ink-dim); line-height:1.55; }
+  .opt-prompt b{ color:var(--gold); font-style:normal; }
+  .opt-perfect{ color:var(--gold); font-family:'Cinzel',serif; letter-spacing:.03em; }
+  .opt-perfect b{ color:#fff; }
+
+  .solver-modal{ max-width:680px; }
+  .solver-badge{
+    display:inline-flex; align-items:center; gap:8px; font-family:'Cinzel',serif; font-weight:700;
+    letter-spacing:.14em; text-transform:uppercase; font-size:12px; color:var(--gold-deep);
+    background:#160f06; border:1px solid var(--line); border-radius:999px; padding:6px 14px; margin:4px 0;
+  }
+  .solver-badge .spin{ display:inline-block; animation:spin 1.6s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .solver-status{ font-style:italic; color:var(--ink-dim); font-size:12.5px; min-height:18px; letter-spacing:.03em; margin-top:4px; }
+  .opt-level{ font-family:'Cinzel',serif; font-weight:700; font-size:16px; color:var(--ink); margin:10px 0 2px; min-height:24px; }
+  .opt-level .lv-mon{ font-style:normal; color:var(--gold); }
+  .opt-scores{ display:flex; gap:14px; justify-content:center; align-items:stretch; margin:8px 0 14px; flex-wrap:wrap; }
+  .opt-scores .sc{
+    background:linear-gradient(180deg,var(--panel-2),var(--panel)); border:1px solid var(--line);
+    border-radius:10px; padding:8px 18px; min-width:124px; transition:box-shadow .25s;
+  }
+  .opt-scores .sc .l{ font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-dim); }
+  .opt-scores .sc .v{ font-family:'Cinzel',serif; font-weight:800; font-size:26px; margin-top:2px; }
+  .opt-scores .sc.you .v{ color:var(--ink); }
+  .opt-scores .sc.opt .v{ color:var(--gold); }
+  .opt-scores .sc.opt.lead{ box-shadow:0 0 0 1px var(--gold-deep), 0 0 20px rgba(231,189,92,.32); }
+
+  .opt-stage{
+    position:relative; width:calc(var(--optcell,44px) * 8); height:calc(var(--optcell,44px) * 5); margin:0 auto;
+    border-radius:10px; background:linear-gradient(180deg,#1a1207,#120b05); border:2px solid var(--gold-deep);
+    box-shadow:0 0 0 4px #1a1207, 0 0 0 5px var(--line), inset 0 0 30px rgba(0,0,0,.6), 0 14px 34px rgba(0,0,0,.5);
+  }
+  .opt-stage .grid-slots,.opt-stage .grid-pieces{
+    position:absolute; inset:0; display:grid;
+    grid-template-columns:repeat(8,var(--optcell,44px)); grid-template-rows:repeat(5,var(--optcell,44px));
+  }
+  .opt-stage .grid-pieces{ display:block; z-index:3; }
+  .opt-piece{ position:absolute; animation:dropIn .32s cubic-bezier(.2,.9,.3,1.25) both; }
+  @keyframes dropIn{ 0%{ transform:translateY(-16px) scale(.55); opacity:0; } 60%{ opacity:1; } 100%{ transform:translateY(0) scale(1); opacity:1; } }
+  .overtake-note{ color:var(--gold); font-family:'Cinzel',serif; font-weight:700; letter-spacing:.08em; font-size:13px; min-height:18px; margin-top:12px; opacity:0; transition:opacity .35s; }
+  .overtake-note.show{ opacity:1; }
+  .opt-skip{ margin-top:12px; }
+
+  .vs-wrap{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin:18px 0 8px; }
+  .vs-card{ flex:1 1 180px; max-width:230px; background:linear-gradient(180deg,#241a0d,#140d06); border:1px solid var(--line); border-radius:14px; padding:18px 16px; }
+  .vs-card.best{ border-color:var(--gold-deep); box-shadow:0 0 0 1px var(--gold-deep), 0 0 26px rgba(231,189,92,.18); }
+  .vs-card .vc-label{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-dim); }
+  .vs-card .vc-val{ font-family:'Cinzel',serif; font-weight:900; font-size:46px; line-height:1; margin:6px 0 4px; }
+  .vs-card.you .vc-val{ color:var(--ink); }
+  .vs-card.best .vc-val{ color:var(--gold); text-shadow:0 0 22px rgba(231,189,92,.3); }
+  .vs-card .vc-sub,.vs-card .vc-rank{ font-size:12px; color:var(--ink-dim); font-style:italic; }
+  .vs-gap{ color:var(--ink-dim); font-style:italic; margin:6px auto 16px; max-width:430px; line-height:1.5; }
+  .vs-actions,.learn-actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+
+  .learn-modal{ max-width:600px; text-align:left; }
+  .learn-modal h2{ text-align:center; }
+  .learn-slides{ position:relative; min-height:248px; }
+  .lslide{ display:none; }
+  .lslide.active{ display:block; animation:lfade .32s ease both; }
+  @keyframes lfade{ from{ opacity:0; transform:translateY(7px); } to{ opacity:1; transform:none; } }
+  .lslide-tag{ font-family:'Cinzel',serif; font-weight:700; letter-spacing:.14em; text-transform:uppercase; font-size:12px; color:var(--gold-deep); margin-bottom:8px; }
+  .lslide p{ color:var(--ink-dim); line-height:1.62; font-size:14px; margin:10px 0; }
+  .lslide b{ color:var(--ink); }
+  .lslide i{ color:var(--ink-dim); }
+  .lslide .btn{ margin-top:10px; }
+  .lslide .mzn{
+    display:block; white-space:pre; background:#120c06; border:1px solid var(--line); border-radius:8px;
+    padding:12px 14px; color:#cde6c9; font-size:12.5px; line-height:1.55; overflow:auto; margin:12px 0;
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+  }
+  .lslide .mzn .tag{ color:var(--gold-deep); }
+  .lnav{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:6px; }
+  .lnav .btn{ padding:9px 16px; font-size:12px; }
+  .lnav .btn:disabled{ visibility:hidden; }
+  .ldots{ display:flex; gap:9px; align-items:center; }
+  .ldot{ width:9px; height:9px; border-radius:50%; background:var(--line); cursor:pointer; border:none; padding:0; transition:background .2s, transform .2s; }
+  .ldot.on{ background:var(--gold); transform:scale(1.25); }
+  .learn-actions{ margin-top:14px; }
+
+  @media (max-width:760px){
+    .opt-scores .sc{ min-width:106px; padding:7px 12px; }
+    .vs-card .vc-val{ font-size:38px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 class="title">Dungeon Hoard</h1>
+    <div class="subtitle">Slay · Loot · Carry the Greatest Treasure</div>
+    <div class="hud">
+      <div class="stat"><div class="lbl">Encounter</div><div class="val" id="encVal">1 / 5</div></div>
+      <div class="stat value"><div class="lbl">Hoard Value</div><div class="val" id="valVal">0</div></div>
+      <div class="stat"><div class="lbl">Pack Space</div><div class="val" id="spaceVal">0 / 40</div></div>
+    </div>
+  </header>
+
+  <div class="board">
+    <!-- ARENA -->
+    <section class="panel arena">
+      <div class="panel-title">The Foe</div>
+      <div class="mon-name" id="monName">Goblin Scout</div>
+      <div class="mon-flavor" id="monFlavor"></div>
+      <div class="hpbar"><div class="hpfill" id="hpFill"></div></div>
+      <div class="hptext" id="hpText">100 / 100</div>
+      <div class="mon-stage" id="monStage">
+        <div class="mon alive" id="mon" role="button" aria-label="Attack the monster">👺</div>
+      </div>
+      <div class="attack-hint" id="atkHint">— strike the beast to make it drop its hoard —</div>
+      <div class="proceed-row" id="proceedRow"></div>
+    </section>
+
+    <!-- INVENTORY -->
+    <section class="panel inv">
+      <div class="panel-title">Your Pack</div>
+      <div class="grid-holder">
+        <div class="grid-stage" id="stage">
+          <div class="grid-slots" id="slots"></div>
+          <div class="grid-highlight" id="highlight"></div>
+          <div class="grid-pieces" id="pieces"></div>
+        </div>
+      </div>
+
+      <div class="tray-wrap">
+        <div class="panel-title" style="margin-top:6px;">Loot Pile</div>
+        <div class="tray empty-state" id="tray"></div>
+      </div>
+
+      <div class="legend">
+        <span><i class="dot" style="background:linear-gradient(160deg,var(--c-common-1),var(--c-common-2))"></i>Common</span>
+        <span><i class="dot" style="background:linear-gradient(160deg,var(--c-uncommon-1),var(--c-uncommon-2))"></i>Uncommon</span>
+        <span><i class="dot" style="background:linear-gradient(160deg,var(--c-rare-1),var(--c-rare-2))"></i>Rare</span>
+        <span><i class="dot" style="background:linear-gradient(160deg,var(--c-epic-1),var(--c-epic-2))"></i>Epic</span>
+        <span><i class="dot" style="background:linear-gradient(160deg,var(--c-legend-1),var(--c-legend-2))"></i>Legendary</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="hintbar">
+    <b>Drag</b> loot into your pack · <b>Tap / click</b> an item to rotate (or <b>R</b> while dragging) · <b>Drop off the grid</b> to discard · The pack can't hold it all — keep what's worth the most.
+  </div>
+</div>
+
+<!-- INTRO OVERLAY -->
+<div class="overlay" id="introOverlay">
+  <div class="modal">
+    <h2>Dungeon Hoard</h2>
+    <p>Five foes guard the depths. Cut them down — but your pack is small and their treasures are many and strangely shaped.</p>
+    <ul class="rules">
+      <li>⚔️ <b>Click the monster</b> to attack. When it falls, its loot spills into the pile.</li>
+      <li>🎒 <b>Drag</b> items from the pile into your grid. Pieces can't overlap.</li>
+      <li>🔄 <b>Tap / click</b> an item to rotate it (or press <b>R</b> while dragging).</li>
+      <li>🗑️ <b>Drop an item off the grid</b> to leave it behind and free up space.</li>
+      <li>💰 Whatever you <b>can't fit is lost forever</b> when you move on. Carry the most valuable haul you can.</li>
+    </ul>
+    <button class="btn" id="beginBtn">Begin the Descent</button>
+  </div>
+</div>
+
+<!-- END OVERLAY -->
+<div class="overlay hidden" id="endOverlay">
+  <div class="modal">
+    <h2 id="endTitle">The Depths Are Cleared</h2>
+    <p>You climb back into the light, pack heavy with plunder.</p>
+    <div class="final-val" id="endVal">0</div>
+    <div class="rank" id="endRank">—</div>
+    <div class="haul" id="endHaul"></div>
+    <div id="endActions" class="end-actions"></div>
+    <button class="btn ghost" id="againBtn">Descend Again</button>
+  </div>
+</div>
+
+<!-- SOLVER OVERLAY (time-lapse + comparison) -->
+<div class="overlay hidden" id="solverOverlay">
+  <div class="modal solver-modal">
+    <!-- PHASE A: live solve time-lapse -->
+    <div id="solveView">
+      <h2>The Optimizer Descends</h2>
+      <div class="solver-badge"><span class="spin">⚙</span> HiGHS · MiniZinc</div>
+      <div class="solver-status" id="solverStatus">Formulating the packing model…</div>
+      <div class="opt-level" id="optLevel">&nbsp;</div>
+      <div class="opt-scores">
+        <div class="sc you"><div class="l">Your hoard</div><div class="v" id="optYou">0</div></div>
+        <div class="sc opt" id="optScoreCard"><div class="l">Optimal so far</div><div class="v" id="optScore">0</div></div>
+      </div>
+      <div class="grid-holder">
+        <div class="grid-stage opt-stage" id="optStage">
+          <div class="grid-slots" id="optSlots"></div>
+          <div class="grid-pieces" id="optPieces"></div>
+        </div>
+      </div>
+      <div class="overtake-note" id="overtakeNote">✦ The optimizer pulls ahead</div>
+      <div class="opt-skip"><button class="btn ghost" id="skipBtn">Skip to result ▸</button></div>
+    </div>
+    <!-- PHASE B: comparison -->
+    <div id="compareView" style="display:none">
+      <h2>Optimal vs Your Hoard</h2>
+      <p>The very same loot, packed by a mathematical optimization solver.</p>
+      <div class="vs-wrap">
+        <div class="vs-card you"><div class="vc-label">Your hoard</div><div class="vc-val" id="vcYou">0</div><div class="vc-rank" id="vcRank">—</div></div>
+        <div class="vs-card best"><div class="vc-label">HiGHS optimal</div><div class="vc-val" id="vcOpt">1435</div><div class="vc-sub">proven best · fills all 40 cells</div></div>
+      </div>
+      <div class="vs-gap" id="vsGap"></div>
+      <div class="vs-actions">
+        <button class="btn" id="learnBtn">Find Out More</button>
+        <a class="btn ghost" id="liBtn" target="_blank" rel="noopener" href="https://www.linkedin.com/in/jens-peter-joost/">Follow me for more games ▸</a>
+        <button class="btn ghost" id="again2">Descend Again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPLAINER OVERLAY -->
+<div class="overlay hidden" id="learnOverlay">
+  <div class="modal learn-modal">
+    <h2>How the Optimizer Wins</h2>
+    <div class="learn-slides" id="learnSlides">
+      <div class="lslide active">
+        <div class="lslide-tag">1 · The puzzle</div>
+        <p>Your pack is an <b>8×5 grid</b> — 40 cells. Every treasure has its own <b>shape</b> and <b>value</b>, and you may <b>rotate</b> it. Keep the most valuable haul that fits, with no two pieces overlapping.</p>
+        <p>That is exactly the <b>two-dimensional knapsack</b> problem — a form of <b>set-packing</b>, and one of the classic hard problems in optimization.</p>
+      </div>
+      <div class="lslide">
+        <div class="lslide-tag">2 · Too many options</div>
+        <p>Even this little dungeon has billions of ways to choose and arrange the loot — far too many to test one by one.</p>
+        <p>So instead of guessing, we describe the choice precisely. For every item <i>i</i> and every legal placement <i>p</i> (a position <i>and</i> a rotation), a yes/no variable <i>x<sub>i,p</sub></i> is <b>1</b> when that item sits there, and <b>0</b> otherwise.</p>
+      </div>
+      <div class="lslide">
+        <div class="lslide-tag">3 · The model</div>
+        <p>The whole puzzle becomes a compact <b>0/1 integer linear program</b>:</p>
+        <code class="mzn"><span class="tag">maximize</span>   Σ  vᵢ · xᵢ,ₚ
+
+<span class="tag">subject to</span>
+  Σₚ xᵢ,ₚ ≤ 1     each item placed at most once
+  Σ  xᵢ,ₚ ≤ 1     no two pieces share a cell
+  xᵢ,ₚ ∈ {0, 1}</code>
+        <p>Maximize total value · use each treasure at most once · never cover a cell twice.</p>
+      </div>
+      <div class="lslide">
+        <div class="lslide-tag">4 · The solve</div>
+        <p><b>HiGHS</b>, driven through the <b>MiniZinc</b> modelling language, searches with branch-and-bound and cutting planes — and <b>proves</b> the answer is the best possible, not merely a good one. Here the optimum is <b>1435</b>, filling all 40 cells. Since the loot never changes, that layout is computed once and replayed in the time-lapse.</p>
+        <p style="color:var(--gold-deep);font-style:italic;">The same maths routes delivery fleets, schedules shift crews and lays out factory floors — only with millions of variables instead of a few swords and crowns.</p>
+        <a class="btn" id="liBtn2" target="_blank" rel="noopener" href="https://www.linkedin.com/in/jens-peter-joost/">Follow me for more games on optimization ▸</a>
+      </div>
+    </div>
+    <div class="lnav">
+      <button class="btn ghost" id="lPrev">◂ Prev</button>
+      <div class="ldots" id="lDots"></div>
+      <button class="btn" id="lNext">Next ▸</button>
+    </div>
+    <div class="learn-actions">
+      <button class="btn ghost" id="learnBack">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============ CONFIG ============ */
+const COLS = 8, ROWS = 5;
+let cellPx = 48;
+let nextId = 1;
+let phase = "intro";          // intro | fight | loot | done
+let monsterIndex = 0;
+let drag = null;
+
+const occ = Array.from({length:ROWS}, () => Array(COLS).fill(null));
+const piecesMap = new Map();  // id -> piece
+
+/* ============ ITEM CATALOG ============ */
+// cells are [row,col] offsets (normalized so min row/col = 0)
+const V = (r,c)=>[r,c];
+const ITEMS = {
+  coin:    { name:"Gold Coin",     icon:"🪙", value:15,  rarity:"common",    cells:[V(0,0)] },
+  gem:     { name:"Cut Gem",       icon:"💎", value:45,  rarity:"rare",      cells:[V(0,0)] },
+  ring:    { name:"Signet Ring",   icon:"💍", value:65,  rarity:"epic",      cells:[V(0,0)] },
+  amulet:  { name:"Warding Charm",  icon:"🧿", value:50,  rarity:"rare",      cells:[V(0,0)] },
+  scroll:  { name:"Spell Scroll",  icon:"📜", value:25,  rarity:"common",    cells:[V(0,0),V(0,1)] },
+  potion:  { name:"Elixir",        icon:"🧪", value:30,  rarity:"uncommon",  cells:[V(0,0),V(1,0)] },
+  key:     { name:"Old Key",       icon:"🗝️", value:40,  rarity:"uncommon",  cells:[V(0,0),V(1,0)] },
+  chalice: { name:"Golden Chalice", icon:"🏆", value:80,  rarity:"epic",      cells:[V(0,0),V(1,0)] },
+  bone:    { name:"Old Bone",      icon:"🦴", value:20,  rarity:"common",    cells:[V(0,0),V(0,1),V(0,2)] },
+  dagger:  { name:"Dagger",        icon:"🗡️", value:55,  rarity:"rare",      cells:[V(0,0),V(1,0),V(2,0)] },
+  sword:   { name:"Greatsword",    icon:"⚔️", value:110, rarity:"epic",      cells:[V(0,0),V(1,0),V(2,0),V(3,0)] },
+  trident: { name:"Trident",       icon:"🔱", value:150, rarity:"legendary", cells:[V(0,0),V(1,0),V(2,0),V(3,0),V(4,0)] },
+  shield:  { name:"Kite Shield",   icon:"🛡️", value:90,  rarity:"rare",      cells:[V(0,0),V(0,1),V(1,0),V(1,1)] },
+  urn:     { name:"Ornate Urn",    icon:"🏺", value:70,  rarity:"uncommon",  cells:[V(0,0),V(0,1),V(1,0),V(1,1)] },
+  skull:   { name:"Cursed Skull",  icon:"💀", value:50,  rarity:"common",    cells:[V(0,0),V(0,1),V(1,0),V(1,1)] },
+  crown:   { name:"Royal Crown",   icon:"👑", value:160, rarity:"legendary", cells:[V(0,0),V(0,1),V(0,2),V(1,1)] }, // T
+  bow:     { name:"Longbow",       icon:"🏹", value:120, rarity:"epic",      cells:[V(0,0),V(1,0),V(2,0),V(2,1)] }, // L
+  axe:     { name:"War Axe",       icon:"🪓", value:85,  rarity:"rare",      cells:[V(0,0),V(1,0),V(1,1)] },        // L-tromino
+  bag:     { name:"Coin Pouch",    icon:"💰", value:60,  rarity:"uncommon",  cells:[V(0,0),V(1,0),V(1,1)] },        // L-tromino
+};
+
+/* ============ MONSTERS ============ */
+const MONSTERS = [
+  { name:"Goblin Scout",  icon:"👺", hp:100, flavor:"A twitchy little thief with full pockets.",
+    loot:["coin","coin","potion","scroll","bone","skull"] },
+  { name:"Orc Brute",     icon:"👹", hp:130, flavor:"It hoards what it cannot use.",
+    loot:["gem","axe","shield","key","bone","chalice"] },
+  { name:"Skeleton King", icon:"💀", hp:145, flavor:"Crowned in the dark, still clutching its blade.",
+    loot:["amulet","sword","crown","potion","urn","coin"] },
+  { name:"Cave Troll",    icon:"🧌", hp:175, flavor:"Its lair glitters beneath the grime.",
+    loot:["ring","bow","shield","gem","skull","bag"] },
+  { name:"Ancient Dragon",icon:"🐉", hp:235, flavor:"A lifetime of plunder, and you can take only a sliver.",
+    loot:["crown","trident","ring","gem","amulet","sword","chalice","urn","coin","coin"] },
+];
+
+/* ============ DOM ============ */
+const $ = id => document.getElementById(id);
+const slotsEl = $("slots"), highlightEl = $("highlight"), piecesEl = $("pieces");
+const stageEl = $("stage"), trayEl = $("tray"), monEl = $("mon"), monStage = $("monStage");
+
+/* ============ GEOMETRY ============ */
+function normalize(cells){
+  let minR=Infinity, minC=Infinity;
+  for(const [r,c] of cells){ if(r<minR)minR=r; if(c<minC)minC=c; }
+  return cells.map(([r,c]) => [r-minR, c-minC]);
+}
+function rotate(cells){            // 90° clockwise
+  return normalize(cells.map(([r,c]) => [c, -r]));
+}
+function bounding(cells){
+  let h=0,w=0;
+  for(const [r,c] of cells){ if(r+1>h)h=r+1; if(c+1>w)w=c+1; }
+  return {h,w};
+}
+function canPlace(cells, gr, gc, ignoreId){
+  for(const [r,c] of cells){
+    const R=gr+r, C=gc+c;
+    if(R<0||C<0||R>=ROWS||C>=COLS) return false;
+    const o = occ[R][C];
+    if(o !== null && o !== ignoreId) return false;
+  }
+  return true;
+}
+function writeOcc(p){ for(const [r,c] of p.cells) occ[p.pos.r+r][p.pos.c+c] = p.id; }
+function clearOcc(p){ for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(occ[r][c]===p.id) occ[r][c]=null; }
+
+/* ============ BUILD STATIC GRID ============ */
+function buildGrid(){
+  slotsEl.innerHTML=""; highlightEl.innerHTML="";
+  for(let i=0;i<ROWS*COLS;i++){
+    const s=document.createElement("div"); s.className="slot"; slotsEl.appendChild(s);
+    const h=document.createElement("div"); h.className="hcell"; highlightEl.appendChild(h);
+  }
+}
+function clearHighlight(){
+  for(const h of highlightEl.children){ h.classList.remove("valid","invalid"); }
+}
+
+/* ============ PIECES ============ */
+function setPieceVisual(p){
+  const {h,w} = bounding(p.cells);
+  const shape = p.el.querySelector(".pshape");
+  shape.style.gridTemplateColumns = `repeat(${w},1fr)`;
+  shape.style.gridTemplateRows = `repeat(${h},1fr)`;
+  const filled = new Set(p.cells.map(([r,c])=>r+","+c));
+  shape.innerHTML="";
+  for(let r=0;r<h;r++) for(let c=0;c<w;c++){
+    const d=document.createElement("div");
+    d.className = "pcell " + (filled.has(r+","+c) ? "fill" : "empty");
+    shape.appendChild(d);
+  }
+  sizePiece(p);
+}
+function sizePiece(p){
+  const {h,w} = bounding(p.cells);
+  p.el.style.width  = (w*cellPx)+"px";
+  p.el.style.height = (h*cellPx)+"px";
+  const icon = p.el.querySelector(".picon");
+  const iSize = Math.min(Math.min(w,h)*cellPx*0.62, cellPx*1.05);
+  icon.style.fontSize = iSize+"px";
+  if(p.location==="grid" && p.pos){
+    p.el.style.left = (p.pos.c*cellPx)+"px";
+    p.el.style.top  = (p.pos.r*cellPx)+"px";
+  }
+}
+function makePiece(key){
+  const item = ITEMS[key];
+  const p = { id: nextId++, key, item, cells: item.cells.map(c=>c.slice()), location:"tray", pos:null, el:null };
+  const el = document.createElement("div");
+  el.className = "piece rarity-" + item.rarity;
+  el.innerHTML = `<div class="pshape"></div><div class="picon">${item.icon}</div><div class="pval">${item.value}</div>`;
+  el.title = `${item.name} — value ${item.value}`;
+  el.addEventListener("pointerdown", e => onPointerDown(e, p));
+  el.addEventListener("contextmenu", e => {
+    e.preventDefault();
+    if(drag && drag.piece===p && drag.started) rotateDragging();
+    else rotatePieceInPlace(p);
+  });
+  p.el = el;
+  piecesMap.set(p.id, p);
+  setPieceVisual(p);
+  return p;
+}
+
+/* ============ PLACEMENT ============ */
+function placeInGrid(p, gr, gc, doFloat){
+  p.location="grid"; p.pos={r:gr,c:gc};
+  p.el.classList.remove("dragging");
+  p.el.classList.add("in-grid");
+  p.el.style.position="absolute";
+  piecesEl.appendChild(p.el);
+  sizePiece(p);
+  writeOcc(p);
+  if(doFloat) floatAt("+"+p.item.value, gr, gc, "gain");
+}
+function returnToTray(p, lossFloat){
+  if(lossFloat && p.prevPos) floatAt("−"+p.item.value, p.prevPos.r, p.prevPos.c, "loss");
+  p.location="tray"; p.pos=null;
+  p.el.classList.remove("in-grid","dragging");
+  p.el.style.position=""; p.el.style.left=""; p.el.style.top="";
+  trayEl.appendChild(p.el);
+  sizePiece(p);
+  refreshTrayState();
+}
+function floatAt(text, gr, gc, type){
+  const f=document.createElement("div");
+  f.className="float "+type; f.textContent=text;
+  f.style.left=(gc*cellPx + cellPx*0.2)+"px";
+  f.style.top =(gr*cellPx)+"px";
+  stageEl.appendChild(f);
+  setTimeout(()=>f.remove(), 900);
+}
+
+/* ============ ROTATION ============ */
+function rotatePieceInPlace(p){
+  if(phase!=="loot" && p.location==="tray") { /* allow anyway */ }
+  if(p.location==="tray"){
+    p.cells = rotate(p.cells); setPieceVisual(p); return;
+  }
+  // in grid: rotate, search nearby cells to keep it fitting
+  const nc = rotate(p.cells);
+  const {r,c} = p.pos;
+  clearOcc(p);
+  const cand=[];
+  for(let R=r-2;R<=r+2;R++) for(let C=c-2;C<=c+2;C++) cand.push([R,C,Math.abs(R-r)+Math.abs(C-c)]);
+  cand.sort((a,b)=>a[2]-b[2]);
+  for(const [R,C] of cand){
+    if(canPlace(nc,R,C,p.id)){
+      p.cells=nc; p.pos={r:R,c:C}; setPieceVisual(p); writeOcc(p); return;
+    }
+  }
+  writeOcc(p); // revert (old cells)
+}
+function rotateDragging(){
+  const p = drag.piece;
+  p.cells = rotate(p.cells);
+  setPieceVisual(p);
+  const {h,w} = bounding(p.cells);
+  drag.grabDX = w*cellPx/2;
+  drag.grabDY = h*cellPx/2;
+  positionGhost(drag.lastX, drag.lastY);
+  updateHighlight(drag.lastX, drag.lastY);
+}
+
+/* ============ DRAG ============ */
+function onPointerDown(e, p){
+  if(e.button===2) return;             // right-click handled by contextmenu
+  if(phase==="intro"||phase==="done") return;
+  e.preventDefault();
+  const rect = p.el.getBoundingClientRect();
+  drag = {
+    piece:p, pointerId:e.pointerId, started:false,
+    startX:e.clientX, startY:e.clientY, lastX:e.clientX, lastY:e.clientY,
+    grabDX:e.clientX-rect.left, grabDY:e.clientY-rect.top,
+    fromGrid:(p.location==="grid"), prevPos:p.pos?{...p.pos}:null,
+    target:null, canHere:false, outside:true
+  };
+  window.addEventListener("pointermove", onPointerMove, {passive:false});
+  window.addEventListener("pointerup", onPointerUp);
+  window.addEventListener("pointercancel", onPointerUp);
+}
+function liftPiece(){
+  const p = drag.piece;
+  if(p.location==="grid"){ clearOcc(p); }
+  p.el.classList.add("dragging");
+  p.el.classList.remove("in-grid");
+  p.el.style.position="fixed";
+  document.body.appendChild(p.el);
+  sizePiece(p);
+}
+function positionGhost(x,y){
+  drag.piece.el.style.left = (x - drag.grabDX)+"px";
+  drag.piece.el.style.top  = (y - drag.grabDY)+"px";
+}
+function updateHighlight(x,y){
+  clearHighlight();
+  const p = drag.piece;
+  const sr = slotsEl.getBoundingClientRect();
+  const pieceLeft = x - drag.grabDX, pieceTop = y - drag.grabDY;
+  const gc = Math.round((pieceLeft - sr.left)/cellPx);
+  const gr = Math.round((pieceTop  - sr.top )/cellPx);
+  drag.target = {gr,gc};
+  let anyIn=false;
+  for(const [r,c] of p.cells){
+    const R=gr+r, C=gc+c;
+    if(R>=0&&C>=0&&R<ROWS&&C<COLS) anyIn=true;
+  }
+  drag.outside = !anyIn;
+  const ok = canPlace(p.cells,gr,gc,p.id);
+  drag.canHere = ok;
+  if(!drag.outside){
+    for(const [r,c] of p.cells){
+      const R=gr+r, C=gc+c;
+      if(R>=0&&C>=0&&R<ROWS&&C<COLS){
+        highlightEl.children[R*COLS+C].classList.add(ok?"valid":"invalid");
+      }
+    }
+  }
+}
+function onPointerMove(e){
+  if(!drag) return;
+  drag.lastX=e.clientX; drag.lastY=e.clientY;
+  if(!drag.started){
+    if(Math.hypot(e.clientX-drag.startX, e.clientY-drag.startY) < 6) return;
+    drag.started = true;
+    liftPiece();
+  }
+  e.preventDefault();
+  positionGhost(e.clientX, e.clientY);
+  updateHighlight(e.clientX, e.clientY);
+}
+function onPointerUp(){
+  if(!drag) return;
+  const p = drag.piece;
+  window.removeEventListener("pointermove", onPointerMove);
+  window.removeEventListener("pointerup", onPointerUp);
+  window.removeEventListener("pointercancel", onPointerUp);
+
+  if(!drag.started){           // a tap → rotate
+    rotatePieceInPlace(p);
+    finishDrag();
+    return;
+  }
+
+  let done=false;
+  if(drag.target && canPlace(p.cells, drag.target.gr, drag.target.gc, p.id)){
+    placeInGrid(p, drag.target.gr, drag.target.gc, !drag.fromGrid);
+    done=true;
+  }
+  if(!done && drag.fromGrid && !drag.outside && drag.prevPos && canPlace(p.cells, drag.prevPos.r, drag.prevPos.c, p.id)){
+    placeInGrid(p, drag.prevPos.r, drag.prevPos.c, false);  // invalid move → snap back
+    done=true;
+  }
+  if(!done){
+    returnToTray(p, drag.fromGrid);  // dropped off-grid → leave behind / back to pile
+  }
+  finishDrag();
+}
+function finishDrag(){
+  clearHighlight();
+  if(drag) drag.piece.el.classList.remove("dragging");
+  drag=null;
+  updateHUD();
+}
+
+/* ============ COMBAT ============ */
+function attack(){
+  if(phase!=="fight") return;
+  const mon = MONSTERS[monsterIndex];
+  let dmg = 30 + Math.floor(Math.random()*17);     // 30-46
+  const crit = Math.random() < 0.18;
+  if(crit) dmg = Math.floor(dmg*1.7);
+  mon._hp = Math.max(0, mon._hp - dmg);
+
+  monEl.classList.remove("shake"); void monEl.offsetWidth; monEl.classList.add("shake");
+  spawnDamage(dmg, crit);
+  renderHp();
+
+  if(mon._hp<=0) defeatMonster();
+}
+function spawnDamage(dmg, crit){
+  const d=document.createElement("div");
+  d.className="dmg"+(crit?" crit":"");
+  d.textContent = (crit?"✸ ":"") + dmg;
+  d.style.left = (40 + Math.random()*120)+"px";
+  d.style.top  = (40 + Math.random()*40)+"px";
+  monStage.appendChild(d);
+  setTimeout(()=>d.remove(), 700);
+}
+function defeatMonster(){
+  phase="loot";
+  monEl.classList.remove("alive","shake");
+  monEl.classList.add("slain");
+  monStage.classList.add("looted");
+  $("atkHint").textContent = "— slain! its hoard spills out —";
+  setTimeout(()=>{
+    spawnLoot();
+    renderProceed();
+  }, 480);
+}
+function spawnLoot(){
+  const mon = MONSTERS[monsterIndex];
+  for(const key of mon.loot){
+    const p = makePiece(key);
+    trayEl.appendChild(p.el);
+    sizePiece(p);
+  }
+  refreshTrayState();
+  updateHUD();
+  if(window.matchMedia && window.matchMedia("(max-width:760px)").matches){
+    setTimeout(()=>{ const t=document.querySelector(".tray-wrap"); if(t) t.scrollIntoView({behavior:"smooth", block:"center"}); }, 90);
+  }
+}
+
+/* ============ FLOW ============ */
+function startEncounter(){
+  phase="fight";
+  const mon = MONSTERS[monsterIndex];
+  mon._hp = mon.hp;
+  $("monName").textContent = mon.name;
+  $("monFlavor").textContent = mon.flavor;
+  monEl.textContent = mon.icon;
+  monEl.className = "mon alive";
+  monStage.classList.remove("looted");
+  $("atkHint").textContent = "— strike the beast to make it drop its hoard —";
+  $("proceedRow").innerHTML = "";
+  renderHp();
+  updateHUD();
+}
+function renderProceed(){
+  const last = (monsterIndex === MONSTERS.length-1);
+  const row = $("proceedRow");
+  row.innerHTML =
+    `<div class="warn">Anything left in the pile is lost forever.</div>
+     <button class="btn" id="proceedBtn">${last ? "Escape the Dungeon" : "Press On →"}</button>`;
+  $("proceedBtn").addEventListener("click", proceed);
+}
+function proceed(){
+  // discard everything still in the pile
+  for(const p of [...piecesMap.values()]){
+    if(p.location==="tray"){ p.el.remove(); piecesMap.delete(p.id); }
+  }
+  refreshTrayState();
+  monsterIndex++;
+  if(monsterIndex >= MONSTERS.length){ endGame(); }
+  else { startEncounter(); }
+}
+
+/* ============ SCORE / HUD ============ */
+function hoardValue(){
+  let s=0;
+  for(const p of piecesMap.values()) if(p.location==="grid") s+=p.item.value;
+  return s;
+}
+function spaceUsed(){
+  let n=0;
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(occ[r][c]!==null) n++;
+  return n;
+}
+function updateHUD(){
+  $("encVal").textContent  = Math.min(monsterIndex+1, MONSTERS.length) + " / " + MONSTERS.length;
+  $("valVal").textContent  = hoardValue();
+  $("spaceVal").textContent= spaceUsed() + " / " + (ROWS*COLS);
+}
+function renderHp(){
+  const mon = MONSTERS[monsterIndex];
+  const pct = Math.max(0, mon._hp / mon.hp * 100);
+  $("hpFill").style.width = pct + "%";
+  $("hpText").textContent = mon._hp + " / " + mon.hp;
+}
+function refreshTrayState(){
+  const hasTray = [...piecesMap.values()].some(p=>p.location==="tray");
+  trayEl.classList.toggle("empty-state", !hasTray);
+}
+
+/* ============ END ============ */
+function rankFor(v){
+  if(v >= 720) return "Hoard Master — the dragon would be jealous";
+  if(v >= 540) return "Master Plunderer";
+  if(v >= 360) return "Seasoned Looter";
+  if(v >= 180) return "Apprentice Thief";
+  return "Hapless Pack Rat";
+}
+function endGame(){
+  phase="done";
+  const v = hoardValue();
+  $("endVal").textContent = v;
+  $("endRank").textContent = rankFor(v);
+  // breakdown
+  const counts = {};
+  for(const p of piecesMap.values()) if(p.location==="grid"){
+    if(!counts[p.key]) counts[p.key] = {n:0, item:p.item};
+    counts[p.key].n++;
+  }
+  const haul = $("endHaul"); haul.innerHTML="";
+  const entries = Object.values(counts).sort((a,b)=> b.item.value - a.item.value);
+  if(entries.length===0){
+    haul.innerHTML = `<div class="hitem">You carried out… nothing.</div>`;
+  } else {
+    for(const e of entries){
+      const d=document.createElement("div"); d.className="hitem";
+      d.innerHTML = `${e.item.icon} ${e.item.name}${e.n>1?" ×"+e.n:""} · <b>${e.item.value*e.n}</b>`;
+      haul.appendChild(d);
+    }
+  }
+  setupEndActions(v);
+  $("endOverlay").classList.remove("hidden");
+}
+function restart(){
+  for(const p of [...piecesMap.values()]){ p.el.remove(); }
+  piecesMap.clear();
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) occ[r][c]=null;
+  nextId=1; monsterIndex=0;
+  $("endOverlay").classList.add("hidden");
+  $("solverOverlay").classList.add("hidden");
+  $("learnOverlay").classList.add("hidden");
+  resetOptGrid();
+  refreshTrayState();
+  layout();
+  startEncounter();
+}
+
+/* ============ OPTIMIZER SHOWCASE ============ */
+/* Proven-optimal packing of all 5 monsters' loot, computed once with an
+   integer-programming (set-packing / 2-D knapsack) model and replayed below.
+   Grouped by the monster that drops each item, so any prefix fits the grid. */
+const BAKED = {"opt":1435,"fill":40,"total":40,"levels":[[{"key":"coin","cells":[[0,1]]}],[{"key":"axe","cells":[[3,6],[4,5],[4,6]]},{"key":"chalice","cells":[[4,3],[4,4]]},{"key":"gem","cells":[[3,7]]}],[{"key":"crown","cells":[[2,3],[3,2],[3,3],[3,4]]},{"key":"sword","cells":[[0,4],[0,5],[0,6],[0,7]]},{"key":"amulet","cells":[[1,7]]}],[{"key":"bow","cells":[[1,6],[2,4],[2,5],[2,6]]},{"key":"ring","cells":[[4,2]]},{"key":"gem","cells":[[3,5]]}],[{"key":"crown","cells":[[1,1],[2,1],[2,2],[3,1]]},{"key":"trident","cells":[[0,0],[1,0],[2,0],[3,0],[4,0]]},{"key":"sword","cells":[[1,2],[1,3],[1,4],[1,5]]},{"key":"chalice","cells":[[0,2],[0,3]]},{"key":"ring","cells":[[4,1]]},{"key":"amulet","cells":[[4,7]]},{"key":"gem","cells":[[2,7]]}]]};
+const OPT_VALUE = BAKED.opt;
+
+let optCancel = false, optRunning = false;
+let optTimers = [];
+let optPlaced = [];           // {el, offsets, pos}
+
+function buildOptSlots(){
+  const s = $("optSlots"); if(!s) return;
+  s.innerHTML = "";
+  for(let i=0;i<ROWS*COLS;i++){ const d=document.createElement("div"); d.className="slot"; s.appendChild(d); }
+}
+function optCellSize(){
+  const w = Math.min(window.innerWidth - 72, 520);
+  return Math.max(30, Math.min(52, Math.floor(w / COLS)));
+}
+function applyOptCell(){
+  const oc = optCellSize();
+  document.documentElement.style.setProperty("--optcell", oc+"px");
+  for(const o of optPlaced) sizeOptPieceEl(o.el, o.offsets, o.pos, oc);
+}
+function absToOffsets(cells){
+  let minR=Infinity, minC=Infinity;
+  for(const [r,c] of cells){ if(r<minR)minR=r; if(c<minC)minC=c; }
+  return { offsets: cells.map(([r,c])=>[r-minR, c-minC]), pos:{r:minR, c:minC} };
+}
+function buildOptPieceEl(key, offsets){
+  const item = ITEMS[key];
+  const el = document.createElement("div");
+  el.className = "piece opt-piece rarity-" + item.rarity;
+  el.innerHTML = `<div class="pshape"></div><div class="picon">${item.icon}</div><div class="pval">${item.value}</div>`;
+  const {h,w} = bounding(offsets);
+  const shape = el.querySelector(".pshape");
+  shape.style.gridTemplateColumns = `repeat(${w},1fr)`;
+  shape.style.gridTemplateRows = `repeat(${h},1fr)`;
+  const filled = new Set(offsets.map(([r,c])=>r+","+c));
+  for(let r=0;r<h;r++) for(let c=0;c<w;c++){
+    const d=document.createElement("div");
+    d.className = "pcell " + (filled.has(r+","+c) ? "fill" : "empty");
+    shape.appendChild(d);
+  }
+  return el;
+}
+function sizeOptPieceEl(el, offsets, pos, oc){
+  const {h,w} = bounding(offsets);
+  el.style.width  = (w*oc)+"px";
+  el.style.height = (h*oc)+"px";
+  el.style.left   = (pos.c*oc)+"px";
+  el.style.top    = (pos.r*oc)+"px";
+  const icon = el.querySelector(".picon");
+  icon.style.fontSize = Math.min(Math.min(w,h)*oc*0.62, oc*1.05)+"px";
+}
+function optFloat(text, pos){
+  const oc = optCellSize();
+  const f = document.createElement("div");
+  f.className = "float gain"; f.textContent = text;
+  f.style.left = (pos.c*oc + oc*0.2)+"px";
+  f.style.top  = (pos.r*oc)+"px";
+  const st = $("optStage"); if(st){ st.appendChild(f); setTimeout(()=>f.remove(), 900); }
+}
+function resetOptGrid(){
+  optCancel = true; optRunning = false;
+  for(const t of optTimers) clearTimeout(t);
+  optTimers = []; optPlaced = [];
+  const p = $("optPieces"); if(p) p.innerHTML = "";
+  const st = $("optStage"); if(st) st.querySelectorAll(".float").forEach(f=>f.remove());
+}
+const sleep = (ms) => new Promise(res => { const t=setTimeout(res, ms); optTimers.push(t); });
+
+async function runOptShowcase(){
+  const youVal = hoardValue();
+  buildOptSlots(); resetOptGrid();
+  optCancel = false; optRunning = true;
+  applyOptCell();
+  $("optYou").textContent = youVal;
+  $("optScore").textContent = "0";
+  $("optScoreCard").classList.remove("lead");
+  $("overtakeNote").classList.remove("show");
+  $("optLevel").innerHTML = "&nbsp;";
+
+  const status = $("solverStatus");
+  status.textContent = "Formulating the packing model…";
+  await sleep(650); if(optCancel) return;
+  status.textContent = "Solving with HiGHS (branch & bound)…";
+  await sleep(750); if(optCancel) return;
+  status.textContent = "Optimal found — replaying level by level";
+
+  let running = 0;
+  let overtaken = (youVal <= 0);
+  if(overtaken) $("optScoreCard").classList.add("lead");
+
+  for(let l=0; l<BAKED.levels.length; l++){
+    if(optCancel) return;
+    const mon = MONSTERS[l];
+    $("optLevel").innerHTML = `Level ${l+1} / ${BAKED.levels.length} — <span class="lv-mon">${mon.icon} ${mon.name}</span>`;
+    await sleep(430); if(optCancel) return;
+    for(const it of BAKED.levels[l]){
+      if(optCancel) return;
+      const {offsets, pos} = absToOffsets(it.cells);
+      const el = buildOptPieceEl(it.key, offsets);
+      $("optPieces").appendChild(el);
+      sizeOptPieceEl(el, offsets, pos, optCellSize());
+      optPlaced.push({el, offsets, pos});
+      const val = ITEMS[it.key].value;
+      running += val;
+      $("optScore").textContent = running;
+      optFloat("+"+val, pos);
+      if(!overtaken && running > youVal){
+        overtaken = true;
+        $("optScoreCard").classList.add("lead");
+        $("overtakeNote").classList.add("show");
+      }
+      await sleep(250); if(optCancel) return;
+    }
+    await sleep(360);
+  }
+  await sleep(520);
+  if(optCancel) return;
+  finishOptShowcase(youVal);
+}
+function placeAllInstant(){
+  const p = $("optPieces"); p.innerHTML = ""; optPlaced = [];
+  const oc = optCellSize();
+  for(let l=0; l<BAKED.levels.length; l++) for(const it of BAKED.levels[l]){
+    const {offsets, pos} = absToOffsets(it.cells);
+    const el = buildOptPieceEl(it.key, offsets);
+    el.style.animation = "none";
+    p.appendChild(el);
+    sizeOptPieceEl(el, offsets, pos, oc);
+    optPlaced.push({el, offsets, pos});
+  }
+}
+function skipOptShowcase(){
+  optCancel = true;
+  for(const t of optTimers) clearTimeout(t); optTimers = [];
+  buildOptSlots(); applyOptCell(); placeAllInstant();
+  finishOptShowcase(hoardValue());
+}
+function finishOptShowcase(youVal){
+  optRunning = false;
+  $("vcYou").textContent = youVal;
+  $("vcRank").textContent = rankFor(youVal).split(" — ")[0];
+  $("vcOpt").textContent = OPT_VALUE;
+  const gap = OPT_VALUE - youVal;
+  $("vsGap").textContent = gap <= 0
+    ? "You matched the proven optimum — a flawless pack. Nothing carries more."
+    : `You carried ${youVal}. A perfect plan carried ${OPT_VALUE} — that's ${gap} more value, and you reached ${Math.round(youVal/OPT_VALUE*100)}% of optimal.`;
+  $("solveView").style.display = "none";
+  $("compareView").style.display = "";
+}
+
+/* ----- end-overlay actions: reveal prompt, or "perfect" path ----- */
+function setupEndActions(v){
+  const wrap = $("endActions");
+  if(!wrap) return;
+  if(v < OPT_VALUE){
+    wrap.innerHTML =
+      `<div class="opt-prompt">A perfect plan could have carried <b>${OPT_VALUE}</b> out of these depths. Want to see the optimal solution?</div>
+       <button class="btn" id="revealBtn">Reveal the Optimal Hoard ▸</button>`;
+    $("revealBtn").addEventListener("click", openSolver);
+  } else {
+    wrap.innerHTML =
+      `<div class="opt-perfect">✦ Provably perfect — no packing of this loot beats <b>${OPT_VALUE}</b>.</div>
+       <div class="end-actions">
+         <button class="btn" id="learnBtnP">Find Out More</button>
+         <a class="btn ghost" target="_blank" rel="noopener" href="https://www.linkedin.com/in/jens-peter-joost/">Follow me for more games ▸</a>
+       </div>`;
+    $("learnBtnP").addEventListener("click", openLearn);
+  }
+}
+function openSolver(){
+  $("endOverlay").classList.add("hidden");
+  $("compareView").style.display = "none";
+  $("solveView").style.display = "";
+  $("solverOverlay").classList.remove("hidden");
+  runOptShowcase();
+}
+let learnIdx = 0;
+const LEARN_N = 4;
+function renderLearn(){
+  document.querySelectorAll("#learnSlides .lslide").forEach((s,i)=> s.classList.toggle("active", i===learnIdx));
+  document.querySelectorAll("#lDots .ldot").forEach((d,i)=> d.classList.toggle("on", i===learnIdx));
+  $("lPrev").disabled = (learnIdx === 0);
+  $("lNext").disabled = (learnIdx === LEARN_N-1);
+}
+function gotoLearn(i){ learnIdx = Math.max(0, Math.min(LEARN_N-1, i)); renderLearn(); }
+function buildLearnDots(){
+  const wrap = $("lDots"); if(!wrap || wrap.childElementCount) return;
+  for(let i=0;i<LEARN_N;i++){
+    const b=document.createElement("button");
+    b.className="ldot"; b.type="button"; b.setAttribute("aria-label","Go to slide "+(i+1));
+    b.addEventListener("click", ()=>gotoLearn(i));
+    wrap.appendChild(b);
+  }
+}
+function openLearn(){ buildLearnDots(); gotoLearn(0); $("learnOverlay").classList.remove("hidden"); }
+function closeLearn(){ $("learnOverlay").classList.add("hidden"); }
+
+/* static buttons that always exist in the DOM */
+$("skipBtn").addEventListener("click", () => { if(optRunning) skipOptShowcase(); });
+$("learnBtn").addEventListener("click", openLearn);
+$("again2").addEventListener("click", () => { $("solverOverlay").classList.add("hidden"); restart(); });
+$("learnBack").addEventListener("click", closeLearn);
+$("lPrev").addEventListener("click", ()=>gotoLearn(learnIdx-1));
+$("lNext").addEventListener("click", ()=>gotoLearn(learnIdx+1));
+window.addEventListener("resize", () => { if(!$("solverOverlay").classList.contains("hidden")) applyOptCell(); });
+
+/* ============ LAYOUT / RESIZE ============ */
+function layout(){
+  const holder = document.querySelector(".grid-holder");
+  const avail = holder.clientWidth || 460;
+  cellPx = Math.max(32, Math.min(58, Math.floor((avail - 12) / COLS)));
+  document.documentElement.style.setProperty("--cell", cellPx+"px");
+  for(const p of piecesMap.values()) sizePiece(p);
+}
+
+/* ============ EVENTS ============ */
+monEl.addEventListener("click", attack);
+window.addEventListener("keydown", e=>{
+  if((e.key==="r"||e.key==="R") && drag && drag.started){ e.preventDefault(); rotateDragging(); }
+});
+window.addEventListener("resize", layout);
+$("beginBtn").addEventListener("click", ()=>{
+  $("introOverlay").classList.add("hidden");
+  startEncounter();
+});
+$("againBtn").addEventListener("click", restart);
+// prevent long-press context menu on the monster (mobile)
+monEl.addEventListener("contextmenu", e=>e.preventDefault());
+
+/* ============ INIT ============ */
+buildGrid();
+layout();
+updateHUD();
+refreshTrayState();
+// re-run layout once fonts settle
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(layout); }
+</script>
+</body>
+</html>
