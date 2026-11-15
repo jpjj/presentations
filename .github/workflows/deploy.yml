@@ -54,6 +54,12 @@ jobs:
             --base /presentations/hands-on-cp-sat/ \
             --out ${{ github.workspace }}/dist/hands-on-cp-sat
 
+      - name: Build or-games-factory
+        run: |
+          bun run slidev build presentations/or-games-factory/slides.md \
+            --base /presentations/or-games-factory/ \
+            --out ${{ github.workspace }}/dist/or-games-factory
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

@@ -7,10 +7,12 @@
     "dev:hands-on": "slidev presentations/hands-on-modeling/slides.md --open",
     "dev:freelance": "slidev presentations/freelance-or/slides.md --open",
     "dev:cpsat": "slidev presentations/hands-on-cp-sat/slides.md --open",
+    "dev:games": "slidev presentations/or-games-factory/slides.md --open",
     "build": "slidev build presentations/hands-on-modeling/slides.md",
     "build:hands-on": "slidev build presentations/hands-on-modeling/slides.md",
     "build:freelance": "slidev build presentations/freelance-or/slides.md",
     "build:cpsat": "slidev build presentations/hands-on-cp-sat/slides.md",
+    "build:games": "slidev build presentations/or-games-factory/slides.md",
     "export": "slidev export presentations/hands-on-modeling/slides.md"
   },
   "dependencies": {
