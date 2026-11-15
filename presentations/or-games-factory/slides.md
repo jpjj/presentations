@@ -40,15 +40,16 @@ Timing (35 min + 10 min discussion):
 20–30  So what?
 30–35  Take-aways
 
-Everything runs from the laptop, no venue wifi needed:
-- the games: in the games repo, `npm run build:pages`, then serve `_site`
-- the old version with all 32 games: see the notes on "The factory run"
+LINKS: the pictures on "Let's play", the island, the clip slides, "The game / The project" and
+"A client project" are links. They open the live sites in a new tab, so they need internet.
+Without wifi: build the games (`npm run build:pages` in the games repo, serve `_site`) and the website,
+then replace `https://games.jpjsolutions.com` and `https://jpjsolutions.com` in this file with the
+local addresses. The old version with all 32 games: see the notes on "The factory run".
 -->
 
 ---
-layout: image-right
-image: /assets/games/norias-of-the-dunes.jpg
-backgroundSize: contain
+layout: two-cols
+layoutClass: gap-8
 ---
 
 # Let's play
@@ -69,11 +70,18 @@ Norias of the Dunes
 
 </v-click>
 
+::right::
+
+<br>
+<br>
+
+[![Norias of the Dunes: click to open the game](/assets/games/norias-of-the-dunes.jpg)](https://games.jpjsolutions.com/norias-of-the-dunes/)
+
 <!--
-LIVE. Switch to the browser: Norias of the Dunes, first oasis, already past the title and the how-to.
+LIVE. Click the picture (or switch to the browser): Norias of the Dunes, first oasis, already past the title and the how-to.
 Play ONE level with the room, then skip straight to the optimizer: your wheels next to the proven optimum.
 
-If the demo fails: the Norias clips are on the backup slides at the end.
+If the demo fails: the Norias clips are on the clip slides in the middle of the deck.
 -->
 
 ---
@@ -290,34 +298,186 @@ November: a world
 ![Dungeon Hoard today: a 3D dungeon](/assets/games/dungeon-hoard.jpg)
 
 ---
-layout: image
-image: /assets/games/hub.jpg
-backgroundSize: contain
+layout: full
 ---
 
+[![The Optimal Realm: click to open the games](/assets/games/hub.jpg)](https://games.jpjsolutions.com/)
+
 <!--
-The island: walk to a place, press Play.
+The island: walk to a place, press Play. Click the picture to open it.
 -->
 
 ---
+layout: two-cols
+layoutClass: gap-8
+zoom: 0.62
+---
 
-# Let me show you
+## [Dungeon Hoard](https://games.jpjsolutions.com/dungeon-hoard/)
 
-| Game                  | The problem inside                         | Where it costs real money        |
-| --------------------- | ------------------------------------------ | -------------------------------- |
-| Dungeon Hoard         | 2D knapsack / packing                      | Truck and container loading      |
-| Norias of the Dunes   | Maximal covering location                  | Where to put sites and stations  |
-| The Spice Route       | Travelling salesman                        | Routing and sequencing           |
-| The Quest Board       | Assignment                                 | Who does which job               |
-| Plunder Deck          | 3D loading with stacking rules             | Pallets and containers           |
-| Cart & Run            | Prize-collecting capacitated routing       | Delivery with capacity and time  |
-| The Labyrinth Keeper  | Shortest-path interdiction                 | Network resilience               |
+<SlidevVideo autoplay autoreset="slide" controls>
+  <source src="/assets/clips/dungeon-hoard-1.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click autoplay autoreset="slide" controls>
+  <source src="/assets/clips/dungeon-hoard-2.mp4" type="video/mp4" />
+</SlidevVideo>
 
 <!--
-LIVE, about 5 minutes: walk the island, open two or three games, show a reveal.
+LET ME SHOW YOU, about 5 minutes. Seven games, one slide each.
+Arriving on a slide plays the first clip; "next" plays the second; "next" again goes to the next game.
+The game's name is a link: click it to play that game live instead.
 In every game a real solver runs live in the browser, and "optimal" is only said when it is proven.
 
-Backup if the demo fails: "how to play" clips of every game on the last slides.
+Dungeon Hoard: 2D knapsack / packing.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+zoom: 0.62
+---
+
+## [Norias of the Dunes](https://games.jpjsolutions.com/norias-of-the-dunes/)
+
+<SlidevVideo autoplay autoreset="slide" controls>
+  <source src="/assets/clips/norias-of-the-dunes-1.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click autoplay autoreset="slide" controls>
+  <source src="/assets/clips/norias-of-the-dunes-2.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+Norias of the Dunes: maximal covering location.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+zoom: 0.62
+---
+
+## [The Spice Route](https://games.jpjsolutions.com/spice-route/)
+
+<SlidevVideo autoplay autoreset="slide" controls>
+  <source src="/assets/clips/spice-route-1.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click autoplay autoreset="slide" controls>
+  <source src="/assets/clips/spice-route-2.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+The Spice Route: travelling salesman.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+zoom: 0.62
+---
+
+## [The Quest Board](https://games.jpjsolutions.com/quest-board/)
+
+<SlidevVideo autoplay autoreset="slide" controls>
+  <source src="/assets/clips/quest-board-1.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click autoplay autoreset="slide" controls>
+  <source src="/assets/clips/quest-board-2.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+The Quest Board: assignment.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+zoom: 0.62
+---
+
+## [Plunder Deck](https://games.jpjsolutions.com/plunder-deck/)
+
+<SlidevVideo autoplay autoreset="slide" controls>
+  <source src="/assets/clips/plunder-deck-1.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click autoplay autoreset="slide" controls>
+  <source src="/assets/clips/plunder-deck-2.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+Plunder Deck: 3D loading with stacking rules.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+zoom: 0.62
+---
+
+## [Cart & Run](https://games.jpjsolutions.com/cart-and-run/)
+
+<SlidevVideo autoplay autoreset="slide" controls>
+  <source src="/assets/clips/cart-and-run-1.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click autoplay autoreset="slide" controls>
+  <source src="/assets/clips/cart-and-run-2.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+Cart & Run: prize-collecting capacitated routing.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+zoom: 0.62
+---
+
+## [The Labyrinth Keeper](https://games.jpjsolutions.com/labyrinth-keeper/)
+
+<SlidevVideo autoplay autoreset="slide" controls>
+  <source src="/assets/clips/labyrinth-keeper-1.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click autoplay autoreset="slide" controls>
+  <source src="/assets/clips/labyrinth-keeper-2.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+The Labyrinth Keeper: shortest-path interdiction.
 -->
 
 ---
@@ -396,7 +556,7 @@ layoutClass: gap-8
 
 Where do the water wheels go?
 
-![Norias of the Dunes](/assets/games/norias-of-the-dunes.jpg)
+[![Norias of the Dunes: click to open the game](/assets/games/norias-of-the-dunes.jpg)](https://games.jpjsolutions.com/norias-of-the-dunes/)
 
 ::right::
 
@@ -404,18 +564,17 @@ Where do the water wheels go?
 
 Where do the warehouses go?
 
-![A facility-location tool on a map of Germany](/assets/facility-opening.jpg)
+[![The facility-location tool: click to open it](/assets/facility-opening.jpg)](https://jpjsolutions.com/use-cases/facility-location/)
 
 <!--
-LIVE: back to Norias, to the last screen, and from there to the use case:
-jpjsolutions.com/use-cases/facility-location (works offline from the laptop build of the website too).
+LIVE: both pictures are links. Back to Norias, to its last screen, and from there to the use case
+(or click the right picture): jpjsolutions.com/use-cases/facility-location.
 The tool on the right is a neutral copy, on made-up data, of what I built for a client.
 -->
 
 ---
-layout: image-right
-image: /assets/facility-rules.jpg
-backgroundSize: contain
+layout: two-cols
+layoutClass: gap-8
 ---
 
 # A client project
@@ -431,7 +590,15 @@ Planners play facility location
 
 </v-clicks>
 
+::right::
+
+<br>
+<br>
+
+[![The facility-location tool with two planner rules priced: click to open it](/assets/facility-rules.jpg)](https://jpjsolutions.com/use-cases/facility-location/)
+
 <!--
+Click the picture to open the tool.
 TODO (Peter): one or two real things the planners changed, and why.
 On the neutral copy every rule gets a price: e.g. "München stays open": +€441k a year.
 -->
@@ -459,30 +626,6 @@ On the neutral copy every rule gets a price: e.g. "München stays open": +€441
 3. **Let your imagination run wild.**
 
 </v-clicks>
-
----
-
-# Let your imagination run wild
-
-Reported in the newest model's first week
-
-<v-clicks>
-
-- A thousand agents formalised the proof of Fermat's Last Theorem in 30 hours.
-- Three electronics prototypes, designed by the model, built and tested by engineers.
-- Someone had it work out an undocumented USB keypad, and write six games for it.
-- And an island with seven OR games.
-
-</v-clicks>
-
-<!--
-TODO (Peter): pick your own favourites, and check each one against its original source before the talk.
-I found these in launch-week write-ups (secondary sources), attributed to Anthropic's launch thread,
-to Anthropic and Diode, and to a commentator's blog post:
-- datacamp.com/blog/claude-fable-5-2-and-mythos-5-2
-- oneusefulthing.org/p/fable-52-and-jagged-agi
-- x.com/claudeai/status/2119867114450268322
--->
 
 ---
 layout: two-cols
@@ -514,147 +657,3 @@ Jens-Peter Joost · jpjsolutions.com
 Questions to expect: what did it cost in hours and money; did you read the code; would you trust it on a client model;
 client data and confidentiality; did the games bring any business; does this hold beyond toy instances.
 -->
-
----
-layout: two-cols
-layoutClass: gap-8
-zoom: 0.62
----
-
-## Backup: Norias of the Dunes
-
-<SlidevVideo controls>
-  <source src="/assets/clips/norias-of-the-dunes-1.mp4" type="video/mp4" />
-</SlidevVideo>
-
-::right::
-
-## &nbsp;
-
-<SlidevVideo controls>
-  <source src="/assets/clips/norias-of-the-dunes-2.mp4" type="video/mp4" />
-</SlidevVideo>
-
-<!--
-Backup only. These are the games' own "how to play" clips, recorded from the real games.
--->
-
----
-layout: two-cols
-layoutClass: gap-8
-zoom: 0.62
----
-
-## Backup: Dungeon Hoard
-
-<SlidevVideo controls>
-  <source src="/assets/clips/dungeon-hoard-1.mp4" type="video/mp4" />
-</SlidevVideo>
-
-::right::
-
-## &nbsp;
-
-<SlidevVideo controls>
-  <source src="/assets/clips/dungeon-hoard-2.mp4" type="video/mp4" />
-</SlidevVideo>
-
----
-layout: two-cols
-layoutClass: gap-8
-zoom: 0.62
----
-
-## Backup: The Spice Route
-
-<SlidevVideo controls>
-  <source src="/assets/clips/spice-route-1.mp4" type="video/mp4" />
-</SlidevVideo>
-
-::right::
-
-## &nbsp;
-
-<SlidevVideo controls>
-  <source src="/assets/clips/spice-route-2.mp4" type="video/mp4" />
-</SlidevVideo>
-
----
-layout: two-cols
-layoutClass: gap-8
-zoom: 0.62
----
-
-## Backup: The Quest Board
-
-<SlidevVideo controls>
-  <source src="/assets/clips/quest-board-1.mp4" type="video/mp4" />
-</SlidevVideo>
-
-::right::
-
-## &nbsp;
-
-<SlidevVideo controls>
-  <source src="/assets/clips/quest-board-2.mp4" type="video/mp4" />
-</SlidevVideo>
-
----
-layout: two-cols
-layoutClass: gap-8
-zoom: 0.62
----
-
-## Backup: Plunder Deck
-
-<SlidevVideo controls>
-  <source src="/assets/clips/plunder-deck-1.mp4" type="video/mp4" />
-</SlidevVideo>
-
-::right::
-
-## &nbsp;
-
-<SlidevVideo controls>
-  <source src="/assets/clips/plunder-deck-2.mp4" type="video/mp4" />
-</SlidevVideo>
-
----
-layout: two-cols
-layoutClass: gap-8
-zoom: 0.62
----
-
-## Backup: Cart & Run
-
-<SlidevVideo controls>
-  <source src="/assets/clips/cart-and-run-1.mp4" type="video/mp4" />
-</SlidevVideo>
-
-::right::
-
-## &nbsp;
-
-<SlidevVideo controls>
-  <source src="/assets/clips/cart-and-run-2.mp4" type="video/mp4" />
-</SlidevVideo>
-
----
-layout: two-cols
-layoutClass: gap-8
-zoom: 0.62
----
-
-## Backup: The Labyrinth Keeper
-
-<SlidevVideo controls>
-  <source src="/assets/clips/labyrinth-keeper-1.mp4" type="video/mp4" />
-</SlidevVideo>
-
-::right::
-
-## &nbsp;
-
-<SlidevVideo controls>
-  <source src="/assets/clips/labyrinth-keeper-2.mp4" type="video/mp4" />
-</SlidevVideo>
