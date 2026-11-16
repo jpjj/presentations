@@ -30,21 +30,21 @@ Jens-Peter Joost · JPJ Solutions
 </div>
 
 <!--
-DRAFT 2, to Peter's agenda of 15 Nov. TODO marks what still needs your input.
+DRAFT 3, to Peter's feedback of 16 Nov. TODO marks what still needs your input.
+
+The whole deck runs on "next" alone: nothing has to be played or clicked live.
+Every game moment is a silent video. A video either starts when its slide opens,
+or it shows a still picture first and starts on the next "next" (noted on each slide).
 
 Timing (35 min + 10 min discussion):
- 0– 4  Ice breaker: play Norias of the Dunes
- 4– 7  What was that? Why games?
+ 0– 4  Ice breaker: the Norias of the Dunes play-through (2:48)
+ 4– 7  Why games?
  7–15  Building the arcade
-15–20  Live tour of the games
+15–20  The seven games, as clips
 20–30  So what?
 30–35  Take-aways
 
-LINKS: the pictures on "Let's play", the island, the clip slides, "The game / The project" and
-"A client project" are links. They open the live sites in a new tab, so they need internet.
-Without wifi: build the games (`npm run build:pages` in the games repo, serve `_site`) and the website,
-then replace `https://games.jpjsolutions.com` and `https://jpjsolutions.com` in this file with the
-local addresses. The old version with all 32 games: see the notes on "The factory run".
+The pictures and game names are still links to the live sites, for a laptop with internet. They are not needed.
 -->
 
 ---
@@ -64,12 +64,6 @@ Norias of the Dunes
 
 </v-clicks>
 
-<v-click>
-
-**You tell me where the wheels go.**
-
-</v-click>
-
 ::right::
 
 <br>
@@ -78,44 +72,40 @@ Norias of the Dunes
 [![Norias of the Dunes: click to open the game](/assets/games/norias-of-the-dunes.jpg)](https://games.jpjsolutions.com/norias-of-the-dunes/)
 
 <!--
-LIVE. Click the picture (or switch to the browser): Norias of the Dunes, first oasis, already past the title and the how-to.
-Play ONE level with the room, then skip straight to the optimizer: your wheels next to the proven optimum.
-
-If the demo fails: the Norias clips are on the clip slides in the middle of the deck.
+Three clicks for the rules. The next slide is the play-through.
 -->
 
 ---
+layout: full
+class: video-slide
+---
 
-# What was that?
-
-<v-clicks>
-
-- A **game**: a setting, a few wheels, a score.
-- A **facility-location problem**: where do you put a limited number of sites to serve the most demand?
-- And an **algorithm** that solved the same level, live, and proved the best answer.
-
-</v-clicks>
+<SlidevVideo autoplay autoreset="slide" muted controls poster="/assets/games/norias-of-the-dunes.jpg">
+  <source src="/assets/videos/norias-of-the-dunes.mp4" type="video/mp4" />
+</SlidevVideo>
 
 <!--
-Bridge from the game into the talk. Keep it short.
-The solver behind this game is a MILP (maximal covering location) solved by HiGHS in the browser.
--->
+VIDEO, starts by itself, no sound, 2:48: the full play-through of Norias of the Dunes, all five oases.
+Talk over it. "Next" moves on at any time.
 
+What to say while it runs: a game (a setting, a few wheels, a score); behind it a facility-location problem
+(where do you put a limited number of sites to serve the most demand?); and an algorithm that solves
+the same level live and proves the best answer. The solver is a MILP (maximal covering location), solved by HiGHS in the browser.
+-->
 
 ---
 layout: two-cols
 layoutClass: gap-8
 ---
 
-# Games as a way in
-
-What I have believed for years
+# Why games?
 
 <v-clicks>
 
-- Games are a great entry point for stakeholders to **understand OR**.
-- You do not explain the problem. People **feel** it.
-- Then you show what an algorithm does with it.
+- Games are a fantastic way to **introduce people to OR**: students, end users, stakeholders.
+- My first encounter: an internal fair at DHL. A colleague showed a very simple CVRP game. **His booth stole the show.**
+- Last year I built that game myself.
+- Players engage with the problem **on a deeper level** than by reading slides.
 
 </v-clicks>
 
@@ -123,34 +113,71 @@ What I have believed for years
 
 <div class="h-full flex items-center justify-center">
 
-[![The apple-collection game: click to open it](/assets/apple-game.jpg)](https://jpjj.github.io/cvrp_game/)
+<SlidevVideo v-click="3" class="stay-visible" autoplay autoreset="slide" muted poster="/assets/apple-game.jpg">
+  <source src="/assets/videos/apple-game.mp4" type="video/mp4" />
+</SlidevVideo>
 
 </div>
 
 <!--
-The picture is a link. My apple-collection game (a capacitated vehicle routing problem): jpjj.github.io/cvrp_game
+VIDEO: the picture is on the slide from the start. The clip starts with the third bullet ("Last year I built that game myself").
+TODO (Peter): the clip is still missing. Save it as public/assets/videos/apple-game.mp4 (no sound). Until then the picture stays.
 
-ANECDOTE (no slide): the fair at DHL. People had to solve a small CVRP instance by hand.
-It really made them understand what our division does.
+The game: my apple-collection game, a capacitated vehicle routing problem (jpjj.github.io/cvrp_game).
+At the DHL fair people had to solve a small CVRP instance by hand. It really made them understand what our division does.
 -->
 
 ---
+class: genai-slide
+---
 
-# Then came agentic coding
+# Enter agentic coding
 
-<v-clicks>
+<div class="genai-grid">
+<figure>
+  <SlidevVideo autoplay autoreset="slide" muted loop>
+    <source src="/assets/genai/1-pelican.mp4" type="video/mp4" />
+  </SlidevVideo>
+  <figcaption>Claude Opus 5.5 (Anthropic): a pelican on a bike, built in Three.js. Source: <a href="https://x.com/addyosmani/status/2102436416437580159">Addy Osmani on X, 22 Sep 2026</a></figcaption>
+</figure>
+<figure>
+  <SlidevVideo autoplay autoreset="slide" muted loop>
+    <source src="/assets/genai/2-penthouse.mp4" type="video/mp4" />
+  </SlidevVideo>
+  <figcaption>GPT-6 Astra (OpenAI): the demo house, from Blender to Unreal Engine 5. Source: <a href="https://x.com/Dimillian/status/2095596700815516004">Thomas Ricouard on X, 3 Sep 2026</a></figcaption>
+</figure>
+<figure>
+  <SlidevVideo autoplay autoreset="slide" muted loop>
+    <source src="/assets/genai/3-project-genie.mp4" type="video/mp4" />
+  </SlidevVideo>
+  <figcaption>Genie 3 (Google DeepMind): worlds you can walk through. Source: <a href="https://www.youtube.com/watch?v=YxkGdX4WIBE">Google DeepMind, "Project Genie", 29 Jan 2026</a></figcaption>
+</figure>
+<figure>
+  <SlidevVideo autoplay autoreset="slide" muted loop>
+    <source src="/assets/genai/4-gemini-omni-orbs.mp4" type="video/mp4" />
+  </SlidevVideo>
+  <figcaption>Gemini Omni (Google): generated video. Source: <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-omni-3-5-videos">Google, The Keyword, 29 May 2026</a></figcaption>
+</figure>
+</div>
 
-- With GenAI and coding agents, I felt free to **try more**.
-- First the apple game, and a few others.
-- Then the idea got bigger: **an arcade**.
-
-</v-clicks>
+<!--
+Four clips, all running at once, no sound, in a loop. The sources are under each clip.
+1 Pelican: made with Claude Opus 5.5, but posted by Addy Osmani, not by Anthropic. Anthropic's own launch film has no pelican.
+2 House: GPT-6 Astra. Posted by Thomas Ricouard, who built "the demo house for our launch blog post" at OpenAI. It is a house, not a penthouse.
+3 and 4 are my picks, both from Google: generated worlds (Genie 3) and generated video (Gemini Omni). Neither was built by a coding agent.
+With GenAI and coding agents I felt free to try more: first the apple game and a few others. Then the idea got bigger: an arcade.
+-->
 
 ---
-layout: section
+layout: image-right
+image: /assets/original-games-arcade.jpg
 ---
 
 # Building the arcade
+
+<!--
+The picture: the first arcade, the flat version from June.
+-->
 
 ---
 layout: two-cols
@@ -169,21 +196,27 @@ Dungeon Hoard
 
 ::right::
 
-<GameEmbed src="/games/dungeon-hoard.html" poster="/assets/dh-2d.jpg" alt="Dungeon Hoard, the very first version" />
+<div class="h-full flex items-center justify-center">
+
+<SlidevVideo v-click class="stay-visible" autoplay autoreset="slide" muted poster="/assets/videos/dungeon-hoard-original.jpg">
+  <source src="/assets/videos/dungeon-hoard-original.mp4" type="video/mp4" />
+</SlidevVideo>
+
+</div>
 
 <!--
-LIVE: the right side IS the very first version (one HTML file, copied from the root of the games repo
-to public/games/dungeon-hoard.html). Play it right on the slide; it scrolls inside the frame.
-After clicking into the game, click on the left half once before using the arrow keys again.
-Overview, presenter view and PDF show the picture instead; so does the slide if the game does not load.
+First "next": the prompt. Second "next": the VIDEO starts (no sound, 1:18), me playing the very first version, one HTML file.
+Before that the right side shows a still picture of it.
 -->
 
-
+---
+layout: two-cols
+layoutClass: gap-8
 ---
 
 # Refine, in a loop
 
-```mermaid {scale: 0.8}
+```mermaid {scale: 0.62}
 flowchart LR
   P[I play it] --> F[I give feedback]
   F --> A[The agent builds]
@@ -198,9 +231,26 @@ flowchart LR
 
 </v-clicks>
 
+::right::
+
+<div v-click class="recipe">
+
+### The recipe
+
+1. Pick an **OR problem** and dress it in a setting.
+2. Build the game around a few small, handcrafted levels.
+3. Build a **real solver**, with a test that proves the optimum.
+4. Build the reveal: **you against the algorithm**, with the honest gap.
+5. Explain the problem and where it shows up in business.
+6. Done means: build green, tests green, a full play-through in a headless browser.
+
+</div>
+
 <!--
-The recipe lives in one file in the repo that the agent reads first: what the project is for,
-how a game is built, and what "done" means (build, tests, a play-through in a headless browser).
+The recipe appears with the fourth "next", after the three bullets.
+It lives in one file in the repo that the agent reads first: what the project is for,
+how a game is built, and what "done" means. The slide is the short form; the file has ten steps.
+One rule in it is not negotiable: say "optimal" only when the solver has proven it.
 -->
 
 ---
@@ -220,21 +270,11 @@ how a game is built, and what "done" means (build, tests, a play-through in a he
 Each run was a fresh session: pick an idea, build the solver with tests, build the game,
 play it through in a headless browser, merge if everything is green.
 Source: AUTORUN_LOG.md on the `experiment` branch of the games repo.
-
-LIVE: browse the old version with all 32 games. On the laptop, once:
-  cd games
-  git fetch origin experiment
-  git worktree add ../games-experiment origin/experiment
-  cd ../games-experiment
-  npm ci
-  OVERVIEW_GAMES="*" npm run build:pages
-then serve the folder `_site` (for example `npx serve _site`) and open it.
-This was built and checked on 15 Nov: all 32 pages open.
 -->
 
 ---
 layout: image
-image: /assets/all-games.jpg
+image: /assets/all-games.webp
 backgroundSize: contain
 ---
 
@@ -291,16 +331,20 @@ June: flat pages
 
 November: a world
 
-![Dungeon Hoard today: a 3D dungeon](/assets/games/dungeon-hoard.jpg)
+![Dungeon Hoard today: a 3D dungeon](/assets/games/dungeon-hoard-close.jpg)
 
 ---
 layout: full
+class: video-slide
 ---
 
-[![The Optimal Realm: click to open the games](/assets/games/hub.jpg)](https://games.jpjsolutions.com/)
+<SlidevVideo v-click class="stay-visible" autoplay autoreset="slide" muted poster="/assets/games/hub.jpg">
+  <source src="/assets/videos/optimal-realm-into-dungeon-hoard.mp4" type="video/mp4" />
+</SlidevVideo>
 
 <!--
-The island: walk to a place, press Play. Click the picture to open it.
+The slide opens on the picture of the island. "Next" starts the VIDEO (no sound, 1:21):
+me walking across the Optimal Realm and into Dungeon Hoard. "Next" again moves on.
 -->
 
 ---
@@ -326,7 +370,6 @@ zoom: 0.62
 <!--
 LET ME SHOW YOU, about 5 minutes. Seven games, one slide each.
 Arriving on a slide plays the first clip; "next" plays the second; "next" again goes to the next game.
-The game's name is a link: click it to play that game live instead.
 In every game a real solver runs live in the browser, and "optimal" is only said when it is proven.
 
 Dungeon Hoard: 2D knapsack / packing.
@@ -563,8 +606,7 @@ Where do the warehouses go?
 [![The facility-location tool: click to open it](/assets/facility-opening.jpg)](https://jpjsolutions.com/use-cases/facility-location/)
 
 <!--
-LIVE: both pictures are links. Back to Norias, to its last screen, and from there to the use case
-(or click the right picture): jpjsolutions.com/use-cases/facility-location.
+No live demo needed: the two pictures side by side make the point.
 The tool on the right is a neutral copy, on made-up data, of what I built for a client.
 -->
 
@@ -594,7 +636,6 @@ Planners play facility location
 [![The facility-location tool with two planner rules priced: click to open it](/assets/facility-rules.jpg)](https://jpjsolutions.com/use-cases/facility-location/)
 
 <!--
-Click the picture to open the tool.
 TODO (Peter): one or two real things the planners changed, and why.
 On the neutral copy every rule gets a price: e.g. "München stays open": +€441k a year.
 -->
