@@ -331,7 +331,7 @@ June: flat pages
 
 November: a world
 
-![Dungeon Hoard today: a 3D dungeon](/assets/games/dungeon-hoard-close.jpg)
+![Dungeon Hoard today: a 3D dungeon](/assets/games/dungeon-hoard.jpg)
 
 ---
 layout: full
@@ -611,6 +611,28 @@ The tool on the right is a neutral copy, on made-up data, of what I built for a 
 -->
 
 ---
+layout: full
+class: video-slide
+---
+
+<SlidevVideo v-click class="stay-visible" autoplay autoreset="slide" muted poster="/assets/videos/facility-dashboard.jpg">
+  <source src="/assets/videos/facility-dashboard.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+The slide opens on a still of the tool. "Next" starts the VIDEO (no sound, 21 s). "Next" again moves on.
+What happens in it, on the neutral copy with made-up data:
+1. The opening network costs €9.00M a year; the proved optimum is €7.17M.
+2. I close Stuttgart: the cost moves at once.
+3. I pick up Kassel and hand it to Köln: that is a rule now.
+4. "Start from the optimum".
+5. Two things real life might ask for: München stays open, Kassel is served from Berlin.
+6. "Re-optimise around my rules": the best plan that keeps both costs €7.65M, and each rule gets a price:
+   München +€441k, Kassel +€23k a year.
+Everything in the video was solved live while it was recorded.
+-->
+
+---
 layout: two-cols
 layoutClass: gap-8
 ---
@@ -693,4 +715,178 @@ Jens-Peter Joost · jpjsolutions.com
 10 minutes of discussion.
 Questions to expect: what did it cost in hours and money; did you read the code; would you trust it on a client model;
 client data and confidentiality; did the games bring any business; does this hold beyond toy instances.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+---
+
+## Backup: [Dungeon Hoard](https://games.jpjsolutions.com/dungeon-hoard/)
+
+<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/dungeon-hoard-start.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/dungeon-hoard-finish.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+BACKUP, a second set of clips for the seven games (upright phone format, about 10 s each, no sound).
+Left: the title screen, the press on Start, the first moves of level 1. It plays when the slide opens.
+Right ("next"): the end of level 5, played a bit worse than the best, then the solver's answer for that level.
+One cut in each right clip: the comparisons of levels 1–4 are left out.
+The solve times in the clips are those of the recording machine (a slow one).
+
+Dungeon Hoard: 2D knapsack / packing.
+Right clip, stage 5: the solver's pack with its cheapest piece, the Warding Charm, left on the floor. 775; the proven optimum is 825.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+---
+
+## Backup: [Norias of the Dunes](https://games.jpjsolutions.com/norias-of-the-dunes/)
+
+<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/norias-of-the-dunes-start.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/norias-of-the-dunes-finish.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+Norias of the Dunes: maximal covering location.
+Right clip, oasis 5: every wheel goes where it waters the most palms that are still dry. 27 palms; the proven optimum is 30.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+---
+
+## Backup: [The Spice Route](https://games.jpjsolutions.com/spice-route/)
+
+<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/spice-route-start.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/spice-route-finish.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+The Spice Route: travelling salesman.
+Right clip, voyage 5: always on to the nearest port. 348.1 leagues; the proven shortest round is 284.3.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+---
+
+## Backup: [The Quest Board](https://games.jpjsolutions.com/quest-board/)
+
+<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/quest-board-start.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/quest-board-finish.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+The Quest Board: assignment.
+Right clip, day 5: best hero–contract pair first. 544 gold; the proven optimum is 567.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+---
+
+## Backup: [Plunder Deck](https://games.jpjsolutions.com/plunder-deck/)
+
+<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/plunder-deck-start.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/plunder-deck-finish.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+Plunder Deck: 3D container loading.
+Right clip, island 5: the solver's deck with one piece, the Caged Parrot, left on the quay. 448 gold; the proven optimum is 470.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+---
+
+## Backup: [Cart & Run](https://games.jpjsolutions.com/cart-and-run/)
+
+<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/cart-and-run-start.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/cart-and-run-finish.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+Cart & Run: prize-collecting vehicle routing with capacities.
+Right clip, room 5: most gold per weight first. 133 gold banked; the proven optimum is 145.
+-->
+
+---
+layout: two-cols
+layoutClass: gap-8
+---
+
+## Backup: [The Labyrinth Keeper](https://games.jpjsolutions.com/labyrinth-keeper/)
+
+<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/labyrinth-keeper-start.mp4" type="video/mp4" />
+</SlidevVideo>
+
+::right::
+
+## &nbsp;
+
+<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+  <source src="/assets/clips-play/labyrinth-keeper-finish.mp4" type="video/mp4" />
+</SlidevVideo>
+
+<!--
+The Labyrinth Keeper: shortest-path network interdiction.
+Right clip, labyrinth 5: one wall a tile off. The hero needs 12 steps; the proven longest forced path is 14.
 -->
