@@ -27,7 +27,8 @@ into `<dir>` (a minute or two) — look at that before spending ten to twenty mi
 
 Upright phone screen, about ten seconds each, no sound.
 
-- `<game>-start.mp4` — the title screen, the press on Start, the first moves of level 1.
+- `<game>-start.mp4` — the title screen, the press on Start, the first moves of level 1
+  (Dungeon Hoard's runs about 15 s: the fight, then the first pieces packed).
 - `<game>-finish.mp4` — the last move of level 5, then the comparison with the solver for that
   level. One cut in between (the comparisons of levels 1–4 are stepped past off-camera), and a
   second cut where a comparison runs longer than a few seconds.
@@ -35,21 +36,22 @@ Upright phone screen, about ten seconds each, no sound.
 The recorder also writes a `.jpg` still beside each clip. The slides do not use them, so they are
 not committed.
 
-Levels 1–4 are played off-camera with the solver's own answers. Level 5 is played **a bit worse
-than the best**, so the solver visibly wins:
+Levels 1–4 are played off-camera with the solver's own answers. In six games level 5 is played
+**a bit worse than the best**, so the solver visibly wins; in Dungeon Hoard the pack is filled to
+the optimum (a pack with an empty cell looked wrong):
 
 | Game | Level-5 play |
 |---|---|
-| Dungeon Hoard | the solver's pack with its cheapest piece left on the floor |
+| Dungeon Hoard | the solver's own pack: the player matches the proven optimum |
 | Norias of the Dunes | every wheel where it waters the most palms that are still dry |
-| The Spice Route | always on to the nearest port |
+| The Spice Route | nearest port first with every crossing repaired; on camera one last crossing is made and repaired |
 | The Quest Board | best hero–contract pair first |
 | Plunder Deck | the solver's deck with one piece left on the quay |
 | Cart & Run | most gold per weight first |
 | The Labyrinth Keeper | one wall a tile off |
 
-Every script stops with an error unless the play scored strictly below the optimum **and** the
-game's live solve reported a proof. The numbers in the clips are the ones that run produced; each
+Every script stops with an error unless the play scored as described (strictly below the optimum;
+equal to it in Dungeon Hoard) **and** the game's live solve reported a proof. The numbers in the clips are the ones that run produced; each
 script prints them at the end.
 
 ## How it works

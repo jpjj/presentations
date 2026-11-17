@@ -739,12 +739,14 @@ layoutClass: gap-8
 <!--
 BACKUP, a second set of clips for the seven games (upright phone format, about 10 s each, no sound).
 Left: the title screen, the press on Start, the first moves of level 1. It plays when the slide opens.
-Right ("next"): the end of level 5, played a bit worse than the best, then the solver's answer for that level.
+Right ("next"): the end of level 5, then the solver's answer for that level.
+In six games level 5 is played a bit worse than the best; in Dungeon Hoard the pack is filled to the optimum.
 One cut in each right clip: the comparisons of levels 1–4 are left out.
 The solve times in the clips are those of the recording machine (a slow one).
 
 Dungeon Hoard: 2D knapsack / packing.
-Right clip, stage 5: the solver's pack with its cheapest piece, the Warding Charm, left on the floor. 775; the proven optimum is 825.
+Left clip (about 15 s): the first fight, then the first two pieces go into the pack.
+Right clip, stage 5: the last piece fills the pack. 825, and the solver proves that 825 is the optimum.
 -->
 
 ---
@@ -792,7 +794,8 @@ layoutClass: gap-8
 
 <!--
 The Spice Route: travelling salesman.
-Right clip, voyage 5: always on to the nearest port. 348.1 leagues; the proven shortest round is 284.3.
+Right clip, voyage 5: the round crosses itself (405.6 leagues), the crossing is repaired (337.6 leagues, no legs cross),
+and the proven shortest round is still shorter: 284.3. No crossings does not mean optimal.
 -->
 
 ---
