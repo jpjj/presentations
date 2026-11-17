@@ -50,6 +50,7 @@ The pictures and game names are still links to the live sites, for a laptop with
 ---
 layout: two-cols
 layoutClass: gap-8
+disabled: true
 ---
 
 # Let's play
@@ -102,10 +103,9 @@ layoutClass: gap-8
 
 <v-clicks>
 
-- Games are a fantastic way to **introduce people to OR**: students, end users, stakeholders.
-- My first encounter: an internal fair at DHL. A colleague showed a very simple CVRP game. **His booth stole the show.**
-- Last year I built that game myself.
-- Players engage with the problem **on a deeper level** than by reading slides.
+- Great **Introduction people to OR**: students, end users, stakeholders.
+- Players engage with the problem **on a deeper level** (compared to reading slides).
+- But games take a long time to code and I am not a game developer...
 
 </v-clicks>
 
@@ -128,10 +128,17 @@ At the DHL fair people had to solve a small CVRP instance by hand. It really mad
 -->
 
 ---
+layout: quote
+---
+
+# Enter GenAI
+
+
+---
 class: genai-slide
 ---
 
-# Enter agentic coding
+<br>
 
 <div class="genai-grid">
 <figure>
@@ -226,8 +233,7 @@ flowchart LR
 <v-clicks>
 
 - From one static HTML file to a real project: tests, a real solver in the browser.
-- Round after round, until it looked good.
-- Then I wrote the way of working down as a **recipe**.
+- When I was satisfied, I wrote the recipe **recipe**.
 
 </v-clicks>
 
@@ -259,10 +265,13 @@ One rule in it is not negotiable: say "optimal" only when the solver has proven 
 
 <v-clicks>
 
-- Scheduled agent runs, nobody at the keyboard.
-- The instruction: **come up with a new game idea and follow the recipe.**
-- Every fifth run: brainstorm new ideas and tidy the repo.
-- **25 new games in four days** (22–25 June 2026).
+- Scheduled claude routines. One run every two hours.
+1. Read value `i` from file.
+2. `if i % 5 == 0`: brainstorm new ideas and tidy the repo.
+3. `else:`  **pick idea from backlog and execute the recipe.**
+4. increment `i`
+5. Commit & Push
+- Result: **25 new games in four days** (22–25 June 2026).
 
 </v-clicks>
 
@@ -285,6 +294,7 @@ Bin packing, scheduling, graph colouring, min-cost flow, set cover, spanning tre
 
 ---
 layout: fact
+disabled: True
 ---
 
 # 32 → 7
@@ -298,14 +308,17 @@ The solvers were fine. The games were often the same game in a new costume.
 
 ---
 
-# With Fable 5.2 release: the next level
+# Enter Fable 5.2
+
+
+
+"Hello Claude, I want...
 
 <v-clicks>
 
-- A new model came out. I wanted to see how far the look could go.
-- Every game rebuilt in **3D**. Same levels, same solvers, same proven optima.
-- And an **island** to walk across, with one place per game.
-- 40 commits in three days.
+- Cool 3d graphics for all games!
+- An island which functions as my hub world!
+- And a dragon as a pet!"
 
 </v-clicks>
 
@@ -317,6 +330,7 @@ An anecdote, not a benchmark.
 ---
 layout: two-cols
 layoutClass: gap-8
+disabled: true
 ---
 
 # Before
@@ -526,21 +540,34 @@ layout: section
 # So what?
 
 ---
+layout: two-cols
+layoutClass: gap-8
+---
 
-# Coding. Modelling. Solving.
+# What a world we live in
 
-LLMs do remarkable things
+Have you tried the latest LLM models for your work?
 
 <v-clicks>
 
-- We have all seen what they do for **coding**.
-- For modelling and solving, the results are getting remarkable too.
-- One example: **203** open MIPLIB instances. **72** better solutions than the best known. **45** proved optimal.
+- We have all seen what they do for **coding** & modelling.
+- Fable 5.2. on solving:
 
 </v-clicks>
 
+::right::
+
+<div v-click class="h-full flex flex-col items-center justify-center">
+  <img src="/assets/fable-miplib.png" alt="The MIPLIB statement from the Fable 5.2 Instagram post" class="max-h-105 rounded" />
+  <div class="text-xs opacity-60 mt-2">
+    Source: <a href="https://www.instagram.com/p/DfsFpYDIHYa/?img_index=4">instagram.com/p/DfsFpYDIHYa</a>, picture 4
+  </div>
+</div>
+
 <!--
 Source: the vendor's own announcement (Anthropic, 9 Nov 2026); the solutions were submitted to MIPLIB.
+The picture carries its own small print: "an earlier version of Claude Fable 5.2", teams of up to 300 agents,
+and "proofs checked only by separate Claude agents so far". Say it before someone asks.
 TODO (Peter): check miplib.zib.de the week before and quote what is listed there. People who know MIPLIB closely are in the room.
 
 Careful with the wording: this result is about SOLVING given instances. On modelling from a text description,
@@ -552,19 +579,21 @@ If someone asks: say so.
 layout: statement
 ---
 
-# That was rarely my problem.
+# Was that ever the problem?*
 
-In my projects, model and solver performance were almost never what held us back.
+*... that needed to be solved to make a project succed?
 
 ---
-
+ 
 # What did hold us back
 
 <v-clicks>
 
-- **Data quality**
-- **Stakeholders and requirements**: what exactly is the problem, and what would a good solution look like?
-- **Change management**: getting people to trust and use the result
+- **Data Quality**
+- **Requirements Engineeing**
+- **Stakeholder Management**
+- **Change Management**
+- ...
 
 </v-clicks>
 
@@ -574,7 +603,10 @@ In my projects, model and solver performance were almost never what held us back
 
 <v-clicks>
 
-- Developers, users and stakeholders have to mean **the same pain** and **the same solution**.
+- Developers, users and stakeholders have to 
+  - **speak the same language**
+  - feel **the same pain** 
+  - envision **the same solution**
 - Words and formulas rarely get them there.
 - **Visualisation does.**
 
@@ -635,6 +667,7 @@ Everything in the video was solved live while it was recorded.
 ---
 layout: two-cols
 layoutClass: gap-8
+disabled: true
 ---
 
 # A client project
@@ -671,6 +704,7 @@ On the neutral copy every rule gets a price: e.g. "München stays open": +€441
 - A fast exchange about **how the problem is defined**.
 - The **requirements that were missing** came up by themselves.
 - People without a technical background **understood and valued** what the solver can do.
+- Non-techies engaging with the development of the project, driving **change management**.
 
 </v-clicks>
 
@@ -680,9 +714,9 @@ On the neutral copy every rule gets a price: e.g. "München stays open": +€441
 
 <v-clicks>
 
-1. We all know it: **visualisation is key.**
+1. **(Interactive) Visualisation is key.**
 2. OR can be visualised **very interactively**.
-3. **Let your imagination run wild.**
+3. **We all have the tools. Let's get creative.**
 
 </v-clicks>
 
