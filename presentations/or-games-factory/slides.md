@@ -81,7 +81,7 @@ layout: full
 class: video-slide
 ---
 
-<SlidevVideo autoplay autoreset="slide" muted controls poster="/assets/games/norias-of-the-dunes.jpg">
+<SlidevVideo autoplay autoreset="slide" muted controls poster="assets/games/norias-of-the-dunes.jpg">
   <source src="/assets/videos/norias-of-the-dunes.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -103,7 +103,7 @@ layoutClass: gap-8
 
 <v-clicks>
 
-- Great **Introduction people to OR**: students, end users, stakeholders.
+- A great way to **introduce people to OR**: students, end users, stakeholders.
 - Players engage with the problem **on a deeper level** (compared to reading slides).
 - But games take a long time to code and I am not a game developer...
 
@@ -113,7 +113,7 @@ layoutClass: gap-8
 
 <div class="h-full flex items-center justify-center">
 
-<SlidevVideo v-click="3" class="stay-visible" autoplay autoreset="slide" muted poster="/assets/apple-game.jpg">
+<SlidevVideo v-click="3" class="stay-visible" autoplay autoreset="slide" muted poster="assets/apple-game.jpg">
   <source src="/assets/videos/apple-game.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -197,7 +197,7 @@ Dungeon Hoard
 
 <v-clicks>
 
-"Create a game where you are the hero slaying monsters. After a monster is slayn, you have to loot the items into your inventory. Your inventory is a 2d grid and every item has different shape and different value. The goal is to get as much value with you as possible since you cannot carry all (too many items for your inventory)."
+"Create a game where you are the hero slaying monsters. After a monster is slain, you have to loot the items into your inventory. Your inventory is a 2d grid and every item has different shape and different value. The goal is to get as much value with you as possible since you cannot carry all (too many items for your inventory)."
 
 </v-clicks>
 
@@ -205,7 +205,7 @@ Dungeon Hoard
 
 <div class="h-full flex items-center justify-center">
 
-<SlidevVideo v-click class="stay-visible" autoplay autoreset="slide" muted poster="/assets/videos/dungeon-hoard-original.jpg">
+<SlidevVideo v-click class="stay-visible" autoplay autoreset="slide" muted poster="assets/videos/dungeon-hoard-original.jpg">
   <source src="/assets/videos/dungeon-hoard-original.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -233,7 +233,7 @@ flowchart LR
 <v-clicks>
 
 - From one static HTML file to a real project: tests, a real solver in the browser.
-- When I was satisfied, I wrote the recipe **recipe**.
+- When I was satisfied, I wrote the **recipe**.
 
 </v-clicks>
 
@@ -265,12 +265,12 @@ One rule in it is not negotiable: say "optimal" only when the solver has proven 
 
 <v-clicks>
 
-- Scheduled claude routines. One run every two hours.
+- Scheduled Claude routines. One run every two hours.
 1. Read value `i` from file.
 2. `if i % 5 == 0`: brainstorm new ideas and tidy the repo.
-3. `else:`  **pick idea from backlog and execute the recipe.**
-4. increment `i`
-5. Commit & Push
+3. `else:` **pick an idea from the backlog and execute the recipe.**
+4. Increment `i`.
+5. Commit and push.
 - Result: **25 new games in four days** (22–25 June 2026).
 
 </v-clicks>
@@ -294,7 +294,7 @@ Bin packing, scheduling, graph colouring, min-cost flow, set cover, spanning tre
 
 ---
 layout: fact
-disabled: True
+disabled: true
 ---
 
 # 32 → 7
@@ -316,7 +316,7 @@ The solvers were fine. The games were often the same game in a new costume.
 
 <v-clicks>
 
-- Cool 3d graphics for all games!
+- Cool 3D graphics for all games!
 - An island which functions as my hub world!
 - And a dragon as a pet!"
 
@@ -352,7 +352,7 @@ layout: full
 class: video-slide
 ---
 
-<SlidevVideo v-click class="stay-visible" autoplay autoreset="slide" muted poster="/assets/games/hub.jpg">
+<SlidevVideo v-click class="stay-visible" autoplay autoreset="slide" muted poster="assets/games/hub.jpg">
   <source src="/assets/videos/optimal-realm-into-dungeon-hoard.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -546,12 +546,12 @@ layoutClass: gap-8
 
 # What a world we live in
 
-Have you tried the latest LLM models for your work?
+Have you tried the latest LLMs for your work?
 
 <v-clicks>
 
 - We have all seen what they do for **coding** & modelling.
-- Fable 5.2. on solving:
+- Fable 5.2 on solving:
 
 </v-clicks>
 
@@ -581,16 +581,16 @@ layout: statement
 
 # Was that ever the problem?*
 
-*... that needed to be solved to make a project succed?
+*... that needed to be solved to make a project succeed?
 
 ---
- 
+
 # What did hold us back
 
 <v-clicks>
 
 - **Data Quality**
-- **Requirements Engineeing**
+- **Requirements Engineering**
 - **Stakeholder Management**
 - **Change Management**
 - ...
@@ -603,9 +603,9 @@ layout: statement
 
 <v-clicks>
 
-- Developers, users and stakeholders have to 
+- Developers, users and stakeholders have to
   - **speak the same language**
-  - feel **the same pain** 
+  - feel **the same pain**
   - envision **the same solution**
 - Words and formulas rarely get them there.
 - **Visualisation does.**
@@ -643,25 +643,84 @@ The tool on the right is a neutral copy, on made-up data, of what I built for a 
 -->
 
 ---
+
+# One tool, three networks
+
+<div class="grid grid-cols-3 gap-6 text-center">
+<div>
+
+<div class="h-15 flex items-end justify-center text-xl leading-tight">The current supply<br>chain network</div>
+
+**€9.00M** a year
+
+<img src="/assets/facility-current.jpg" alt="Map of Germany: the current network, every line solid, unused sites crossed out" class="h-68 mx-auto rounded" />
+
+</div>
+<div v-click="2">
+
+<div class="h-15 flex items-end justify-center text-xl leading-tight">The realistic<br>potential</div>
+
+**€7.82M** a year
+
+<img src="/assets/facility-potential.jpg" alt="Map of Germany: the realistic potential, a mix of solid and dashed lines" class="h-68 mx-auto rounded" />
+
+</div>
+<div v-click="1">
+
+<div class="h-15 flex items-end justify-center text-xl leading-tight">The cost-optimal<br>network</div>
+
+**€7.17M** a year
+
+<img src="/assets/facility-optimal.jpg" alt="Map of Germany: the cost-optimal network, every line dashed, nothing crossed out" class="h-68 mx-auto rounded" />
+
+</div>
+</div>
+
+<div class="text-center text-sm opacity-70 mt-2">
+
+**solid** = enforced · **dashed** = the solver decides · **crossed out** = must stay closed
+
+</div>
+
+<!--
+The tool has three views, and this slide has the same three. Left is on the slide from the start;
+first "next": the right column; second "next": the middle one.
+
+LEFT, current: the network as it is. Everything is a constraint: five sites must stay open, seven candidate
+sites must stay closed (crossed out), every customer stays with its site (solid lines). Only this network is possible.
+RIGHT, cost-optimal: no constraint at all. The solver picks four sites (Bremen, Berlin, Dortmund, Nürnberg) and
+every assignment: all dashed, nothing crossed out. Proved optimal. €1.84M a year less, and nobody will build it.
+MIDDLE, the realistic potential: the planner removed the constraints that do not really have to stay.
+What stayed in this example: Berlin and München must stay open, six sites are not available, and Frankfurt
+is served from München. €1.19M a year less than today, and this one can be defended.
+
+Made-up data, a neutral copy of the client tool. All three numbers are proved by the solver in the browser.
+-->
+
+---
 layout: full
 class: video-slide
 ---
 
-<SlidevVideo v-click class="stay-visible" autoplay autoreset="slide" muted poster="/assets/videos/facility-dashboard.jpg">
+<SlidevVideo v-click class="stay-visible" autoplay autoreset="slide" muted poster="assets/videos/facility-dashboard.jpg">
   <source src="/assets/videos/facility-dashboard.mp4" type="video/mp4" />
 </SlidevVideo>
 
 <!--
-The slide opens on a still of the tool. "Next" starts the VIDEO (no sound, 21 s). "Next" again moves on.
-What happens in it, on the neutral copy with made-up data:
-1. The opening network costs €9.00M a year; the proved optimum is €7.17M.
-2. I close Stuttgart: the cost moves at once.
-3. I pick up Kassel and hand it to Köln: that is a rule now.
-4. "Start from the optimum".
-5. Two things real life might ask for: München stays open, Kassel is served from Berlin.
-6. "Re-optimise around my rules": the best plan that keeps both costs €7.65M, and each rule gets a price:
-   München +€441k, Kassel +€23k a year.
-Everything in the video was solved live while it was recorded.
+The slide opens on a still of the tool. "Next" starts the VIDEO (no sound, 26 s). "Next" again moves on.
+What happens in it:
+1. Current, €9.00M: every line and frame solid, the unused sites crossed out.
+2. Optimal, €7.17M: everything dashed, nothing crossed out.
+3. Potential: it starts as the current network.
+4. "Release all customer assignments": the lines turn dashed, and the cost stays at €9.00M.
+   With these five sites the customers were already sorted well. The sites are the question.
+5. Stuttgart is released: the solver closes it, €7.87M.
+6. Köln is released: nothing happens. Then Dortmund becomes possible: the solver opens it and closes Köln, €7.77M.
+7. Hamburg is released: the solver keeps it.
+8. A constraint is added: Frankfurt is served from München, €7.82M.
+9. The list at the end: what each remaining constraint costs. München must stay open +€282k a year,
+   Bremen not available +€107k, Hannover not available +€75k, Frankfurt from München +€48k.
+The end state is the middle picture of the slide before. Everything in the video was solved live while it was recorded.
 -->
 
 ---
@@ -677,9 +736,9 @@ Planners play facility location
 <v-clicks>
 
 - A visualisation, built with AI, of their own network question.
-- They open and close sites and move customers.
-- They can always compare with the **optimal solution**.
-- And they can add **their own rules**, as they like.
+- It starts from the network as it is: **everything is a constraint**.
+- They release what does not really have to stay.
+- The solver answers at once, and puts **a price on every constraint** that is left.
 
 </v-clicks>
 
@@ -688,11 +747,11 @@ Planners play facility location
 <br>
 <br>
 
-[![The facility-location tool with two planner rules priced: click to open it](/assets/facility-rules.jpg)](https://jpjsolutions.com/use-cases/facility-location/)
+[![The facility-location tool with the remaining constraints priced: click to open it](/assets/facility-rules.jpg)](https://jpjsolutions.com/use-cases/facility-location/)
 
 <!--
 TODO (Peter): one or two real things the planners changed, and why.
-On the neutral copy every rule gets a price: e.g. "München stays open": +€441k a year.
+On the neutral copy every remaining constraint gets a price: e.g. "München must stay open": +€282k a year.
 -->
 
 ---

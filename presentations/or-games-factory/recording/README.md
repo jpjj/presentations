@@ -1,15 +1,17 @@
 # Recording the videos of this deck
 
 The scripts in this folder made the videos under `public/assets/clips-play/` (two per game, on
-the backup slides) and `public/assets/videos/facility-dashboard.mp4` (the dashboard slide). They
-are not part of the deck's build; run them again only when a game or the dashboard has changed.
+the backup slides), `public/assets/videos/facility-dashboard.mp4` (the video of the
+facility-location tool) and the tool's still pictures `public/assets/facility-*.jpg` (the three
+maps on "One tool, three networks", and the two pictures of the whole tool). They are not part of
+the deck's build; run them again only when a game or the tool has changed.
 
 They need `ffmpeg`, and a checkout **and build** of two other repositories:
 
 | Video | Repository | Build it with |
 |---|---|---|
 | the fourteen game clips | `jpjj/games` | `npm ci && npm run build:pages` |
-| the dashboard video | `jpjj/jpjj.github.io` | `npm ci && npm run build` |
+| the facility-location video and pictures | `jpjj/jpjj.github.io` | `npm ci && npm run build` |
 
 Playwright and Chromium are borrowed from those checkouts (`CHROMIUM_PATH` overrides the browser).
 
@@ -61,3 +63,12 @@ The games render in software here, far slower than real time. So the games repo'
 frame and lets `ffmpeg` cut the video; moves are real pointer events with a drawn finger.
 `lib/game.mjs` wraps that for these clips. The dashboard is a plain web page: `lib/screen.mjs`
 records it the same way (screenshot per frame, drawn cursor) in real time.
+
+## The facility-location tool
+
+`facility-dashboard.mjs` first takes the pictures (the map in the three views Current, Potential —
+the page's own example — and Optimal; the whole tool on the example), then records the video:
+Current → Optimal → Potential, where constraints are released one by one and one is added, ending
+on that same example with the price of each remaining constraint. The script stops with an error
+if a total is not the one the slides quote (9,004 / 7,815 / 7,166 k€) or if the video does not end
+on the page's example.
