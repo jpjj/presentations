@@ -103,8 +103,8 @@ layoutClass: gap-8
 
 <v-clicks>
 
+- It's fun!
 - A great way to **introduce people to OR**: students, end users, stakeholders.
-- Players engage with the problem **on a deeper level** (compared to reading slides).
 - But games take a long time to code and I am not a game developer...
 
 </v-clicks>
@@ -113,16 +113,11 @@ layoutClass: gap-8
 
 <div class="h-full flex items-center justify-center">
 
-<SlidevVideo v-click="3" class="stay-visible" autoplay autoreset="slide" muted poster="assets/apple-game.jpg">
-  <source src="/assets/videos/apple-game.mp4" type="video/mp4" />
-</SlidevVideo>
+![The apple-collection game](/assets/apple-game.jpg)
 
 </div>
 
 <!--
-VIDEO: the picture is on the slide from the start. The clip starts with the third bullet ("Last year I built that game myself").
-TODO (Peter): the clip is still missing. Save it as public/assets/videos/apple-game.mp4 (no sound). Until then the picture stays.
-
 The game: my apple-collection game, a capacitated vehicle routing problem (jpjj.github.io/cvrp_game).
 At the DHL fair people had to solve a small CVRP instance by hand. It really made them understand what our division does.
 -->
@@ -589,7 +584,6 @@ layout: statement
 
 <v-clicks>
 
-- **Data Quality**
 - **Requirements Engineering**
 - **Stakeholder Management**
 - **Change Management**
@@ -598,13 +592,16 @@ layout: statement
 </v-clicks>
 
 ---
+layout: two-cols
+layoutClass: gap-8
+---
 
 # A common picture
 
 <v-clicks>
 
 - Developers, users and stakeholders have to
-  - **speak the same language**
+  - speak **the same language**
   - feel **the same pain**
   - envision **the same solution**
 - Words and formulas rarely get them there.
@@ -612,11 +609,20 @@ layout: statement
 
 </v-clicks>
 
+::right::
+
+<div v-after class="h-full flex flex-col items-center justify-center">
+  <img src="/assets/cargo-planner-truck.webp" alt="A truck and trailer loaded with palletised goods, shown as a 3D load plan" class="rounded" />
+  <div class="text-xs opacity-60 mt-2">
+    Source: <a href="https://cargo-planner.com">cargo-planner.com</a>
+  </div>
+</div>
+
 ---
 layout: statement
 ---
 
-# And what are games, if not interactive visualisations?
+## And what are games, if not interactive visualisations?
 
 ---
 layout: two-cols
@@ -678,7 +684,6 @@ The tool on the right is a neutral copy, on made-up data, of what I built for a 
 
 <div class="text-center text-sm opacity-70 mt-2">
 
-**solid** = enforced · **dashed** = the solver decides · **crossed out** = must stay closed
 
 </div>
 
@@ -760,49 +765,53 @@ On the neutral copy every remaining constraint gets a price: e.g. "München must
 
 <v-clicks>
 
-- A fast exchange about **how the problem is defined**.
-- The **requirements that were missing** came up by themselves.
-- People without a technical background **understood and valued** what the solver can do.
-- Non-techies engaging with the development of the project, driving **change management**.
+- We found our translation device.
+- Missing requirements came up by themselves.
+- Every "hard rule" was questioned because it was directly connected to missed savings.
+- Appreciation and understanding for the solver from the non-techies. 
+- It was fun!
 
 </v-clicks>
 
 ---
-
+ 
 # Take-aways
 
 <v-clicks>
 
-1. **(Interactive) Visualisation is key.**
-2. OR can be visualised **very interactively**.
-3. **We all have the tools. Let's get creative.**
+1. Games can make people engage with OR on a deeper level.
+2. Not only for education, but also for making **real business projects** succeed.
+3. We all have the tools now. **Let's get creative**.
 
 </v-clicks>
 
 ---
-layout: two-cols
-layoutClass: gap-8
----
 
-# Can you beat the algorithm?
-
-Try it
-
-### games.jpjsolutions.com
+# Thank you!
 
 <br>
 
-The facility tool:
+<div class="thanks-grid">
+  <a href="https://games.jpjsolutions.com/">
+    <h3>Play The Optimal Realm</h3>
+    <img class="shot" src="/assets/games/hub.jpg" alt="The Optimal Realm, the island with the seven games" />
+    <img class="qr" src="/assets/qr-games.svg" alt="QR code to games.jpjsolutions.com" />
+    <span>games.jpjsolutions.com</span>
+  </a>
+  <a href="https://jpjsolutions.com/use-cases/facility-location/">
+    <h3>Try interactive facility location</h3>
+    <img class="shot" src="/assets/videos/facility-dashboard.jpg" alt="The facility-location tool" />
+    <img class="qr" src="/assets/qr-facility.svg" alt="QR code to the facility-location tool" />
+    <span>jpjsolutions.com/use-cases/facility-location</span>
+  </a>
+  <a href="https://jpjsolutions.com/presentations/or-games-factory/">
+    <h3>Browse the slides</h3>
+    <img class="shot" src="/assets/slides-stack.webp" alt="The first three slides of this deck" />
+    <img class="qr" src="/assets/qr-slides.svg" alt="QR code to these slides" />
+    <span>jpjsolutions.com/presentations/or-games-factory</span>
+  </a>
+</div>
 
-**jpjsolutions.com/use-cases/facility-location**
-
-<br>
-
-Jens-Peter Joost · jpjsolutions.com
-
-::right::
-
-![QR code to games.jpjsolutions.com](/assets/qr-games.svg)
 
 <!--
 10 minutes of discussion.
@@ -811,13 +820,17 @@ client data and confidentiality; did the games bring any business; does this hol
 -->
 
 ---
+
+# Backup Slides
+
+---
 layout: two-cols
 layoutClass: gap-8
 ---
 
-## Backup: [Dungeon Hoard](https://games.jpjsolutions.com/dungeon-hoard/)
+## [Dungeon Hoard](https://games.jpjsolutions.com/dungeon-hoard/)
 
-<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo class="backup-clip backup-clip-left" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/dungeon-hoard-start.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -825,7 +838,7 @@ layoutClass: gap-8
 
 ## &nbsp;
 
-<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo v-click class="backup-clip backup-clip-right" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/dungeon-hoard-finish.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -847,9 +860,9 @@ layout: two-cols
 layoutClass: gap-8
 ---
 
-## Backup: [Norias of the Dunes](https://games.jpjsolutions.com/norias-of-the-dunes/)
+## [Norias of the Dunes](https://games.jpjsolutions.com/norias-of-the-dunes/)
 
-<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo class="backup-clip backup-clip-left" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/norias-of-the-dunes-start.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -857,7 +870,7 @@ layoutClass: gap-8
 
 ## &nbsp;
 
-<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo v-click class="backup-clip backup-clip-right" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/norias-of-the-dunes-finish.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -871,9 +884,9 @@ layout: two-cols
 layoutClass: gap-8
 ---
 
-## Backup: [The Spice Route](https://games.jpjsolutions.com/spice-route/)
+## [The Spice Route](https://games.jpjsolutions.com/spice-route/)
 
-<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo class="backup-clip backup-clip-left" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/spice-route-start.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -881,7 +894,7 @@ layoutClass: gap-8
 
 ## &nbsp;
 
-<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo v-click class="backup-clip backup-clip-right" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/spice-route-finish.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -896,9 +909,9 @@ layout: two-cols
 layoutClass: gap-8
 ---
 
-## Backup: [The Quest Board](https://games.jpjsolutions.com/quest-board/)
+## [The Quest Board](https://games.jpjsolutions.com/quest-board/)
 
-<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo class="backup-clip backup-clip-left" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/quest-board-start.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -906,7 +919,7 @@ layoutClass: gap-8
 
 ## &nbsp;
 
-<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo v-click class="backup-clip backup-clip-right" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/quest-board-finish.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -920,9 +933,9 @@ layout: two-cols
 layoutClass: gap-8
 ---
 
-## Backup: [Plunder Deck](https://games.jpjsolutions.com/plunder-deck/)
+## [Plunder Deck](https://games.jpjsolutions.com/plunder-deck/)
 
-<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo class="backup-clip backup-clip-left" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/plunder-deck-start.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -930,7 +943,7 @@ layoutClass: gap-8
 
 ## &nbsp;
 
-<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo v-click class="backup-clip backup-clip-right" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/plunder-deck-finish.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -944,9 +957,9 @@ layout: two-cols
 layoutClass: gap-8
 ---
 
-## Backup: [Cart & Run](https://games.jpjsolutions.com/cart-and-run/)
+## [Cart & Run](https://games.jpjsolutions.com/cart-and-run/)
 
-<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo class="backup-clip backup-clip-left" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/cart-and-run-start.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -954,7 +967,7 @@ layoutClass: gap-8
 
 ## &nbsp;
 
-<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo v-click class="backup-clip backup-clip-right" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/cart-and-run-finish.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -968,9 +981,9 @@ layout: two-cols
 layoutClass: gap-8
 ---
 
-## Backup: [The Labyrinth Keeper](https://games.jpjsolutions.com/labyrinth-keeper/)
+## [The Labyrinth Keeper](https://games.jpjsolutions.com/labyrinth-keeper/)
 
-<SlidevVideo class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo class="backup-clip backup-clip-left" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/labyrinth-keeper-start.mp4" type="video/mp4" />
 </SlidevVideo>
 
@@ -978,7 +991,7 @@ layoutClass: gap-8
 
 ## &nbsp;
 
-<SlidevVideo v-click class="h-105 mx-auto" autoplay autoreset="slide" muted controls>
+<SlidevVideo v-click class="backup-clip backup-clip-right" autoplay autoreset="slide" muted controls>
   <source src="/assets/clips-play/labyrinth-keeper-finish.mp4" type="video/mp4" />
 </SlidevVideo>
 
