@@ -79,3 +79,62 @@
   opacity: 0.75;
   margin-top: 0.15rem;
 }
+
+/* The last slide: "Thank you!", three columns with a picture and a QR code each. */
+.slidev-layout.thanks-slide {
+  padding: 1.5rem 2.5rem 0;
+  text-align: center;
+}
+.slidev-layout.thanks-slide h1 {
+  margin-bottom: 0.5rem;
+}
+.thanks-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.thanks-grid a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: none !important;
+  color: inherit;
+}
+.thanks-grid h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0c384a;
+  margin-bottom: 0.4rem;
+}
+.thanks-grid .shot {
+  height: 132px;
+  width: 100%;
+  object-fit: contain;
+}
+.thanks-grid .qr {
+  height: 150px;
+  margin-top: 0.4rem;
+}
+.thanks-grid span {
+  font-size: 0.65rem;
+  opacity: 0.7;
+}
+.thanks-questions {
+  font-size: 1.5rem;
+  margin-top: 0.6rem !important;
+}
+
+/* The backup slides: two upright clips, pulled towards the middle of the slide
+   and set below the dashed line of the title, clear of the logo in the corner. */
+.slidev-layout video.backup-clip {
+  height: 26.25rem;
+  margin-top: 1rem;
+}
+.slidev-layout video.backup-clip-left {
+  margin-left: auto;
+  margin-right: 3rem;
+}
+.slidev-layout video.backup-clip-right {
+  margin-left: 3rem;
+  margin-right: auto;
+}
